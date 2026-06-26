@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JPJ7VKS451"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-JPJ7VKS451');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="description" content="See the revenue and commission hidden in repeat guests and long-stay B2B bookings made via OTAs instead of direct.">
+<meta property="og:title" content="Repeat Guest Value — Operator Series">
+<meta property="og:description" content="Repeat booking revenue and OTA commission — short-stay guests and long-stay B2B. Diagnostic only.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>↻</text></svg>">
+<title>Repeat Guest Value — Operator Series</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --ink:#0A0A0F; --ink2:#2C2C3A; --muted:#7A7A8C; --muted2:#ADADBE;
+  --border:rgba(0,0,0,0.08); --bg:#F7F6F2; --card:#FFFFFF; --card2:#F9F9FB;
+  --accent:#1B4F72; --accent-dark:#0a2a3d; --alert:#C0392B; --positive:#1E8449;
+  --amber:#E59866; --r16:16px; --r12:12px; --r10:10px;
+  --shadow:0 2px 12px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.04);
+}
+html { scroll-behavior:smooth; }
+body { font-family:Inter,-apple-system,sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; -webkit-font-smoothing:antialiased; }
+
+header {
+  background:rgba(8,8,14,0.96); padding:12px 20px;
+  padding-top:calc(12px + env(safe-area-inset-top));
+  display:flex; align-items:center; border-bottom:0.5px solid rgba(255,255,255,0.08);
+  position:sticky; top:0; z-index:100;
+}
+.logo { display:flex; align-items:center; gap:10px; }
+.logo-mark {
+  width:36px; height:36px; background:linear-gradient(145deg,#1B4F72,#0a2a3d);
+  border-radius:9px; display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:800; color:#fff;
+}
+.logo-name { color:#fff; font-size:15px; font-weight:700; }
+.logo-sub { color:rgba(255,255,255,0.35); font-size:9px; text-transform:uppercase; letter-spacing:1px; margin-top:1px; }
+
+.hero {
+  background:linear-gradient(170deg,#08080E 0%,#071520 55%,#08080E 100%);
+  padding:36px 20px 32px; text-align:center;
+}
+.hero h1 { color:#fff; font-size:clamp(22px,5vw,32px); font-weight:800; letter-spacing:-0.5px; margin-bottom:10px; }
+.hero h1 em { font-style:normal; color:#5DADE2; }
+.hero p { color:rgba(255,255,255,0.4); font-size:14px; max-width:480px; margin:0 auto; line-height:1.6; }
+
+.container { max-width:680px; margin:0 auto; padding:24px 16px 48px; }
+
+.step-label { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.step-num { width:20px; height:20px; border-radius:50%; background:var(--ink2); color:#fff; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.step-text { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.9px; color:var(--muted); }
+
+.ios-group { background:var(--card); border-radius:var(--r16); overflow:hidden; margin-bottom:10px; box-shadow:var(--shadow); }
+.ios-row { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; border-bottom:0.5px solid var(--border); gap:12px; }
+.ios-row:last-child { border-bottom:none; }
+.ios-row-left { flex:1; min-width:0; }
+.ios-row-label { font-size:15px; font-weight:500; }
+.ios-row-hint { font-size:11px; color:var(--muted2); margin-top:2px; }
+.ios-row-right { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+.ios-row input, .ios-row select {
+  border:none; outline:none; background:transparent; font-size:15px; font-family:inherit;
+  color:var(--ink2); text-align:right; width:100px;
+}
+.ios-row input::-webkit-outer-spin-button, .ios-row input::-webkit-inner-spin-button { -webkit-appearance:none; }
+
+.toggle-row { background:var(--card2); padding:10px 16px; border-bottom:0.5px solid var(--border); }
+.toggle-btn { border:1px solid var(--border); background:var(--card); border-radius:8px; padding:6px 12px; font-size:12px; font-weight:600; color:var(--muted); cursor:pointer; font-family:inherit; margin-right:6px; }
+.toggle-btn.active { color:var(--accent); border-color:rgba(27,79,114,0.3); background:#EBF5FB; }
+
+/* MODE SELECTOR — Short-stay vs Long-stay B2B */
+.mode-selector {
+  background:var(--card);
+  border-radius:var(--r16);
+  padding:6px;
+  margin-bottom:14px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  box-shadow:var(--shadow);
+}
+.mode-btn {
+  background:transparent;
+  border:none;
+  border-radius:var(--r10);
+  padding:14px 12px;
+  cursor:pointer;
+  font-family:inherit;
+  text-align:left;
+  transition:all 0.15s;
+}
+.mode-btn:hover { background:var(--card2); }
+.mode-btn.active {
+  background:linear-gradient(145deg,#1B4F72,#0a2a3d);
+  color:#fff;
+}
+.mode-btn-icon { font-size:18px; margin-bottom:6px; display:block; }
+.mode-btn-title { font-size:13px; font-weight:700; margin-bottom:2px; }
+.mode-btn-desc { font-size:11px; opacity:0.7; line-height:1.4; }
+.mode-btn.active .mode-btn-desc { opacity:0.85; }
+.mode-btn:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+.toggle-btn:focus-visible, .btn-run:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.ios-row input:focus, .ios-row select:focus { outline:2px solid rgba(27,79,114,0.35); outline-offset:-2px; border-radius:4px; }
+
+@media (max-width: 420px) {
+  .stat-grid { grid-template-columns:1fr; }
+  .mode-btn-desc { font-size:10px; }
+}
+
+/* MODE CONTEXT NOTE */
+.mode-context {
+  background:#EBF5FB;
+  border-left:3px solid var(--accent);
+  border-radius:var(--r10);
+  padding:12px 14px;
+  margin-bottom:16px;
+  font-size:12px;
+  color:var(--ink2);
+  line-height:1.55;
+}
+.mode-context strong { color:var(--accent-dark); font-weight:700; }
+
+.estimate-note { font-size:11px; color:var(--amber); font-weight:600; margin-top:4px; display:none; }
+.estimate-note.visible { display:block; }
+
+.btn-run {
+  width:100%; background:var(--positive); color:#fff; border:none; border-radius:var(--r12);
+  padding:14px; font-size:15px; font-weight:700; cursor:pointer; margin:20px 0; font-family:inherit;
+}
+.btn-run:active { background:#155934; }
+
+.result-panel { display:none; }
+.result-panel.visible { display:block; }
+
+.result-card { background:var(--card); border-radius:var(--r16); padding:16px; margin-bottom:16px; box-shadow:var(--shadow); }
+.sec-label { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--ink2); margin-bottom:8px; }
+.sec-desc { font-size:12px; color:var(--muted); line-height:1.55; margin-bottom:14px; }
+
+.stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.stat-box { background:var(--card2); border-radius:var(--r10); padding:12px; border:0.5px solid var(--border); }
+.stat-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); }
+.stat-value { font-size:20px; font-weight:800; color:var(--ink2); margin-top:4px; }
+.stat-value.green { color:var(--positive); }
+.stat-value.red { color:var(--alert); }
+.stat-sub { font-size:11px; color:var(--muted); margin-top:4px; line-height:1.4; }
+
+.milestone-block { margin-top:16px; padding-top:16px; border-top:0.5px solid var(--border); }
+.milestone-title { font-size:14px; font-weight:700; color:var(--accent); margin-bottom:10px; }
+
+.chart-wrap { position:relative; height:260px; margin-top:8px; }
+
+.authority-band { display:none; background:var(--card); border-radius:var(--r12); padding:14px 16px; margin:20px 0; border:0.5px solid var(--border); }
+.authority-band.visible { display:block; }
+.authority-note { font-size:12px; color:var(--muted); line-height:1.6; font-style:italic; }
+.authority-series { font-size:11px; margin-top:10px; color:var(--muted); }
+.authority-series strong { color:var(--alert); font-style:italic; font-weight:700; }
+
+footer {
+  text-align:center; padding:20px 16px 32px; font-size:11px; color:var(--muted); line-height:1.6;
+  border-top:0.5px solid var(--border); margin-top:8px;
+}
+footer a { color:var(--alert); text-decoration:none; font-weight:500; }
+
+.framework-attribution { border-top:1px solid var(--border); padding:20px 24px; background:var(--bg); }
+.attribution-content { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--muted); }
+.attribution-text strong { color:var(--ink2); font-weight:600; }
+.attribution-link { color:var(--accent); font-weight:600; text-decoration:none; }
+.attribution-link:hover { text-decoration:underline; }
+.attribution-link:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+
+.validation { display:none; background:rgba(192,57,43,0.08); border:0.5px solid rgba(192,57,43,0.25); border-radius:var(--r10); padding:12px; margin-bottom:12px; font-size:13px; color:var(--alert); }
+.validation.visible { display:block; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">↻</div>
+    <div>
+      <div class="logo-name">Repeat Guest Value</div>
+      <div class="logo-sub">Operator Series</div>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>What are <em>repeat bookings</em> costing you on OTAs?</h1>
+  <p>Most operators never calculate the revenue and commission tied to repeat bookings — whether from individual returning guests or from organisations booking long stays through OTAs.</p>
+</div>
+
+<div class="container">
+
+  <!-- MODE SELECTOR -->
+  <div class="mode-selector" role="radiogroup" aria-label="Choose operator scenario">
+    <button type="button" class="mode-btn active" id="modeShortStay" onclick="setMode('short')" role="radio" aria-checked="true">
+      <span class="mode-btn-icon">🏖️</span>
+      <div class="mode-btn-title">Short-stay tourists</div>
+      <div class="mode-btn-desc">Individual guests rebooking via OTAs</div>
+    </button>
+    <button type="button" class="mode-btn" id="modeLongStay" onclick="setMode('long')" role="radio" aria-checked="false">
+      <span class="mode-btn-icon">💼</span>
+      <div class="mode-btn-title">Long-stay B2B</div>
+      <div class="mode-btn-desc">Organisations booking 20+ day stays</div>
+    </button>
+  </div>
+
+  <!-- MODE CONTEXT NOTE -->
+  <div class="mode-context" id="modeContext">
+    <strong>Short-stay mode.</strong> Models individual guests who rebook on OTAs instead of direct. Useful for vacation rental and serviced apartment operators with mainly tourist bookings.
+  </div>
+
+  <div class="step-label">
+    <div class="step-num">1</div>
+    <div class="step-text">Your numbers</div>
+  </div>
+
+  <div class="ios-group">
+    <!-- SHORT-STAY INPUTS -->
+    <div id="shortStayInputs">
+      <div class="ios-row">
+        <div class="ios-row-left">
+          <div class="ios-row-label">Annual booking volume</div>
+          <div class="ios-row-hint">Total bookings or guest stays per year</div>
+        </div>
+        <div class="ios-row-right">
+          <input type="number" id="bookings" placeholder="1200" min="1" step="1" inputmode="numeric">
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <button type="button" class="toggle-btn active" id="modeAbv" onclick="setAbvMode('direct')">Enter avg booking value</button>
+        <button type="button" class="toggle-btn" id="modeAdr" onclick="setAbvMode('adr')">Calculate from ADR × stay</button>
+      </div>
+
+      <div class="ios-row" id="rowAbv">
+        <div class="ios-row-left">
+          <div class="ios-row-label">Average booking value</div>
+        </div>
+        <div class="ios-row-right">
+          <span>€</span>
+          <input type="number" id="abv" placeholder="120" min="1" step="1" inputmode="numeric">
+        </div>
+      </div>
+
+      <div id="rowAdr" style="display:none;">
+        <div class="ios-row">
+          <div class="ios-row-left"><div class="ios-row-label">Average daily rate (ADR)</div></div>
+          <div class="ios-row-right"><span>€</span><input type="number" id="adr" placeholder="95" min="1" step="1"></div>
+        </div>
+        <div class="ios-row">
+          <div class="ios-row-left"><div class="ios-row-label">Average length of stay</div></div>
+          <div class="ios-row-right"><input type="number" id="los" placeholder="3" min="0.5" step="0.5"><span>nights</span></div>
+        </div>
+      </div>
+
+      <div class="ios-row">
+        <div class="ios-row-left">
+          <div class="ios-row-label">Repeat / return booking rate</div>
+          <div class="ios-row-hint">% of bookings from returning guests</div>
+          <div class="estimate-note" id="estimateNote">Estimated — most operators don't track this yet (using 1%)</div>
+        </div>
+        <div class="ios-row-right">
+          <select id="repeatRate" onchange="onRepeatRateChange()">
+            <option value="custom">Enter %</option>
+            <option value="unknown" selected>I don't know</option>
+            <option value="1">1%</option>
+            <option value="2">2%</option>
+            <option value="3">3%</option>
+            <option value="5">5%</option>
+            <option value="8">8%</option>
+            <option value="10">10%</option>
+          </select>
+        </div>
+      </div>
+      <div class="ios-row" id="rowRepeatCustom" style="display:none;">
+        <div class="ios-row-left"><div class="ios-row-label">Your repeat rate</div></div>
+        <div class="ios-row-right"><input type="number" id="repeatCustom" placeholder="2" min="0" max="100" step="0.1"><span>%</span></div>
+      </div>
+
+      <div class="ios-row">
+        <div class="ios-row-left">
+          <div class="ios-row-label">OTA commission on repeat rebookings</div>
+          <div class="ios-row-hint">Avg rate when repeat guests book via OTA</div>
+        </div>
+        <div class="ios-row-right">
+          <input type="number" id="commission" value="17" min="0" max="50" step="0.5"><span>%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LONG-STAY B2B INPUTS -->
+    <div id="longStayInputs" style="display:none;">
+      <div class="ios-row">
+        <div class="ios-row-left">
+          <div class="ios-row-label">Long-stay OTA bookings per year</div>
+          <div class="ios-row-hint">Bookings of 20+ days received through OTAs</div>
+        </div>
+        <div class="ios-row-right">
+          <input type="number" id="lsBookings" placeholder="50" min="1" step="1" inputmode="numeric">
+        </div>
+      </div>
+
+      <div class="ios-row">
+        <div class="ios-row-left">
+          <div class="ios-row-label">Average length of stay</div>
+          <div class="ios-row-hint">For these long-stay bookings</div>
+        </div>
+        <div class="ios-row-right">
+          <input type="number" id="lsLos" placeholder="30" min="20" step="1"><span>days</span>
+        </div>
+      </div>
+
+      <div class="ios-row">
+        <div class="ios-row-left">
+          <div class="ios-row-label">ADR for long-stay bookings</div>
+          <div class="ios-row-hint">Often discounted vs short-stay nightly rate</div>
+        </div>
+        <div class="ios-row-right">
+          <span>€</span><input type="number" id="lsAdr" placeholder="85" min="1" step="1">
+        </div>
+      </div>
+
+      <div class="ios-row">
+        <div class="ios-row-left">
+          <div class="ios-row-label">OTA commission</div>
+          <div class="ios-row-hint">Same rate applied as short-stay bookings</div>
+        </div>
+        <div class="ios-row-right">
+          <input type="number" id="lsCommission" value="17" min="0" max="50" step="0.5"><span>%</span>
+        </div>
+      </div>
+
+      <div class="ios-row">
+        <div class="ios-row-left">
+          <div class="ios-row-label">Estimated organisations behind these bookings</div>
+          <div class="ios-row-hint">Corporate, relocation, insurance, medical, production, etc.</div>
+        </div>
+        <div class="ios-row-right">
+          <input type="number" id="lsOrgs" placeholder="10" min="1" step="1">
+        </div>
+      </div>
+
+      <div class="ios-row">
+        <div class="ios-row-left">
+          <div class="ios-row-label">Avg bookings per organisation per year</div>
+          <div class="ios-row-hint">How many similar stays each organisation typically books</div>
+        </div>
+        <div class="ios-row-right">
+          <input type="number" id="lsBookingsPerOrg" placeholder="3" min="1" step="1">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="validation" id="validation"></div>
+  <button type="button" class="btn-run" onclick="runCalc()">Calculate</button>
+
+  <div class="result-panel" id="resultPanel">
+    <div class="result-card">
+      <div class="sec-label">Today</div>
+      <div class="sec-desc" id="todayDesc"></div>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-label" id="todayRevLabel">Repeat guest revenue</div>
+          <div class="stat-value" id="todayRevenue">—</div>
+          <div class="stat-sub" id="todayRevenueSub"></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Commission paid on OTAs</div>
+          <div class="stat-value red" id="todayCommission">—</div>
+          <div class="stat-sub" id="todayCommSub">Repeat guests rebooking via OTA</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="sec-label">Projections</div>
+      <div class="sec-desc" id="projDesc">Two milestones — revenue gained and commission saved shown separately (not blended).</div>
+
+      <div class="milestone-block">
+        <div class="milestone-title" id="m3Title">3-month milestone · repeat rate +1 point</div>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-label" id="m3RevLabel">Additional repeat revenue</div>
+            <div class="stat-value green" id="m3Revenue">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label" id="m3CommLabel">Commission saved (direct vs OTA)</div>
+            <div class="stat-value green" id="m3Commission">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="milestone-block">
+        <div class="milestone-title" id="m6Title">6-month milestone · repeat rate at 5%</div>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-label" id="m6RevLabel">Additional repeat revenue</div>
+            <div class="stat-value green" id="m6Revenue">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label" id="m6CommLabel">Commission saved (direct vs OTA)</div>
+            <div class="stat-value green" id="m6Commission">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="sec-label" id="chartLabel">Today vs milestones</div>
+      <div class="chart-wrap"><canvas id="valueChart"></canvas></div>
+    </div>
+
+    <!-- LONG-STAY-ONLY: B2B INSIGHT CARD -->
+    <div class="result-card" id="b2bInsightCard" style="display:none;">
+      <div class="sec-label">The B2B opportunity</div>
+      <div class="sec-desc" id="b2bInsight"></div>
+    </div>
+  </div>
+
+  <div class="authority-band" id="authorityBand">
+    <div class="authority-note">Built for operators who want the number before the strategy. Roger Bisschoff — 15 years in European hospitality distribution and commercial leadership across 1,500+ properties.</div>
+    <div class="authority-series"><strong>Operator Series</strong> — free diagnostic tools for senior property operators.</div>
+  </div>
+
+</div>
+
+<div class="framework-attribution">
+  <div class="attribution-content">
+    <div class="attribution-text">
+      <strong>Framework by Roger Bisschoff</strong> · First published 2026 · Part of the Operator Intelligence Suite
+    </div>
+    <a href="https://rbisschoff.github.io/operator-intelligence-suite/" class="attribution-link" rel="noopener noreferrer">View the full suite →</a>
+  </div>
+</div>
+
+<footer>Repeat Guest Value · Repeat booking revenue &amp; OTA commission diagnostic · <a href="https://linkedin.com/in/rogerbisschoff" target="_blank" rel="noopener noreferrer">linkedin.com/in/rogerbisschoff</a></footer>
+
+<script>
+let chartInstance = null;
+let completionFired = { short: false, long: false };
+let abvMode = 'direct';
+let scenarioMode = 'short';
+
+function setMode(mode) {
+  scenarioMode = mode;
+  
+  // Update mode button states
+  document.getElementById('modeShortStay').classList.toggle('active', mode === 'short');
+  document.getElementById('modeShortStay').setAttribute('aria-checked', mode === 'short');
+  document.getElementById('modeLongStay').classList.toggle('active', mode === 'long');
+  document.getElementById('modeLongStay').setAttribute('aria-checked', mode === 'long');
+  
+  // Show/hide input groups
+  document.getElementById('shortStayInputs').style.display = mode === 'short' ? 'block' : 'none';
+  document.getElementById('longStayInputs').style.display = mode === 'long' ? 'block' : 'none';
+  
+  // Update context note
+  const contextEl = document.getElementById('modeContext');
+  if (mode === 'short') {
+    contextEl.innerHTML = '<strong>Short-stay mode.</strong> Models individual guests who rebook on OTAs instead of direct. Useful for vacation rental and serviced apartment operators with mainly tourist bookings.';
+  } else {
+    contextEl.innerHTML = '<strong>Long-stay B2B mode.</strong> Long-stay OTA bookings (20+ days) are rarely tourists. They are usually placed by organisations — corporate relocation, project assignments, insurance, medical, production. The OTA is intermediating a B2B relationship. Each booking represents an organisation that may have more bookings just like it.';
+  }
+  
+  // Hide previous results when switching modes
+  document.getElementById('resultPanel').classList.remove('visible');
+  document.getElementById('authorityBand').classList.remove('visible');
+  document.getElementById('validation').classList.remove('visible');
+}
+
+function setAbvMode(mode) {
+  abvMode = mode;
+  document.getElementById('modeAbv').classList.toggle('active', mode === 'direct');
+  document.getElementById('modeAdr').classList.toggle('active', mode === 'adr');
+  document.getElementById('rowAbv').style.display = mode === 'direct' ? 'flex' : 'none';
+  document.getElementById('rowAdr').style.display = mode === 'adr' ? 'block' : 'none';
+}
+
+function onRepeatRateChange() {
+  const sel = document.getElementById('repeatRate').value;
+  document.getElementById('rowRepeatCustom').style.display = sel === 'custom' ? 'flex' : 'none';
+  document.getElementById('estimateNote').classList.toggle('visible', sel === 'unknown');
+}
+
+function getRepeatRate() {
+  const sel = document.getElementById('repeatRate').value;
+  if (sel === 'unknown') return { rate: 1, estimated: true };
+  if (sel === 'custom') return { rate: parseFloat(document.getElementById('repeatCustom').value) || 0, estimated: false };
+  return { rate: parseFloat(sel) || 0, estimated: false };
+}
+
+function getAbv() {
+  if (abvMode === 'adr') {
+    const adr = parseFloat(document.getElementById('adr').value) || 0;
+    const los = parseFloat(document.getElementById('los').value) || 0;
+    return adr * los;
+  }
+  return parseFloat(document.getElementById('abv').value) || 0;
+}
+
+function fmt(n) {
+  n = Math.max(0, Math.round(Math.abs(n)));
+  if (n >= 1000000) return (n/1000000).toFixed(2) + 'M';
+  if (n >= 1000) return n.toLocaleString('de-DE');
+  return n.toString();
+}
+
+function money(n) { return '€' + fmt(n); }
+
+function runCalc() {
+  if (scenarioMode === 'long') {
+    runLongStayCalc();
+  } else {
+    runShortStayCalc();
+  }
+}
+
+function runShortStayCalc() {
+  const val = document.getElementById('validation');
+  const bookings = parseFloat(document.getElementById('bookings').value) || 0;
+  const abv = getAbv();
+  const { rate, estimated } = getRepeatRate();
+  const commission = parseFloat(document.getElementById('commission').value) || 0;
+
+  if (!bookings || bookings <= 0) {
+    val.textContent = 'Enter your annual booking volume.';
+    val.classList.add('visible');
+    return;
+  }
+  if (!abv || abv <= 0) {
+    val.textContent = abvMode === 'adr' ? 'Enter ADR and average length of stay.' : 'Enter average booking value.';
+    val.classList.add('visible');
+    return;
+  }
+  if (document.getElementById('repeatRate').value === 'custom' && (!rate || rate < 0)) {
+    val.textContent = 'Enter your repeat booking rate.';
+    val.classList.add('visible');
+    return;
+  }
+  val.classList.remove('visible');
+
+  const repeatBookings = bookings * (rate / 100);
+  const repeatRevenue = repeatBookings * abv;
+  const commissionPaid = repeatRevenue * (commission / 100);
+
+  const m3Delta = bookings * 0.01;
+  const m3Revenue = m3Delta * abv;
+  const m3Saved = m3Revenue * (commission / 100);
+
+  const target6 = 5;
+  const delta6pp = Math.max(0, target6 - rate);
+  const m6Delta = bookings * (delta6pp / 100);
+  const m6Revenue = m6Delta * abv;
+  const m6Saved = m6Revenue * (commission / 100);
+
+  // Update result labels for short-stay
+  document.getElementById('todayRevLabel').textContent = 'Repeat guest revenue';
+  document.getElementById('todayCommSub').textContent = 'Repeat guests rebooking via OTA';
+  document.getElementById('m3Title').textContent = '3-month milestone · repeat rate +1 point';
+  document.getElementById('m6Title').textContent = '6-month milestone · repeat rate at 5%';
+  document.getElementById('m3RevLabel').textContent = 'Additional repeat revenue';
+  document.getElementById('m6RevLabel').textContent = 'Additional repeat revenue';
+  document.getElementById('m3CommLabel').textContent = 'Commission saved (direct vs OTA)';
+  document.getElementById('m6CommLabel').textContent = 'Commission saved (direct vs OTA)';
+  document.getElementById('chartLabel').textContent = 'Today vs milestones';
+  document.getElementById('projDesc').textContent = 'Two milestones — revenue gained and commission saved shown separately (not blended).';
+  document.getElementById('b2bInsightCard').style.display = 'none';
+
+  const estLabel = estimated ? ' (estimated at 1% — most operators don\'t track this yet)' : '';
+  document.getElementById('todayDesc').textContent =
+    `At a ${rate}% repeat rate${estLabel}, ${Math.round(repeatBookings).toLocaleString()} bookings per year come from return guests — modelled as rebooking via OTA at ${commission}% commission.`;
+
+  document.getElementById('todayRevenue').textContent = money(repeatRevenue) + '/yr';
+  document.getElementById('todayRevenueSub').textContent = Math.round(repeatBookings).toLocaleString() + ' repeat bookings × €' + fmt(abv);
+  document.getElementById('todayCommission').textContent = money(commissionPaid) + '/yr';
+
+  document.getElementById('m3Revenue').textContent = '+' + money(m3Revenue) + '/yr';
+  document.getElementById('m3Commission').textContent = '+' + money(m3Saved) + '/yr';
+  document.getElementById('m6Revenue').textContent = delta6pp > 0 ? '+' + money(m6Revenue) + '/yr' : '— (already at or above 5%)';
+  document.getElementById('m6Commission').textContent = delta6pp > 0 ? '+' + money(m6Saved) + '/yr' : '—';
+
+  renderChart(repeatRevenue, commissionPaid, m3Revenue, m3Saved, m6Revenue, m6Saved);
+
+  document.getElementById('resultPanel').classList.add('visible');
+  document.getElementById('authorityBand').classList.add('visible');
+
+  if (!completionFired.short && typeof gtag === 'function') {
+    gtag('event', 'repeat_guest_value_completed', { event_category: 'engagement', mode: 'short' });
+    completionFired.short = true;
+  }
+
+  setTimeout(() => document.getElementById('resultPanel').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+}
+
+function runLongStayCalc() {
+  const val = document.getElementById('validation');
+  const bookings = parseFloat(document.getElementById('lsBookings').value) || 0;
+  const los = parseFloat(document.getElementById('lsLos').value) || 0;
+  const adr = parseFloat(document.getElementById('lsAdr').value) || 0;
+  const commission = parseFloat(document.getElementById('lsCommission').value) || 0;
+  const orgs = parseFloat(document.getElementById('lsOrgs').value) || 0;
+  const bookingsPerOrg = parseFloat(document.getElementById('lsBookingsPerOrg').value) || 0;
+
+  if (!bookings || bookings <= 0) {
+    val.textContent = 'Enter your annual long-stay OTA bookings.';
+    val.classList.add('visible');
+    return;
+  }
+  if (!los || los <= 0) {
+    val.textContent = 'Enter the average length of stay.';
+    val.classList.add('visible');
+    return;
+  }
+  if (!adr || adr <= 0) {
+    val.textContent = 'Enter the ADR for long-stay bookings.';
+    val.classList.add('visible');
+    return;
+  }
+  if (!orgs || orgs <= 0) {
+    val.textContent = 'Enter the estimated number of organisations behind these bookings.';
+    val.classList.add('visible');
+    return;
+  }
+  if (!bookingsPerOrg || bookingsPerOrg <= 0) {
+    val.textContent = 'Enter the average bookings per organisation per year.';
+    val.classList.add('visible');
+    return;
+  }
+  val.classList.remove('visible');
+
+  // Per-booking value
+  const bookingValue = los * adr;
+  
+  // Total long-stay revenue via OTA
+  const totalRevenue = bookings * bookingValue;
+  
+  // Total commission paid
+  const totalCommission = totalRevenue * (commission / 100);
+  
+  // Per-org annual value (their potential as direct B2B account)
+  const perOrgAnnualValue = bookingsPerOrg * bookingValue;
+  const perOrgCommissionToday = perOrgAnnualValue * (commission / 100);
+
+  // Milestone 1: Convert 1 organisation to direct
+  const m1RevenueGained = 0; // not new revenue, same bookings but now direct
+  const m1CommissionSaved = perOrgAnnualValue * (commission / 100);
+  
+  // Milestone 2: Convert 3 organisations to direct
+  const m3Orgs = Math.min(3, orgs);
+  const m3CommissionSaved = m3Orgs * perOrgAnnualValue * (commission / 100);
+
+  // Update result labels for long-stay
+  document.getElementById('todayRevLabel').textContent = 'Long-stay OTA revenue';
+  document.getElementById('todayCommSub').textContent = 'Paid to OTAs on long-stay bookings';
+  document.getElementById('m3Title').textContent = '3-month milestone · convert 1 organisation to direct';
+  document.getElementById('m6Title').textContent = `6-month milestone · convert ${m3Orgs} organisation${m3Orgs > 1 ? 's' : ''} to direct`;
+  document.getElementById('m3RevLabel').textContent = 'Organisation annual value';
+  document.getElementById('m6RevLabel').textContent = `${m3Orgs} organisation${m3Orgs > 1 ? 's' : ''} annual value`;
+  document.getElementById('m3CommLabel').textContent = 'Commission saved (direct vs OTA)';
+  document.getElementById('m6CommLabel').textContent = 'Commission saved (direct vs OTA)';
+  document.getElementById('chartLabel').textContent = 'OTA spend vs direct opportunity';
+  document.getElementById('projDesc').textContent = 'Milestones model converting organisations from OTA intermediation to direct B2B — commission saved shown separately from booking value.';
+  document.getElementById('b2bInsightCard').style.display = 'block';
+
+  // Result text
+  document.getElementById('todayDesc').textContent =
+    `${bookings} long-stay bookings via OTAs, averaging ${los} days at €${fmt(adr)} ADR. Each booking is worth ${money(bookingValue)}. Behind these bookings are ~${orgs} organisations placing roughly ${bookingsPerOrg} bookings each per year.`;
+
+  document.getElementById('todayRevenue').textContent = money(totalRevenue) + '/yr';
+  document.getElementById('todayRevenueSub').textContent = `${bookings} bookings × ${money(bookingValue)}`;
+  document.getElementById('todayCommission').textContent = money(totalCommission) + '/yr';
+
+  document.getElementById('m3Revenue').textContent = money(perOrgAnnualValue) + '/yr';
+  document.getElementById('m3Commission').textContent = '+' + money(m1CommissionSaved) + '/yr';
+  document.getElementById('m6Revenue').textContent = money(m3Orgs * perOrgAnnualValue) + '/yr';
+  document.getElementById('m6Commission').textContent = '+' + money(m3CommissionSaved) + '/yr';
+
+  // B2B insight
+  const insightEl = document.getElementById('b2bInsight');
+  insightEl.innerHTML = `Each of these ${orgs} organisations is worth roughly <strong>${money(perOrgAnnualValue)}/yr</strong> in long-stay revenue. The OTA earns about <strong>${money(perOrgCommissionToday)}</strong> per organisation per year in commission. That is not a tourist relationship. It is a B2B relationship being intermediated.<br><br>Converting just one of these organisations to direct relationship — corporate framework agreement, relocation partnership, insurance preferred-supplier listing — captures the full booking value and ends the commission leak from that source.`;
+
+  // Chart: OTA spend vs direct opportunity
+  renderLongStayChart(totalCommission, m1CommissionSaved, m3CommissionSaved);
+
+  document.getElementById('resultPanel').classList.add('visible');
+  document.getElementById('authorityBand').classList.add('visible');
+
+  if (!completionFired.long && typeof gtag === 'function') {
+    gtag('event', 'repeat_guest_value_completed', { event_category: 'engagement', mode: 'long' });
+    completionFired.long = true;
+  }
+
+  setTimeout(() => document.getElementById('resultPanel').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+}
+
+function renderChart(todayRev, todayComm, m3Rev, m3Saved, m6Rev, m6Saved) {
+  const ctx = document.getElementById('valueChart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+
+  chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Today', '3-month milestone', '6-month milestone'],
+      datasets: [
+        {
+          label: 'Repeat / additional revenue',
+          data: [todayRev, m3Rev, m6Rev],
+          backgroundColor: '#1B4F72',
+          borderRadius: 4
+        },
+        {
+          label: 'Commission (paid or saved)',
+          data: [todayComm, m3Saved, m6Saved],
+          backgroundColor: '#C0392B',
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label + ': €' + fmt(ctx.parsed.y)
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: {
+          beginAtZero: true,
+          ticks: { callback: v => '€' + fmt(v) },
+          grid: { color: 'rgba(0,0,0,0.04)' }
+        }
+      }
+    }
+  });
+}
+
+function renderLongStayChart(currentCommission, m1Saved, m3Saved) {
+  const ctx = document.getElementById('valueChart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+
+  chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Current OTA commission', 'Convert 1 organisation', 'Convert 3 organisations'],
+      datasets: [
+        {
+          label: 'OTA commission today',
+          data: [currentCommission, 0, 0],
+          backgroundColor: '#C0392B',
+          borderRadius: 4
+        },
+        {
+          label: 'Commission recovered',
+          data: [0, m1Saved, m3Saved],
+          backgroundColor: '#1E8449',
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label + ': €' + fmt(ctx.parsed.y)
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, stacked: false },
+        y: {
+          beginAtZero: true,
+          ticks: { callback: v => '€' + fmt(v) },
+          grid: { color: 'rgba(0,0,0,0.04)' }
+        }
+      }
+    }
+  });
+}
+
+onRepeatRateChange();
+</script>
+</body>
+</html>
