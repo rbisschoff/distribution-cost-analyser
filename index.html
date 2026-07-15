@@ -4,9 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="description" content="Compare true distribution costs across Direct and OTAs. See where margin goes and how much room you have for direct marketing.">
-<meta property="og:title" content="Distribution Cost Analyser — Operator Series">
-<meta property="og:description" content="Direct or OTA — which is really eating your margin? Enter your channel mix and see the true cost, not just headline commission.">
+<meta name="description" data-i18n-meta="description" content="Compare true distribution costs across Direct and OTAs. See where margin goes and how much room you have for direct marketing.">
+<link rel="alternate" hreflang="en" href="https://rbisschoff.github.io/distribution-cost-analyser/?lang=en">
+<link rel="alternate" hreflang="it" href="https://rbisschoff.github.io/distribution-cost-analyser/?lang=it">
+<link rel="alternate" hreflang="de" href="https://rbisschoff.github.io/distribution-cost-analyser/?lang=de">
+<link rel="alternate" hreflang="x-default" href="https://rbisschoff.github.io/distribution-cost-analyser/?lang=en">
+<meta property="og:title" data-i18n-meta="ogTitle" content="Distribution Cost Analyser, Operator Series">
+<meta property="og:description" data-i18n-meta="ogDescription" content="Direct or OTA, which is really eating your margin? Enter your channel mix and see the true cost, not just headline commission.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="og-image.svg">
 <meta property="og:image:width" content="1200">
@@ -15,24 +19,87 @@
 <meta name="twitter:image" content="og-image.svg">
 <meta name="twitter:title" content="Distribution Cost Analyser">
 <meta name="twitter:description" content="Compare true distribution costs across Direct and OTAs. Built for hospitality operators.">
+<script>
+  (function () {
+    const supported = ['en', 'it', 'de'];
+    const queryValue = new URLSearchParams(window.location.search).get('lang');
+    let lang;
+    if (queryValue !== null) {
+      lang = supported.includes(queryValue.toLowerCase()) ? queryValue.toLowerCase() : 'en';
+    } else {
+      try { lang = localStorage.getItem('ois-lang'); } catch (e) {}
+      if (!supported.includes(lang)) {
+        const browserLang = (navigator.language || '').slice(0, 2).toLowerCase();
+        lang = supported.includes(browserLang) ? browserLang : 'en';
+      }
+    }
+    document.documentElement.lang = lang;
+    window.__oisInitialLang = lang;
+    try { localStorage.setItem('ois-lang', lang); } catch (e) {}
+    const metadata = {
+      en: {
+        description: 'Compare true distribution costs across Direct and OTAs. See where margin goes and how much room you have for direct marketing.',
+        ogTitle: 'Distribution Cost Analyser, Operator Series',
+        ogDescription: 'Direct or OTA, which is really eating your margin? Enter your channel mix and see the true cost.'
+      },
+      it: {
+        description: 'Confronta i costi reali di distribuzione tra Diretto e OTA. Scopri dove va il margine e quanto puoi investire nel marketing diretto.',
+        ogTitle: 'Distribution Cost Analyser, Operator Series',
+        ogDescription: 'Diretto o OTA: quale canale erode davvero il tuo margine? Inserisci il mix e scopri il costo reale.'
+      },
+      de: {
+        description: 'Vergleichen Sie die tatsächlichen Distributionskosten von Direkt und OTAs. Sehen Sie, wohin Ihre Marge fließt.',
+        ogTitle: 'Distribution Cost Analyser, Operator Series',
+        ogDescription: 'Direkt oder OTA: Was kostet Sie wirklich Marge? Geben Sie Ihren Channel-Mix ein und sehen Sie die tatsächlichen Kosten.'
+      }
+    };
+    window.updateOisMetadata = function (activeLang) {
+      const pack = metadata[activeLang] || metadata.en;
+      document.querySelectorAll('[data-i18n-meta]').forEach(function (el) {
+        const value = pack[el.getAttribute('data-i18n-meta')];
+        if (value) el.setAttribute('content', value);
+      });
+    };
+    window.updateOisMetadata(lang);
+  })();
+</script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-<title>Distribution Cost Analyser — Operator Series</title>
+<title>Distribution Cost Analyser, Operator Series</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 :root {
-  --ink:#0A0A0F; --ink2:#2C2C3A; --muted:#7A7A8C; --muted2:#ADADBE;
-  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.05);
-  --bg:#F2F2F7; --card:#FFFFFF; --card2:#F9F9FB;
-  --accent:#1B4F72; --accent-dark:#0a2a3d;
-  --alert:#C0392B; --positive:#1E8449;
-  --r16:16px; --r12:12px; --r10:10px;
-  --shadow:0 2px 12px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.04);
-  --shadow-lg:0 8px 30px rgba(0,0,0,0.10),0 2px 8px rgba(0,0,0,0.06);
+  --accent:#007AFF;
+  --accent-dark:#0051D5;
+  --accent-light:rgba(0, 122, 255, 0.12);
+  --accent-secondary:#5856D6;
+  --alert:#FF3B30;
+  --positive:#34C759;
+  --warning:#FF9500;
+  --ink:#1C1C1E;
+  --ink2:#3A3A3C;
+  --muted:#8E8E93;
+  --muted2:#AEAEB2;
+  --bg:#F2F2F7;
+  --card:#FFFFFF;
+  --card2:#F9F9FB;
+  --border:rgba(60, 60, 67, 0.12);
+  --border-light:rgba(60, 60, 67, 0.08);
+  --radius-lg:20px;
+  --radius-md:16px;
+  --radius-sm:12px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 8px 24px rgba(0,0,0,0.06);
+  --shadow-card:0 2px 16px rgba(0,0,0,0.06);
+  --r16:var(--radius-lg);
+  --r12:var(--radius-md);
+  --r10:var(--radius-sm);
+  --shadow:var(--shadow-card);
+  --shadow-lg:var(--shadow-md);
 }
 html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
-body { font-family:-apple-system,'Inter',sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; -webkit-font-smoothing:antialiased; }
+body { font-family:-apple-system,'Inter',sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; -webkit-font-smoothing:antialiased; overflow-x:clip; }
 
 header {
   background:rgba(8,8,14,0.96); padding:12px 20px;
@@ -43,17 +110,23 @@ header {
 }
 .logo { display:flex; align-items:center; gap:10px; }
 .logo-mark {
-  width:36px; height:36px; background:linear-gradient(145deg,#1B4F72 0%,#0a2a3d 100%);
-  border-radius:9px; display:flex; align-items:center; justify-content:center;
-  font-size:12px; font-weight:800; color:#fff; box-shadow:0 2px 10px rgba(27,79,114,0.5); flex-shrink:0;
+  width:36px; height:36px; background:linear-gradient(145deg,var(--accent) 0%,var(--accent-dark) 100%);
+  border-radius:10px; display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:800; color:#fff; box-shadow:0 2px 10px rgba(0,122,255,0.35); flex-shrink:0;
 }
 .logo-name { color:#fff; font-size:15px; font-weight:700; letter-spacing:-0.3px; }
 .logo-sub  { color:rgba(255,255,255,0.35); font-size:9px; text-transform:uppercase; letter-spacing:1px; margin-top:1px; }
 
-.hero { background:linear-gradient(170deg,#08080E 0%,#071520 55%,#08080E 100%); padding:40px 20px 36px; text-align:center; position:relative; overflow:hidden; }
-.hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(27,79,114,0.2) 0%,transparent 65%); pointer-events:none; }
+.lang-switch { display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:100px; padding:3px; flex-shrink:0; }
+.lang-btn { font-family:inherit; font-size:11px; font-weight:600; letter-spacing:0.04em; color:rgba(255,255,255,0.55); background:transparent; border:none; border-radius:100px; padding:6px 10px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.15s; }
+.lang-btn:hover { color:#fff; }
+.lang-btn.active { background:rgba(255,255,255,0.16); color:#fff; }
+.lang-flag { font-size:13px; line-height:1; }
+
+.hero { background:linear-gradient(170deg,#08080E 0%,#0A1628 55%,#08080E 100%); padding:40px 20px 36px; text-align:center; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(0,122,255,0.22) 0%,transparent 65%); pointer-events:none; }
 .hero h1 { color:#fff; font-size:clamp(22px,6vw,36px); font-weight:800; letter-spacing:-0.8px; line-height:1.15; margin-bottom:12px; }
-.hero h1 em { font-style:normal; color:#5DADE2; }
+.hero h1 em { font-style:normal; color:#64B5FF; }
 .hero p { color:rgba(255,255,255,0.38); font-size:14px; max-width:520px; margin:0 auto; line-height:1.65; }
 
 .container { max-width:760px; margin:0 auto; padding:24px 16px 72px; }
@@ -63,8 +136,8 @@ header {
 .step-num { width:20px; height:20px; border-radius:50%; background:var(--ink2); color:#fff; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .step-text { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.9px; color:var(--muted); }
 
-.ios-group { background:var(--card); border-radius:var(--r16); overflow:hidden; margin-bottom:10px; box-shadow:var(--shadow); }
-.ios-row { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; border-bottom:0.5px solid var(--border); gap:12px; }
+.ios-group { background:var(--card); border-radius:var(--radius-lg); overflow:hidden; margin-bottom:12px; box-shadow:var(--shadow-card); border:none; }
+.ios-row { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:0.5px solid var(--border-light); gap:12px; }
 .ios-row:last-child { border-bottom:none; }
 .ios-row-left { flex:1; min-width:0; }
 .ios-row-label { font-size:15px; font-weight:500; color:var(--ink); }
@@ -79,7 +152,7 @@ header {
 .ios-row input::-webkit-outer-spin-button, .ios-row input::-webkit-inner-spin-button { -webkit-appearance:none; }
 .ios-row input::placeholder { color:var(--muted2); }
 
-.ota-builder { background:var(--card2); border-radius:var(--r12); padding:14px; margin-bottom:10px; border:0.5px solid var(--border); }
+.ota-builder { background:var(--card); border-radius:var(--radius-md); padding:16px; margin-bottom:12px; border:none; box-shadow:var(--shadow-card); }
 .ota-row { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:10px; align-items:end; margin-bottom:10px; }
 .ota-row:last-child { margin-bottom:0; }
 .ota-row input { border:1px solid var(--border); border-radius:6px; padding:8px; font-size:13px; background:var(--card); width:100%; }
@@ -96,15 +169,15 @@ header {
 .ota-advanced-toggle-hint { font-size:11px; color:var(--muted2); margin-top:1px; }
 .ota-advanced-chevron { font-size:16px; color:var(--muted); flex-shrink:0; margin-left:8px; }
 
-.headline-compare { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; padding-top:14px; border-top:0.5px solid rgba(27,79,114,0.15); }
-.headline-card { background:rgba(255,255,255,0.65); border-radius:var(--r10); padding:12px; border:0.5px solid rgba(27,79,114,0.12); }
-.headline-card-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:4px; }
-.headline-card-value { font-size:22px; font-weight:800; line-height:1.1; }
+.headline-compare { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px; padding-top:18px; border-top:0.5px solid var(--border-light); }
+.headline-card { background:var(--card); border-radius:var(--radius-md); padding:18px 16px; border:none; box-shadow:var(--shadow-sm); }
+.headline-card-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:6px; }
+.headline-card-value { font-size:24px; font-weight:800; line-height:1.1; }
 .headline-card-value.ota { color:var(--alert); }
 .headline-card-value.direct { color:var(--accent); }
-.headline-card-sub { font-size:11px; color:var(--muted); margin-top:4px; line-height:1.4; }
+.headline-card-sub { font-size:11px; color:var(--muted); margin-top:6px; line-height:1.4; }
 
-.scenario-box { background:var(--card2); border-radius:var(--r12); padding:14px; border:0.5px solid var(--border); }
+.scenario-box { background:var(--card); border-radius:var(--radius-md); padding:18px; border:none; box-shadow:var(--shadow-sm); }
 .scenario-block { margin-bottom:16px; }
 .scenario-block:last-child { margin-bottom:0; }
 .scenario-block-title { font-size:14px; font-weight:700; color:var(--ink2); margin-bottom:4px; }
@@ -115,11 +188,11 @@ header {
 .scenario-field label { display:block; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted2); margin-bottom:4px; }
 .scenario-field select, .scenario-field input { width:100%; border:1px solid var(--border); border-radius:6px; padding:8px; font-size:13px; background:var(--card); font-family:inherit; }
 .scenario-field .scenario-static { font-size:15px; font-weight:600; color:var(--ink2); padding:8px 0; }
-.scenario-result { background:var(--card); border-radius:var(--r10); padding:0; border:0.5px solid var(--border); overflow:hidden; }
+.scenario-result { background:var(--card); border-radius:var(--radius-sm); padding:0; border:none; box-shadow:var(--shadow-sm); overflow:hidden; }
 .scenario-result .warn { color:var(--alert); font-weight:600; padding:14px; font-size:13px; display:block; }
 
 .flow-card { font-size:13px; color:var(--ink2); }
-.flow-title { padding:12px 14px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--accent); background:linear-gradient(135deg,#EBF5FB 0%,#D6EAF8 100%); border-bottom:0.5px solid rgba(27,79,114,0.12); }
+.flow-title { padding:14px 16px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--accent); background:var(--accent-light); border-bottom:0.5px solid var(--border-light); }
 .flow-table { width:100%; border-collapse:collapse; table-layout:fixed; }
 .flow-table th, .flow-table td { padding:10px 14px; border-bottom:0.5px solid var(--border); vertical-align:top; }
 .flow-table tr:last-child th, .flow-table tr:last-child td { border-bottom:none; }
@@ -132,14 +205,14 @@ header {
 .flow-table .col-num.saving { color:var(--positive); }
 .flow-table .sub { display:block; font-size:11px; font-weight:500; color:var(--muted); margin-top:3px; line-height:1.35; }
 .flow-table-2col .col-label { width:50%; }
-.flow-highlight { display:flex; justify-content:space-between; align-items:center; padding:14px; background:rgba(30,132,73,0.08); border-top:0.5px solid rgba(30,132,73,0.2); border-bottom:0.5px solid var(--border); gap:12px; }
+.flow-highlight { display:flex; justify-content:space-between; align-items:center; padding:14px; background:rgba(52,199,89,0.08); border-top:0.5px solid rgba(52,199,89,0.2); border-bottom:0.5px solid var(--border-light); gap:12px; }
 .flow-highlight-label { font-size:12px; font-weight:600; color:var(--ink2); line-height:1.4; }
 .flow-highlight-value { font-size:20px; font-weight:800; color:var(--positive); white-space:nowrap; }
 .flow-lead { padding:12px 14px 0; font-size:12px; color:var(--muted); line-height:1.55; }
-.flow-table .flow-diff-row td { background:rgba(30,132,73,0.08); border-bottom:none; font-weight:600; color:var(--ink2); padding:12px 14px; }
+.flow-table .flow-diff-row td { background:rgba(52,199,89,0.08); border-bottom:none; font-weight:600; color:var(--ink2); padding:12px 14px; }
 .flow-table .flow-diff-row .diff-val { float:right; font-size:18px; font-weight:800; color:var(--positive); }
 
-.flow-equation { margin:14px; padding:14px; background:var(--card); border-radius:var(--r12); border:0.5px solid var(--border); }
+.flow-equation { margin:14px; padding:16px; background:var(--card); border-radius:var(--radius-md); border:none; box-shadow:var(--shadow-sm); }
 .flow-equation-title { font-size:14px; font-weight:700; color:var(--ink2); margin-bottom:10px; line-height:1.4; }
 .flow-equation-rate { font-size:12px; color:var(--ink2); line-height:1.55; margin-bottom:14px; padding-bottom:14px; border-bottom:0.5px solid var(--border); }
 .flow-equation-rate span { color:var(--muted); font-size:11px; }
@@ -149,23 +222,23 @@ header {
 .eq-part.eq-result .eq-val { font-size:22px; color:var(--positive); }
 .eq-lbl { display:block; font-size:10px; color:var(--muted); margin-top:3px; line-height:1.3; }
 .eq-op { font-size:18px; font-weight:300; color:var(--muted2); }
-.flow-equation-note { font-size:12px; color:var(--ink2); line-height:1.55; margin-top:14px; padding:12px; background:var(--card2); border-radius:var(--r10); border:0.5px solid var(--border); }
+.flow-equation-note { font-size:12px; color:var(--ink2); line-height:1.55; margin-top:14px; padding:12px; background:var(--card2); border-radius:var(--radius-sm); border:none; }
 .flow-equation-note strong { color:var(--ink); font-weight:600; }
 
 .flow-subtitle { padding:10px 14px 6px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); background:var(--card2); border-top:0.5px solid var(--border); }
 .flow-footnote { padding:10px 14px; font-size:11px; color:var(--muted); line-height:1.5; background:var(--card2); border-top:0.5px solid var(--border); }
 
-.btn-add-ota { background:var(--card); border:1px solid var(--border); border-radius:var(--r10); padding:8px 12px; font-size:13px; color:var(--accent); cursor:pointer; font-weight:600; transition:all 0.15s; }
+.btn-add-ota { background:var(--card); border:none; border-radius:var(--radius-sm); padding:10px 14px; font-size:13px; color:var(--accent); cursor:pointer; font-weight:600; transition:all 0.15s; box-shadow:var(--shadow-sm); }
 .btn-add-ota:active { background:var(--card2); }
 
 .result-panel { display:none; }
 .result-panel.visible { display:block; }
 
-.result-header { background:linear-gradient(135deg,#EBF5FB 0%,#D6EAF8 100%); border-radius:var(--r16); padding:16px; margin-bottom:16px; border:0.5px solid rgba(27,79,114,0.2); }
+.result-header { background:var(--accent-light); border-radius:var(--radius-lg); padding:20px 18px; margin-bottom:18px; border:none; box-shadow:var(--shadow-sm); }
 .rh-title { font-size:13px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:0.7px; }
-.rh-desc { font-size:13px; color:var(--ink); margin-top:4px; }
+.rh-desc { font-size:13px; color:var(--ink); margin-top:6px; }
 
-.chart-section { background:var(--card); border-radius:var(--r16); padding:16px; margin-bottom:16px; box-shadow:var(--shadow); }
+.chart-section { background:var(--card); border-radius:var(--radius-lg); padding:20px 18px; margin-bottom:18px; box-shadow:var(--shadow-card); border:none; }
 .sec-label { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--ink2); margin-bottom:12px; }
 .sec-desc { font-size:12px; color:var(--muted); line-height:1.6; margin-bottom:12px; }
 
@@ -207,6 +280,57 @@ header {
 .print-header-title { font-size:20px; font-weight:800; color:#0A0A0F; }
 .print-header-meta { font-size:12px; color:#666; margin-top:4px; }
 
+@media (max-width: 640px) {
+  .logo-sub { display: none; }
+  .logo-name {
+    font-size: 13px;
+    max-width: 42vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  header {
+    padding: 10px 12px;
+    padding-top: calc(10px + env(safe-area-inset-top));
+  }
+  .lang-btn {
+    padding: 8px 9px;
+    min-height: 36px;
+    gap: 0;
+    font-size: 0;
+  }
+  .lang-flag { font-size: 15px; }
+  .ios-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 14px 16px;
+  }
+  .ios-row-right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .ios-row input {
+    font-size: 16px;
+    width: 100%;
+    max-width: none;
+    text-align: right;
+    min-height: 44px;
+  }
+  .container {
+    padding: 20px 14px calc(88px + env(safe-area-inset-bottom));
+  }
+  .hero { padding: 28px 16px 24px; }
+  .run-btn, .btn-add-ota, .preset-btn {
+    min-height: 44px;
+  }
+  .run-btn { width: 100%; font-size: 16px; }
+  .exec-snapshot-grid { grid-template-columns: 1fr; }
+  .fab-stack {
+    right: max(10px, env(safe-area-inset-right));
+  }
+}
+
 @media (max-width: 520px) {
   .ota-row { grid-template-columns:1fr 1fr; }
   .ota-row > div:first-child { grid-column:1 / -1; }
@@ -222,6 +346,13 @@ header {
 .authority-band.visible { display:block; }
 .ab-text a { color:#5DADE2; text-decoration:none; }
 
+.framework-attribution { border-top:1px solid var(--border); padding:20px 24px; background:var(--bg); margin-top:32px; }
+.attribution-content { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--muted); }
+.attribution-text strong { color:var(--ink2); font-weight:600; }
+.attribution-link { color:var(--accent); font-weight:600; text-decoration:none; }
+.attribution-link:hover { text-decoration:underline; }
+.attribution-link:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+
 .preset-bar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:16px; }
 .preset-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); }
 .preset-btn { background:var(--card); border:1px solid var(--border); border-radius:var(--r10); padding:8px 12px; font-size:12px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
@@ -232,7 +363,7 @@ header {
 .input-hint-banner { display:none; background:rgba(27,79,114,0.06); border:0.5px solid rgba(27,79,114,0.15); border-radius:var(--r10); padding:12px 14px; margin-bottom:12px; font-size:12px; color:var(--ink2); line-height:1.55; }
 .input-hint-banner.visible { display:block; }
 
-.exec-snapshot { background:linear-gradient(135deg,#0a2a3d 0%,#1B4F72 100%); border-radius:var(--r16); padding:18px 16px; margin-bottom:16px; color:#fff; box-shadow:var(--shadow-lg); }
+.exec-snapshot { background:linear-gradient(135deg,var(--accent-dark) 0%,var(--accent) 100%); border-radius:var(--r16); padding:18px 16px; margin-bottom:16px; color:#fff; box-shadow:var(--shadow-lg); }
 .exec-snapshot-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:rgba(255,255,255,0.5); margin-bottom:8px; }
 .exec-snapshot-lead { font-size:14px; font-weight:500; line-height:1.6; letter-spacing:0; }
 .exec-snapshot-lead .exec-line { margin-bottom:10px; }
@@ -254,14 +385,27 @@ header {
 .callout-warn { background:rgba(230,152,102,0.12); border:0.5px solid rgba(230,152,102,0.35); color:var(--ink2); }
 .callout-warn strong { color:var(--ink); }
 
+.risk-score-panel { background:var(--card2); border-radius:var(--r12); padding:16px; border:0.5px solid var(--border); }
+.risk-score-header { display:flex; align-items:center; gap:14px; margin-bottom:12px; flex-wrap:wrap; }
+.risk-badge { display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border-radius:var(--r10); font-size:14px; font-weight:700; letter-spacing:0.02em; }
+.risk-badge.low { background:rgba(30,132,73,0.12); color:var(--positive); border:0.5px solid rgba(30,132,73,0.25); }
+.risk-badge.moderate { background:rgba(229,152,102,0.15); color:#B8651A; border:0.5px solid rgba(229,152,102,0.35); }
+.risk-badge.high { background:rgba(192,57,43,0.1); color:var(--alert); border:0.5px solid rgba(192,57,43,0.25); }
+.risk-badge-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.risk-badge.low .risk-badge-dot { background:var(--positive); }
+.risk-badge.moderate .risk-badge-dot { background:#E59866; }
+.risk-badge.high .risk-badge-dot { background:var(--alert); }
+.risk-score-meta { font-size:12px; color:var(--muted); font-weight:500; }
+.risk-score-copy { font-size:13px; line-height:1.65; color:var(--ink2); margin:0; }
+
 @media print {
-  header, .hero, .preset-bar, .step-label, .ios-group, .ota-builder, .btn-add-ota, .share-summary, .run-btn, .validation-banner, .input-hint-banner, .no-print, .fab-stack { display:none !important; }
+  header, .hero, .preset-bar, .step-label, .ios-group, .ota-builder, .btn-add-ota, .share-summary, .run-btn, .validation-banner, .input-hint-banner, .no-print, .fab-stack, .lang-switch { display:none !important; }
   .only-print { display:block !important; }
   body { background:#fff; }
   .container { max-width:100%; padding:0; }
   .result-panel { display:block !important; }
   .chart-section, .result-header, .exec-snapshot { box-shadow:none; break-inside:avoid; }
-  .exec-snapshot { background:#1B4F72 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .exec-snapshot { background:#007AFF !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
 }
 </style>
 </head>
@@ -272,21 +416,26 @@ header {
     <div class="logo-mark">💰</div>
     <div>
       <div class="logo-name">Distribution Cost Analyser</div>
-      <div class="logo-sub">Operator Series</div>
+      <div class="logo-sub" data-i18n="brandSubtitle">Operator Series</div>
     </div>
+  </div>
+  <div class="lang-switch" role="group" aria-label="Language">
+    <button type="button" class="lang-btn active" data-lang="en" aria-pressed="true"><span class="lang-flag" aria-hidden="true">🇬🇧</span> EN</button>
+    <button type="button" class="lang-btn" data-lang="it" aria-pressed="false"><span class="lang-flag" aria-hidden="true">🇮🇹</span> IT</button>
+    <button type="button" class="lang-btn" data-lang="de" aria-pressed="false"><span class="lang-flag" aria-hidden="true">🇩🇪</span> DE</button>
   </div>
 </header>
 
 <div class="fab-stack no-print" id="fabStack">
-  <button type="button" class="fab-btn" onclick="copySummary()" title="Copy a text summary of your results">Copy summary</button>
-  <button type="button" class="fab-btn" onclick="shareAnalysis()" title="Copy a link with your numbers pre-filled">Share</button>
-  <button type="button" class="fab-btn" onclick="window.print()" title="Print or save as PDF">Print</button>
+  <button type="button" class="fab-btn" onclick="copySummary()" data-i18n="fabCopySummary" data-i18n-title="fabCopySummaryTitle" title="Copy a text summary of your results">Copy summary</button>
+  <button type="button" class="fab-btn" onclick="shareAnalysis()" data-i18n="fabShare" data-i18n-title="fabShareTitle" title="Copy a link with your numbers pre-filled">Share</button>
+  <button type="button" class="fab-btn" onclick="window.print()" data-i18n="fabPrint" data-i18n-title="fabPrintTitle" title="Print or save as PDF">Print</button>
   <div class="fab-toast" id="shareToast"></div>
 </div>
 
 <div class="hero">
-  <h1>Compare <em>all</em> your distribution channels at once</h1>
-  <p>Direct or OTA — which is really eating your margin? Enter your mix and see the true cost, not just headline commission.</p>
+  <h1 data-i18n="heroTitle">Compare <em>all</em> your distribution channels at once</h1>
+  <p data-i18n="heroSubtitle">Direct or OTA, which is really eating your margin? Enter your mix and see the true cost, not just headline commission.</p>
 </div>
 
 <div class="container">
@@ -297,13 +446,13 @@ header {
   </div>
 
   <div class="preset-bar no-print">
-    <span class="preset-label">Quick start</span>
-    <button type="button" class="preset-btn" onclick="loadPreset('serviced')">Serviced apartment</button>
-    <button type="button" class="preset-btn" onclick="loadPreset('hotel')">Small hotel</button>
-    <button type="button" class="preset-btn" onclick="loadPreset('boutique')">Boutique hotel</button>
-    <button type="button" class="preset-btn" onclick="loadPreset('str')">STR / multi-unit</button>
+    <span class="preset-label" data-i18n="quickStart">Quick start</span>
+    <button type="button" class="preset-btn" onclick="loadPreset('serviced')" data-i18n="presetServiced">Serviced apartment</button>
+    <button type="button" class="preset-btn" onclick="loadPreset('hotel')" data-i18n="presetHotel">Small hotel</button>
+    <button type="button" class="preset-btn" onclick="loadPreset('boutique')" data-i18n="presetBoutique">Boutique hotel</button>
+    <button type="button" class="preset-btn" onclick="loadPreset('str')" data-i18n="presetStr">STR / multi-unit</button>
     <div class="prefs-row">
-      <select id="currencySelect" class="currency-select" onchange="setCurrency(this.value)" title="Display currency">
+      <select id="currencySelect" class="currency-select" onchange="setCurrency(this.value)" data-i18n-title="currencySelectTitle" title="Display currency">
         <option value="EUR">EUR €</option>
         <option value="GBP">GBP £</option>
         <option value="USD">USD $</option>
@@ -315,25 +464,25 @@ header {
   <!-- STEP 1: Basic Info -->
   <div class="step-label">
     <div class="step-num">1</div>
-    <div class="step-text">Your business</div>
+    <div class="step-text" data-i18n="step1Title">Your business</div>
   </div>
   <div class="ios-group">
     <div class="ios-row">
       <div class="ios-row-left">
-        <div class="ios-row-label">Input period</div>
-        <div class="ios-row-hint">Revenue &amp; flat costs — hourly rate stays per hour</div>
+        <div class="ios-row-label" data-i18n="inputPeriodLabel">Input period</div>
+        <div class="ios-row-hint" data-i18n="inputPeriodHint">Revenue &amp; flat costs, hourly rate stays per hour</div>
       </div>
       <div class="ios-row-right">
         <div class="period-toggle">
-          <button type="button" class="period-btn active" id="periodAnnual" onclick="setPeriodMode('annual')">Annual</button>
-          <button type="button" class="period-btn" id="periodMonthly" onclick="setPeriodMode('monthly')">Monthly</button>
+          <button type="button" class="period-btn active" id="periodAnnual" onclick="setPeriodMode('annual')" data-i18n="periodAnnualBtn">Annual</button>
+          <button type="button" class="period-btn" id="periodMonthly" onclick="setPeriodMode('monthly')" data-i18n="periodMonthlyBtn">Monthly</button>
         </div>
       </div>
     </div>
     <div class="ios-row">
       <div class="ios-row-left">
-        <div class="ios-row-label" id="totalRevenueLabel">Total Annual Revenue</div>
-        <div class="ios-row-hint">All channels combined</div>
+        <div class="ios-row-label" id="totalRevenueLabel" data-i18n="totalRevenueLabelAnnual">Total Annual Revenue</div>
+        <div class="ios-row-hint" data-i18n="totalRevenueHint">All channels combined</div>
       </div>
       <div class="ios-row-right">
         <span class="ios-row-prefix currency-prefix">€</span>
@@ -342,19 +491,19 @@ header {
     </div>
     <div class="ios-row">
       <div class="ios-row-left">
-        <div class="ios-row-label">Staff Hourly Rate</div>
-        <div class="ios-row-hint">For calculating time-based costs</div>
+        <div class="ios-row-label" data-i18n="hourlyRateLabel">Staff Hourly Rate</div>
+        <div class="ios-row-hint" data-i18n="hourlyRateHint">For calculating time-based costs</div>
       </div>
       <div class="ios-row-right">
         <span class="ios-row-prefix currency-prefix">€</span>
         <input type="number" id="hourlyRate" placeholder="25" value="25" inputmode="numeric" oninput="onInputChange()" />
-        <span class="ios-row-suffix">/hr</span>
+        <span class="ios-row-suffix" data-i18n="hrSuffix">/hr</span>
       </div>
     </div>
     <div class="ios-row">
       <div class="ios-row-left">
-        <div class="ios-row-label">Average Booking Value</div>
-        <div class="ios-row-hint">Used to estimate bookings from revenue — for support cost calc</div>
+        <div class="ios-row-label" data-i18n="avgBookingValueLabel">Average Booking Value</div>
+        <div class="ios-row-hint" data-i18n="avgBookingValueHint">Used to estimate bookings from revenue, for support cost calc</div>
       </div>
       <div class="ios-row-right">
         <span class="ios-row-prefix currency-prefix">€</span>
@@ -366,25 +515,25 @@ header {
   <!-- STEP 2: Multi-OTA Builder -->
   <div class="step-label">
     <div class="step-num">2</div>
-    <div class="step-text">Your OTA Distribution</div>
+    <div class="step-text" data-i18n="step2Title">Your OTA Distribution</div>
   </div>
   <div id="otaList"></div>
-  <button class="btn-add-ota" onclick="addOTA()">+ Add OTA Channel</button>
+  <button class="btn-add-ota" onclick="addOTA()" data-i18n="addOtaBtn">+ Add OTA Channel</button>
   <div class="share-summary" id="shareSummary"></div>
 
   <!-- STEP 3: Direct Costs -->
   <div class="step-label">
     <div class="step-num">3</div>
-    <div class="step-text">Your Direct Channel Costs</div>
+    <div class="step-text" data-i18n="step3Title">Your Direct Channel Costs</div>
   </div>
   <div class="ios-group" style="margin-bottom:20px;">
     <div class="ios-row">
       <div class="ios-row-left">
-        <div class="ios-row-label">Direct Share of Revenue</div>
-        <div class="ios-row-hint">Auto-calculated: 100% minus your OTA mix above</div>
+        <div class="ios-row-label" data-i18n="directShareLabel">Direct Share of Revenue</div>
+        <div class="ios-row-hint" data-i18n="directShareHint">Auto-calculated: 100% minus your OTA mix above</div>
       </div>
       <div class="ios-row-right">
-        <span id="directShareDisplay" style="font-size:15px; font-weight:600; color:var(--ink2);">—%</span>
+        <span id="directShareDisplay" style="font-size:15px; font-weight:600; color:var(--ink2);">-%</span>
       </div>
     </div>
   </div>
@@ -393,8 +542,8 @@ header {
   <div class="ios-group" style="margin-bottom:20px;">
     <div class="ios-row" style="cursor:pointer; background:var(--card2);" onclick="toggleDirectCosts()">
       <div class="ios-row-left">
-        <div class="ios-row-label" style="font-weight:600;">Direct Hidden Costs</div>
-        <div class="ios-row-hint">Payment, support, website & marketing</div>
+        <div class="ios-row-label" style="font-weight:600;" data-i18n="directHiddenCostsLabel">Direct Hidden Costs</div>
+        <div class="ios-row-hint" data-i18n="directHiddenCostsHint">Payment, support, website &amp; marketing</div>
       </div>
       <div class="ios-row-right">
         <span id="directCostsToggle" style="font-size:20px; color:var(--muted);">▼</span>
@@ -402,105 +551,105 @@ header {
     </div>
     
     <div id="directCostsSection" style="display:none; background:var(--card2); padding:14px 16px; border-top:0.5px solid var(--border);">
-      <div style="font-size:11px; color:var(--muted2); margin-bottom:12px; line-height:1.5;">Adjust estimates based on your metrics.</div>
+      <div style="font-size:11px; color:var(--muted2); margin-bottom:12px; line-height:1.5;" data-i18n="directAdjustNote">Adjust estimates based on your metrics.</div>
       
-      <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:4px;">Payment & Support</div>
+      <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:4px;" data-i18n="paymentSupportHeading">Payment &amp; Support</div>
       <div style="margin-bottom:12px; margin-top:8px;">
-        <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;">Payment Processing Fee</div>
+        <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;" data-i18n="paymentProcessingFeeLabel">Payment Processing Fee</div>
         <div style="display:flex; align-items:center; gap:8px;">
           <input type="number" id="directPaymentPct" placeholder="2.5" value="2.5" style="width:70px; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:13px; background:var(--card);" step="0.1" min="0" oninput="onDirectInput()">
-          <span style="font-size:13px; color:var(--muted2);">% of direct revenue</span>
+          <span style="font-size:13px; color:var(--muted2);" data-i18n="pctOfDirectRevenue">% of direct revenue</span>
         </div>
       </div>
       
       <div style="margin-bottom:12px;">
-        <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;">Payment Failure Rate</div>
+        <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;" data-i18n="paymentFailureRateLabel">Payment Failure Rate</div>
         <div style="display:flex; align-items:center; gap:8px;">
           <input type="number" id="directFailurePct" placeholder="0.3" value="0.3" style="width:70px; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:13px; background:var(--card);" step="0.1" min="0" oninput="onDirectInput()">
-          <span style="font-size:13px; color:var(--muted2);">% of direct revenue</span>
+          <span style="font-size:13px; color:var(--muted2);" data-i18n="pctOfDirectRevenue">% of direct revenue</span>
         </div>
-        <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;">Declined cards and failed payments — your own gateway doesn't have an OTA's fraud-screening scale behind it.</div>
+        <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;" data-i18n="paymentFailureHint">Declined cards and failed payments, your own gateway doesn't have an OTA's fraud-screening scale behind it.</div>
       </div>
       
       <div>
-        <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;">Customer Service Time</div>
+        <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;" data-i18n="customerServiceTimeLabel">Customer Service Time</div>
         <div style="display:flex; align-items:center; gap:8px;">
           <input type="number" id="directServiceHours" placeholder="3" value="3" style="width:70px; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:13px; background:var(--card);" step="0.5" min="0" oninput="onDirectInput()">
-          <span style="font-size:13px; color:var(--muted2);">hours per 100 bookings</span>
+          <span style="font-size:13px; color:var(--muted2);" data-i18n="hoursPer100Bookings">hours per 100 bookings</span>
         </div>
-        <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;">Staff time on guest questions, check-in coordination, and billing — scaled to your estimated bookings from revenue ÷ average booking value.</div>
+        <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;" data-i18n="customerServiceHint">Staff time on guest questions, check-in coordination, and billing, scaled to your estimated bookings from revenue ÷ average booking value.</div>
       </div>
 
       <div style="margin-top:18px; padding-top:14px; border-top:0.5px dashed var(--border);">
-        <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:4px;">Website & Marketing</div>
-        <div style="font-size:11px; color:var(--muted2); margin-bottom:12px; line-height:1.4;">Optional — most operators won't have a number for every one of these. Fill in only what you actually track; leave the rest blank.</div>
+        <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:4px;" data-i18n="websiteMarketingHeading">Website &amp; Marketing</div>
+        <div style="font-size:11px; color:var(--muted2); margin-bottom:12px; line-height:1.4;" data-i18n="websiteMarketingNote">Optional, most operators won't have a number for every one of these. Fill in only what you actually track; leave the rest blank.</div>
 
         <div style="margin-bottom:12px;">
-          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;">Booking Engine / Website Fee</div>
+          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;" data-i18n="bookingEngineFeeLabel">Booking Engine / Website Fee</div>
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="currency-prefix" style="font-size:13px; color:var(--muted2);">€</span>
             <input type="number" id="directBookingEngineFee" placeholder="0" class="period-money-input" style="width:90px; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:13px; background:var(--card);" step="10" min="0" oninput="onDirectInput()">
             <span class="period-suffix" style="font-size:13px; color:var(--muted2);">per year</span>
           </div>
-          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;">Your booking-engine or connectivity fee — SiteMinder, Cloudbeds, Lodgify, or similar. The closest direct equivalent to an OTA's commission.</div>
+          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;" data-i18n="bookingEngineFeeHint">Your booking-engine or connectivity fee, SiteMinder, Cloudbeds, Lodgify, or similar. The closest direct equivalent to an OTA's commission.</div>
         </div>
 
         <div style="margin-bottom:12px;">
-          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;">Direct Booking Incentive Discount</div>
+          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;" data-i18n="incentiveDiscountLabel">Direct Booking Incentive Discount</div>
           <div style="display:flex; align-items:center; gap:8px;">
             <input type="number" id="directIncentivePct" placeholder="0" style="width:70px; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:13px; background:var(--card);" step="0.5" min="0" oninput="onDirectInput()">
-            <span style="font-size:13px; color:var(--muted2);">% of direct revenue</span>
+            <span style="font-size:13px; color:var(--muted2);" data-i18n="pctOfDirectRevenue">% of direct revenue</span>
           </div>
-          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;">Any "book direct and save" pricing you run to compete with OTA rates — the direct-side equivalent of an OTA's promo programs.</div>
+          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;" data-i18n="incentiveDiscountHint">Any "book direct and save" pricing you run to compete with OTA rates, the direct-side equivalent of an OTA's promo programs.</div>
         </div>
 
         <div style="margin-bottom:12px;">
-          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;">Website Hosting & Maintenance</div>
+          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;" data-i18n="hostingFeeLabel">Website Hosting &amp; Maintenance</div>
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="currency-prefix" style="font-size:13px; color:var(--muted2);">€</span>
             <input type="number" id="directHostingFee" placeholder="0" class="period-money-input" style="width:90px; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:13px; background:var(--card);" step="10" min="0" oninput="onDirectInput()">
             <span class="period-suffix" style="font-size:13px; color:var(--muted2);">per year</span>
           </div>
-          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;">Domain, hosting, theme/plugin licences, the occasional developer invoice.</div>
+          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;" data-i18n="hostingFeeHint">Domain, hosting, theme/plugin licences, the occasional developer invoice.</div>
         </div>
 
         <div style="margin-bottom:12px;">
-          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;">Ads / Paid Marketing Spend</div>
+          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;" data-i18n="adsSpendLabel">Ads / Paid Marketing Spend</div>
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="currency-prefix" style="font-size:13px; color:var(--muted2);">€</span>
             <input type="number" id="directAdsSpend" placeholder="0" class="period-money-input" style="width:90px; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:13px; background:var(--card);" step="50" min="0" oninput="onDirectInput()">
             <span class="period-suffix" style="font-size:13px; color:var(--muted2);">per year</span>
           </div>
-          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;">Google Ads, Meta Ads, and metasearch bidding (Google Hotel Ads, TripAdvisor) aimed at your own site.</div>
+          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;" data-i18n="adsSpendHint">Google Ads, Meta Ads, and metasearch bidding (Google Hotel Ads, TripAdvisor) aimed at your own site.</div>
         </div>
 
         <div style="margin-bottom:12px;">
-          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;">SEO Cost</div>
+          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;" data-i18n="seoCostLabel">SEO Cost</div>
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="currency-prefix" style="font-size:13px; color:var(--muted2);">€</span>
             <input type="number" id="directSeoCost" placeholder="0" class="period-money-input" style="width:90px; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:13px; background:var(--card);" step="50" min="0" oninput="onDirectInput()">
             <span class="period-suffix" style="font-size:13px; color:var(--muted2);">per year</span>
           </div>
-          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;">Agency retainer or tool subscriptions (Ahrefs, SEMrush, etc.) for organic visibility.</div>
+          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;" data-i18n="seoCostHint">Agency retainer or tool subscriptions (Ahrefs, SEMrush, etc.) for organic visibility.</div>
         </div>
 
         <div style="margin-bottom:12px;">
-          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;">Email Marketing Tool</div>
+          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;" data-i18n="emailToolFeeLabel">Email Marketing Tool</div>
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="currency-prefix" style="font-size:13px; color:var(--muted2);">€</span>
             <input type="number" id="directEmailToolFee" placeholder="0" class="period-money-input" style="width:90px; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:13px; background:var(--card);" step="5" min="0" oninput="onDirectInput()">
             <span class="period-suffix" style="font-size:13px; color:var(--muted2);">per year</span>
           </div>
-          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;">Mailchimp, Klaviyo, or similar — newsletters and remarketing to past guests.</div>
+          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;" data-i18n="emailToolFeeHint">Mailchimp, Klaviyo, or similar, newsletters and remarketing to past guests.</div>
         </div>
 
         <div>
-          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;">Content Creation Time</div>
+          <div style="font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px;" data-i18n="contentHoursLabel">Content Creation Time</div>
           <div style="display:flex; align-items:center; gap:8px;">
             <input type="number" id="directContentHours" placeholder="0" style="width:70px; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:13px; background:var(--card);" step="0.5" min="0" oninput="onDirectInput()">
-            <span style="font-size:13px; color:var(--muted2);">hours per month</span>
+            <span style="font-size:13px; color:var(--muted2);" data-i18n="hoursPerMonth">hours per month</span>
           </div>
-          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;">Staff or freelance time on photos, copy, and updates for your site and social channels.</div>
+          <div style="font-size:11px; color:var(--muted2); margin-top:5px; line-height:1.4;" data-i18n="contentHoursHint">Staff or freelance time on photos, copy, and updates for your site and social channels.</div>
         </div>
       </div>
     </div>
@@ -510,8 +659,8 @@ header {
   <div class="input-hint-banner" id="inputHintBanner"></div>
 
   <div class="run-btn no-print">
-    <button type="button" class="btn-run" onclick="runAnalysis()">Compare Channels</button>
-    <button type="button" class="reset-link" onclick="resetForm()">Start over</button>
+    <button type="button" class="btn-run" onclick="runAnalysis()" data-i18n="compareChannelsBtn">Compare Channels</button>
+    <button type="button" class="reset-link" onclick="resetForm()" data-i18n="startOverBtn">Start over</button>
   </div>
 
   <!-- RESULTS -->
@@ -521,42 +670,57 @@ header {
     <div class="callout callout-warn no-print" id="incompleteDirectCallout" style="display:none;"></div>
     
     <div class="result-header">
-      <div class="rh-title">Your Distribution Costs</div>
+      <div class="rh-title" data-i18n="resultHeaderTitle">Your Distribution Costs</div>
       <div class="rh-desc" id="rhContext"></div>
       <div class="cost-summary" id="costSummary" style="margin-top:14px;"></div>
       <div class="headline-compare" id="headlineCompare"></div>
     </div>
 
     <div class="chart-section">
-      <div class="sec-label">Cost per Channel</div>
-      <div class="sec-desc">Real cost rate per channel, broken into what's driving it, sorted from cheapest to most expensive — this is the one for deciding which channel is actually worth pushing volume toward.</div>
+      <div class="sec-label" data-i18n="costPerChannelTitle">Cost per Channel</div>
+      <div class="sec-desc" data-i18n="costPerChannelDesc">Real cost rate per channel, broken into what's driving it, sorted from cheapest to most expensive. This is the one for deciding which channel is actually worth pushing volume toward.</div>
       <div class="chart-container">
         <canvas id="channelCostChart"></canvas>
       </div>
     </div>
 
     <div class="chart-section">
-      <div class="sec-label">Cost Breakdown</div>
+      <div class="sec-label" data-i18n="costBreakdownTitle">Cost Breakdown</div>
       <div id="costBreakdown"></div>
     </div>
 
     <div class="chart-section">
-      <div class="sec-label">Opportunity Simulations</div>
-      <div class="sec-desc">Three simulations: direct marketing room when an OTA share decreases, margin saved by moving volume to a cheaper OTA, and what extra marketing spend could create at your current rate.</div>
+      <div class="sec-label" data-i18n="riskScoreTitle">Channel Risk Score</div>
+      <div class="sec-desc" data-i18n="riskScoreDesc">How concentrated your revenue is in a single OTA, derived from your mix above, no extra inputs.</div>
+      <div class="risk-score-panel" id="channelRiskScore"></div>
+    </div>
+
+    <div class="chart-section">
+      <div class="sec-label" data-i18n="opportunitySimTitle">Opportunity Simulations</div>
+      <div class="sec-desc" data-i18n="opportunitySimDesc">Three simulations: direct marketing room when an OTA share decreases, margin saved by moving volume to a cheaper OTA, and what extra marketing spend could create at your current rate.</div>
       <div class="scenario-box" id="scenarioBox"></div>
     </div>
 
     <div class="chart-section">
-      <div class="sec-label">What This Means</div>
-      <div class="sec-desc">The practical takeaway — and what to do with it.</div>
+      <div class="sec-label" data-i18n="whatThisMeansTitle">What This Means</div>
+      <div class="sec-desc" data-i18n="whatThisMeansDesc">The practical takeaway, and what to do with it.</div>
       <div class="narrative" id="narrativeText"></div>
     </div>
 
   </div>
 
+  <div class="framework-attribution">
+    <div class="attribution-content">
+      <div class="attribution-text" data-i18n="frameworkAttribution">
+        <strong>Framework by Roger Bisschoff</strong> · First published 2026 · Part of the Operator Intelligence Suite
+      </div>
+      <a href="https://rbisschoff.github.io/operator-intelligence-suite/" class="attribution-link" data-i18n="viewFullSuite">View the full suite →</a>
+    </div>
+  </div>
+
   <div class="authority-band" id="authorityBand">
-    <div class="ab-text">
-      Built by <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a> — 15 years in European hospitality distribution.<br>
+    <div class="ab-text" data-i18n="authorityBandText">
+      Built by <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a>, 15 years in European hospitality distribution.<br>
       <strong style="color:rgba(255,255,255,0.6)">Operator Series</strong>
     </div>
   </div>
@@ -593,10 +757,753 @@ const DEFAULT_OTA_CHANNELS = [
   { name: 'Airbnb', share: 20, commission: 14, promoPct: 5, paymentPct: 1, serviceHours: 1, advancedOpen: false }
 ];
 
+let currentLang = 'en';
+const DATE_LOCALES = { en: 'en-GB', it: 'it-IT', de: 'de-DE' };
+
+const I18N = {
+  en: {
+    brandSubtitle: 'Operator Series',
+    fabCopySummary: 'Copy summary',
+    fabCopySummaryTitle: 'Copy a text summary of your results',
+    fabShare: 'Share',
+    fabShareTitle: 'Copy a link with your numbers pre-filled',
+    fabPrint: 'Print',
+    fabPrintTitle: 'Print or save as PDF',
+    heroTitle: 'Compare <em>all</em> your distribution channels at once',
+    heroSubtitle: 'Direct or OTA, which is really eating your margin? Enter your mix and see the true cost, not just headline commission.',
+    quickStart: 'Quick start',
+    presetServiced: 'Serviced apartment',
+    presetHotel: 'Small hotel',
+    presetBoutique: 'Boutique hotel',
+    presetStr: 'STR / multi-unit',
+    currencySelectTitle: 'Display currency',
+    step1Title: 'Your business',
+    inputPeriodLabel: 'Input period',
+    inputPeriodHint: 'Revenue & flat costs, hourly rate stays per hour',
+    periodAnnualBtn: 'Annual',
+    periodMonthlyBtn: 'Monthly',
+    totalRevenueLabelAnnual: 'Total Annual Revenue',
+    totalRevenueLabelMonthly: 'Total Monthly Revenue',
+    totalRevenueHint: 'All channels combined',
+    perMonth: 'per month',
+    perYear: 'per year',
+    moAbbr: 'mo',
+    yrAbbr: 'yr',
+    hrSuffix: '/hr',
+    hourlyRateLabel: 'Staff Hourly Rate',
+    hourlyRateHint: 'For calculating time-based costs',
+    avgBookingValueLabel: 'Average Booking Value',
+    avgBookingValueHint: 'Used to estimate bookings from revenue, for support cost calc',
+    step2Title: 'Your OTA Distribution',
+    addOtaBtn: '+ Add OTA Channel',
+    step3Title: 'Your Direct Channel Costs',
+    directShareLabel: 'Direct Share of Revenue',
+    directShareHint: 'Auto-calculated: 100% minus your OTA mix above',
+    directHiddenCostsLabel: 'Direct Hidden Costs',
+    directHiddenCostsHint: 'Payment, support, website & marketing',
+    directAdjustNote: 'Adjust estimates based on your metrics.',
+    paymentSupportHeading: 'Payment & Support',
+    paymentProcessingFeeLabel: 'Payment Processing Fee',
+    pctOfDirectRevenue: '% of direct revenue',
+    paymentFailureRateLabel: 'Payment Failure Rate',
+    paymentFailureHint: "Declined cards and failed payments, your own gateway doesn't have an OTA's fraud-screening scale behind it.",
+    customerServiceTimeLabel: 'Customer Service Time',
+    hoursPer100Bookings: 'hours per 100 bookings',
+    customerServiceHint: 'Staff time on guest questions, check-in coordination, and billing, scaled to your estimated bookings from revenue ÷ average booking value.',
+    websiteMarketingHeading: 'Website & Marketing',
+    websiteMarketingNote: "Optional, most operators won't have a number for every one of these. Fill in only what you actually track; leave the rest blank.",
+    bookingEngineFeeLabel: 'Booking Engine / Website Fee',
+    bookingEngineFeeHint: 'Your booking-engine or connectivity fee, SiteMinder, Cloudbeds, Lodgify, or similar. The closest direct equivalent to an OTA\'s commission.',
+    incentiveDiscountLabel: 'Direct Booking Incentive Discount',
+    incentiveDiscountHint: 'Any "book direct and save" pricing you run to compete with OTA rates, the direct-side equivalent of an OTA\'s promo programs.',
+    hostingFeeLabel: 'Website Hosting & Maintenance',
+    hostingFeeHint: 'Domain, hosting, theme/plugin licences, the occasional developer invoice.',
+    adsSpendLabel: 'Ads / Paid Marketing Spend',
+    adsSpendHint: 'Google Ads, Meta Ads, and metasearch bidding (Google Hotel Ads, TripAdvisor) aimed at your own site.',
+    seoCostLabel: 'SEO Cost',
+    seoCostHint: 'Agency retainer or tool subscriptions (Ahrefs, SEMrush, etc.) for organic visibility.',
+    emailToolFeeLabel: 'Email Marketing Tool',
+    emailToolFeeHint: 'Mailchimp, Klaviyo, or similar, newsletters and remarketing to past guests.',
+    contentHoursLabel: 'Content Creation Time',
+    hoursPerMonth: 'hours per month',
+    contentHoursHint: 'Staff or freelance time on photos, copy, and updates for your site and social channels.',
+    compareChannelsBtn: 'Compare Channels',
+    startOverBtn: 'Start over',
+    resultHeaderTitle: 'Your Distribution Costs',
+    costPerChannelTitle: 'Cost per Channel',
+    costPerChannelDesc: "Real cost rate per channel, broken into what's driving it, sorted from cheapest to most expensive. This is the one for deciding which channel is actually worth pushing volume toward.",
+    costBreakdownTitle: 'Cost Breakdown',
+    riskScoreTitle: 'Channel Risk Score',
+    riskScoreDesc: 'How concentrated your revenue is in a single OTA, derived from your mix above, no extra inputs.',
+    opportunitySimTitle: 'Opportunity Simulations',
+    opportunitySimDesc: 'Three simulations: direct marketing room when an OTA share decreases, margin saved by moving volume to a cheaper OTA, and what extra marketing spend could create at your current rate.',
+    whatThisMeansTitle: 'What This Means',
+    whatThisMeansDesc: 'The practical takeaway, and what to do with it.',
+    frameworkAttribution: '<strong>Framework by Roger Bisschoff</strong> · First published 2026 · Part of the Operator Intelligence Suite',
+    viewFullSuite: 'View the full suite →',
+    authorityBandText: 'Built by <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a>, 15 years in European hospitality distribution.<br><strong style="color:rgba(255,255,255,0.6)">Operator Series</strong>',
+
+    scenarioOtaRevenueLabelTpl: 'Revenue amount ({x})',
+    scenarioMarketingExtraLabelTpl: 'Extra marketing spend ({x})',
+    otaNamePlaceholder: 'OTA Name',
+    newOtaDefaultName: 'New OTA',
+    shareOfRevenueLabel: 'Share of Revenue %',
+    commissionLabel: 'Commission %',
+    otaImpliedTpl: '≈ <strong style="color:var(--ink2);">{pct}%</strong> true cost incl. estimated extras (commission + promo/visibility + payment + support)',
+    hiddenCostsToggleLabel: 'Hidden costs',
+    hiddenCostsToggleHint: 'Promo, payment processing, support time',
+    promoVisibilityLabel: 'Promo / Visibility %',
+    paymentProcessingLabel: 'Payment Processing %',
+    serviceHrsLabel: 'Service hrs/100 bookings',
+    addAtLeastOneOta: 'Add at least one OTA to use these scenarios.',
+
+    errEnterRevenue: 'Enter your total annual revenue.',
+    errOtaOver100Tpl: 'OTA mix totals {pct}%, reduce shares so Direct can be calculated.',
+    errAvgBookingValue: 'Average booking value must be greater than zero.',
+    hintDirectIncompleteTpl: "<strong>Tip:</strong> Direct is {pct}% of your mix but you haven't entered website &amp; marketing costs yet. Open <strong>Direct Hidden Costs</strong> in step 3 for a complete direct picture.",
+
+    shareSummaryOverTpl: "OTA mix totals <strong>{pct}%</strong>, that's over 100%. Reduce shares above so Direct can be calculated.",
+    shareSummaryOkTpl: 'OTA mix: <strong>{ota}%</strong> · Direct (auto): <strong>{direct}%</strong>',
+
+    errEnterRevenueBeforeCompare: 'Enter your total annual revenue before comparing channels.',
+    errOtaOver100Run: 'OTA shares add up to more than 100%. Adjust them so Direct can be calculated.',
+    rhContextTpl: 'OTA mix: {mix} · Direct {direct}% of revenue (auto-calculated)',
+    printMetaTpl: '{date} · Operator Series · {currency} · amounts shown as annual',
+
+    execAtGlance: 'At a glance',
+    execLeadMainTpl: 'Your total distribution bill is <strong>{total}</strong>, that\'s <strong>{pct}%</strong> of your revenue ({ota} on OTAs, the rest on Direct).',
+    execLeadRoomTpl: "Direct costs you <strong>{directPct}%</strong> true. {otaName} costs <strong>{otaPct}%</strong>. On the <strong>{directRev}</strong> you already earn direct, you're <strong>{margin}</strong> better off than if that same volume came through {otaName}.",
+    execLeadAddCostsTpl: 'Add your full website &amp; marketing costs in step 3 before comparing Direct ({directPct}%) to {otaName} ({otaPct}%).',
+    execStatTotalDistribution: 'Total distribution',
+    execStatOtaSpend: 'OTA spend',
+    execStatDirectTrueCost: 'Direct true cost',
+    execStatPriciestOta: 'Priciest OTA',
+
+    incompleteDirectCalloutText: "<strong>Incomplete direct picture.</strong> You've modelled payment and support only, not website &amp; marketing. Add those costs in step 3 before comparing Direct to OTAs, or your direct cost will look artificially low.",
+
+    totalDistCostLabel: 'Total Distribution Cost',
+    otaCostLabel: 'OTA Cost',
+    directCostLabel: 'Direct Cost',
+    costOnRevenueTpl: '{cost} cost on {revenue} revenue',
+
+    mostExpensiveOtaLabel: 'Most expensive OTA',
+    mostExpensiveOtaSubTpl: '{name}, true cost on its revenue',
+    directLabel: 'Direct',
+    directSubText: "True cost on direct revenue, incl. payment, support &amp; any marketing you've entered",
+
+    enterTargetShare: 'Enter a target share.',
+    targetBelowCurrentTpl: '<span class="warn">Target must be below the current {current}% share.</span> Lower the OTA\'s share above first, or pick a target below {current}%.',
+    extraMarketingCreateTpl: 'What could {amount} in extra marketing create?',
+    rateLineTpl: "Right now, every <strong>{unit} of direct revenue</strong> costs you <strong>{rate} in marketing</strong> ({pct}%).<br><span>That's {spend} marketing ÷ {revenue} direct revenue.</span>",
+    eqExtraMarketingFromSaving: 'extra marketing<br>from OTA saving',
+    eqExtraMarketingPerYr: 'extra marketing<br>/yr',
+    eqMarketingPerUnitDirectTpl: 'marketing per<br>{unit} direct',
+    eqDirectRevenueIfRate: 'direct revenue /yr<br>if same rate holds',
+    logicOneLineDirectTpl: '<strong>The logic in one line:</strong> you save {saving} on the OTA, if you spend that on marketing at the same rate you spend today ({rate} per {unit} direct), the maths gives you ≈ {revenue} of direct revenue.',
+    addMarketingCostsFootnoteTpl: 'Add website &amp; marketing costs in step 3 to see how much direct revenue {amount} in OTA savings could create.',
+    flowTitleShareTpl: '{name} · {current}% → {target}%',
+    flowLeadPointsMovedTpl: '{points} share points = <strong>{revenue}</strong> of revenue. Compare what that volume costs on {name} vs Direct.',
+    colRevenue: 'Revenue',
+    colCostOnThisRevenue: 'Cost on this revenue',
+    subTrueCostTpl: '{pct}% true cost',
+    subPaymentSupportOnly: 'payment &amp; support only',
+    extraMarketingSpendLabel: 'Extra you could spend on marketing',
+
+    pickTwoDifferentOtas: '<span class="warn">Pick two different OTAs.</span>',
+    enterRevenueAmount: 'Enter a revenue amount.',
+    notCheaperTpl: "<strong>{toName}</strong> ({toPct}%) isn't cheaper than <strong>{fromName}</strong> ({fromPct}%) on this volume. No margin gain here.",
+    flowTitleMoveTpl: '{from} → {to}',
+    colRevenueMoved: 'Revenue moved',
+    colCostOnTpl: 'Cost on {name}',
+    colMarginSaved: 'Margin saved',
+    subPointsOnVolumeTpl: '{pts} points on this volume',
+
+    addMarketingFirst: '<span class="warn">Add website &amp; marketing costs in step 3 first, we need your current spend rate.</span>',
+    enterExtraMarketingAmount: 'Enter an extra marketing amount.',
+    flowTitleExtraMarketing: 'Extra marketing → direct revenue',
+    flowLeadExtraMarketingTpl: "At your current rate of <strong>{rate} marketing per {unit} direct</strong> ({pct}%), here's what {amount} more could buy, if the same rate holds.",
+    logicOneLineMarketingTpl: "<strong>The logic in one line:</strong> spend {extra} more on marketing at today's rate, maths gives you ≈ {revenue} of direct revenue. That would take your marketing from {spend} ({pct}%) to {newTotal} ({newPct}% of current direct revenue).",
+
+    scenarioDirectBlockTitle: 'OTA share decrease → grow Direct',
+    scenarioDirectBlockDesc: 'See what you save when an OTA share drops, and how much direct revenue that saving could buy in marketing.',
+    scenarioOtaFieldLabel: 'OTA',
+    scenarioCurrentShareLabel: 'Current share',
+    scenarioTargetShareLabel: 'Target share %',
+    scenarioOtaOptionTpl: '{name} (now {share}%)',
+    scenarioOtaMoveBlockTitle: 'Move volume between OTAs',
+    scenarioOtaMoveBlockDesc: 'What happens to margin if volume moves from a costlier OTA to a cheaper one?',
+    scenarioFromLabel: 'From (costlier)',
+    scenarioToLabel: 'To (cheaper)',
+    scenarioOtaCostOptionTpl: '{name} ({pct}%)',
+    scenarioMarketingBlockTitle: 'Extra marketing spend → direct revenue',
+    scenarioMarketingBlockDesc: 'If you increase direct marketing at your current spend rate, how much direct revenue could that buy?',
+
+    chartCommission: 'Commission',
+    chartPromoIncentive: 'Promo / Incentive Discount',
+    chartPaymentProcessing: 'Payment Processing',
+    chartPaymentFailures: 'Payment Failures',
+    chartCustomerService: 'Customer Service',
+    chartWebsiteMarketing: 'Website & Marketing',
+    chartDirectLabel: 'Direct',
+    chartPctOfRevenue: '% of revenue',
+
+    breakdownFormulaOtaTpl: 'Commission ({commission}%) + Promo/Visibility ({promo}%) + Payment ({payment}%) + Support ({service}%) = <strong>{total}%</strong> · Revenue: {revenue} · Annual cost: <strong>{cost}</strong>',
+    breakdownDirectHeading: 'Direct',
+    breakdownFormulaDirectBaseTpl: 'Payment ({payment}%) + Failures ({failure}%) + Support ({service}%)',
+    breakdownWebsiteMarketingSuffixTpl: ' + Website &amp; Marketing ({items})',
+    breakdownDirectTotalTpl: ' = <strong>{total}%</strong> · Revenue: {revenue} · Annual cost: <strong>{cost}</strong>',
+    itemBookingEngine: 'Booking engine {amount}',
+    itemIncentiveDiscount: 'Incentive discount {pct}%',
+    itemHosting: 'Hosting {amount}',
+    itemAds: 'Ads {amount}',
+    itemSeo: 'SEO {amount}',
+    itemEmailTool: 'Email tool {amount}',
+    itemContent: 'Content {hrs}hrs/mo ({pct}%)',
+
+    riskAddAtLeastOne: 'Add at least one OTA channel to see concentration risk.',
+    riskLow: 'Low risk',
+    riskModerate: 'Moderate risk',
+    riskHigh: 'High risk',
+    riskLargestOtaTpl: 'Largest single OTA: {pct}% · {name}',
+    riskCopyTpl: '<strong>{pct}%</strong> of your revenue depends on <strong>{name}</strong>. If terms or visibility changed on this channel, this is the share of revenue immediately at risk.',
+
+    narrativeNoDirectShare: '<div class="narrative-point"><strong>No direct share yet.</strong> Your mix is all OTA. Before spending on direct marketing, model what direct would actually cost you, payment, support, booking engine, and marketing, then compare it to your priciest OTA.</div>',
+    narrativeRoomTpl: '<div class="narrative-point"><strong>There is room.</strong> Direct costs you {directPct}% all-in. {otaName} costs {otaPct}%. You are already paying heavily to rent demand on OTAs, the economics can support investing more in your own channel, if you spend it well.</div>',
+    narrativeCheckCostsTpl: '<div class="narrative-point"><strong>Check your direct costs.</strong> At {directPct}% all-in, Direct is not beating {otaName} ({otaPct}%) on paper. Make sure you have counted your real marketing spend, booking engine, ads, email, content, before deciding direct is too expensive.</div>',
+    narrativeSpendingRoom: '<div class="narrative-point"><strong>Your spending room.</strong> The opportunity simulation above turns an OTA share decrease into a currency figure, how much you could put into direct marketing and still beat what that OTA was costing you. That is your budget envelope, not a promise you will win the bookings.</div>',
+    narrativeNeedPlan: '<div class="narrative-point"><strong>You need a plan, not a tactic.</strong> Regaining share means a coordinated direct setup: booking engine, paid search, email to past guests, B2B sales, site conversion, and the content that feeds all of it. Turning up SEO alone will not do it. This tool answers whether you can afford to invest, building how to spend it is the next step.</div>',
+    narrativeStartWithEconomicsTpl: '<div class="narrative-point"><strong>Start with the economics.</strong> Once you know what direct would cost you all-in, compare it to {otaName} at {otaPct}%. If the numbers work, the next job is a proper direct marketing plan, not a single tactic like SEO.</div>',
+
+    summaryTitle: 'Distribution Cost Analyser, Operator Series',
+    summaryTotalDistTpl: 'Total distribution: {amount} ({pct}% of revenue)',
+    summaryOtaSpendTpl: 'OTA spend: {amount}',
+    summaryDirectTrueCostTpl: 'Direct true cost: {pct}% ({share}% of mix)',
+    summaryBlendedOtaTpl: 'Blended OTA true cost: {pct}%',
+    summaryPriciestOtaTpl: 'Priciest OTA: {name} at {pct}%',
+    summaryAnnualRevenueTpl: 'Annual revenue modelled: {amount}',
+    summaryDirectRevenueTpl: 'Direct revenue: {amount}',
+    summaryGeneratedAtTpl: 'Generated at {date}',
+    toastRunFirst: 'Run Compare Channels first',
+    toastSummaryCopied: 'Summary copied to clipboard',
+    promptCopySummary: 'Copy this summary:',
+    toastLinkCopiedFile: 'Link copied, opens this file on your computer with your numbers filled in',
+    toastLinkCopiedWeb: 'Link copied, opens this page with your numbers pre-filled',
+    promptCopyLink: 'Copy this link (your numbers are encoded in it):',
+    confirmResetForm: 'Clear all inputs and start over?'
+  },
+  it: {
+    brandSubtitle: 'Operator Series',
+    fabCopySummary: 'Copia riepilogo',
+    fabCopySummaryTitle: 'Copia un riepilogo testuale dei tuoi risultati',
+    fabShare: 'Condividi',
+    fabShareTitle: 'Copia un link con i tuoi numeri precompilati',
+    fabPrint: 'Stampa',
+    fabPrintTitle: 'Stampa o salva come PDF',
+    heroTitle: 'Confronta <em>tutti</em> i tuoi canali di distribuzione insieme',
+    heroSubtitle: 'Diretto o OTA, chi ti sta davvero erodendo il margine? Inserisci il tuo mix e scopri il costo reale, non solo la commissione dichiarata.',
+    quickStart: 'Avvio rapido',
+    presetServiced: 'Appartamento con servizi',
+    presetHotel: 'Piccolo hotel',
+    presetBoutique: 'Boutique hotel',
+    presetStr: 'STR / multi-unità',
+    currencySelectTitle: 'Valuta di visualizzazione',
+    step1Title: 'La tua attività',
+    inputPeriodLabel: 'Periodo di input',
+    inputPeriodHint: 'Ricavi e costi fissi, la tariffa oraria resta per ora',
+    periodAnnualBtn: 'Annuale',
+    periodMonthlyBtn: 'Mensile',
+    totalRevenueLabelAnnual: 'Ricavi Annuali Totali',
+    totalRevenueLabelMonthly: 'Ricavi Mensili Totali',
+    totalRevenueHint: 'Tutti i canali combinati',
+    perMonth: 'al mese',
+    perYear: "all'anno",
+    moAbbr: 'mese',
+    yrAbbr: 'anno',
+    hrSuffix: '/ora',
+    hourlyRateLabel: 'Tariffa Oraria del Personale',
+    hourlyRateHint: 'Per calcolare i costi basati sul tempo',
+    avgBookingValueLabel: 'Valore Medio della Prenotazione',
+    avgBookingValueHint: 'Usato per stimare le prenotazioni dai ricavi, per il calcolo dei costi di assistenza',
+    step2Title: 'La tua Distribuzione OTA',
+    addOtaBtn: '+ Aggiungi canale OTA',
+    step3Title: 'I tuoi Costi del Canale Diretto',
+    directShareLabel: 'Quota di Ricavi Diretti',
+    directShareHint: 'Calcolato automaticamente: 100% meno il tuo mix OTA sopra',
+    directHiddenCostsLabel: 'Costi Nascosti del Diretto',
+    directHiddenCostsHint: 'Pagamento, assistenza, sito web e marketing',
+    directAdjustNote: 'Adatta le stime in base ai tuoi dati.',
+    paymentSupportHeading: 'Pagamento e Assistenza',
+    paymentProcessingFeeLabel: 'Commissione di Elaborazione Pagamenti',
+    pctOfDirectRevenue: '% dei ricavi diretti',
+    paymentFailureRateLabel: 'Tasso di Fallimento dei Pagamenti',
+    paymentFailureHint: 'Carte rifiutate e pagamenti falliti: il tuo gateway non ha la stessa scala di antifrode di una OTA.',
+    customerServiceTimeLabel: 'Tempo di Assistenza Clienti',
+    hoursPer100Bookings: 'ore ogni 100 prenotazioni',
+    customerServiceHint: 'Tempo del personale su domande degli ospiti, coordinamento del check-in e fatturazione, scalato sulle prenotazioni stimate da ricavi ÷ valore medio prenotazione.',
+    websiteMarketingHeading: 'Sito Web e Marketing',
+    websiteMarketingNote: 'Opzionale, la maggior parte degli operatori non avrà un numero per ognuna di queste voci. Compila solo ciò che monitori davvero; lascia vuoto il resto.',
+    bookingEngineFeeLabel: 'Booking Engine / Commissione Sito',
+    bookingEngineFeeHint: 'La tua commissione di booking engine o connettività: SiteMinder, Cloudbeds, Lodgify o simili. L\'equivalente diretto più vicino alla commissione di una OTA.',
+    incentiveDiscountLabel: 'Sconto Incentivo Prenotazione Diretta',
+    incentiveDiscountHint: 'Qualsiasi tariffa "prenota direttamente e risparmia" che applichi per competere con le tariffe OTA: l\'equivalente lato diretto dei programmi promozionali di una OTA.',
+    hostingFeeLabel: 'Hosting e Manutenzione Sito Web',
+    hostingFeeHint: 'Dominio, hosting, licenze tema/plugin, l\'occasionale fattura dello sviluppatore.',
+    adsSpendLabel: 'Spesa in Ads / Marketing a Pagamento',
+    adsSpendHint: 'Google Ads, Meta Ads e offerte metasearch (Google Hotel Ads, TripAdvisor) mirate al tuo sito.',
+    seoCostLabel: 'Costo SEO',
+    seoCostHint: 'Retainer di agenzia o abbonamenti a strumenti (Ahrefs, SEMrush, ecc.) per la visibilità organica.',
+    emailToolFeeLabel: 'Strumento Email Marketing',
+    emailToolFeeHint: 'Mailchimp, Klaviyo o simili: newsletter e remarketing verso ospiti passati.',
+    contentHoursLabel: 'Tempo di Creazione Contenuti',
+    hoursPerMonth: 'ore al mese',
+    contentHoursHint: 'Tempo del personale o di freelance su foto, testi e aggiornamenti per il sito e i canali social.',
+    compareChannelsBtn: 'Confronta i Canali',
+    startOverBtn: 'Ricomincia',
+    resultHeaderTitle: 'I tuoi Costi di Distribuzione',
+    costPerChannelTitle: 'Costo per Canale',
+    costPerChannelDesc: 'Tasso di costo reale per canale, suddiviso in ciò che lo determina, ordinato dal più economico al più costoso. Questo è quello da usare per decidere su quale canale conviene davvero spingere volume.',
+    costBreakdownTitle: 'Suddivisione dei Costi',
+    riskScoreTitle: 'Punteggio di Rischio del Canale',
+    riskScoreDesc: 'Quanto i tuoi ricavi sono concentrati su una singola OTA, derivato dal tuo mix sopra, senza input extra.',
+    opportunitySimTitle: 'Simulazioni di Opportunità',
+    opportunitySimDesc: 'Tre simulazioni: margine di manovra per il marketing diretto quando una quota OTA diminuisce, margine risparmiato spostando volume verso una OTA più economica, e cosa potrebbe creare una spesa di marketing extra al tuo tasso attuale.',
+    whatThisMeansTitle: 'Cosa Significa',
+    whatThisMeansDesc: 'La conclusione pratica, e cosa farne.',
+    frameworkAttribution: '<strong>Framework di Roger Bisschoff</strong> · Pubblicato per la prima volta nel 2026 · Parte della Operator Intelligence Suite',
+    viewFullSuite: 'Vedi la suite completa →',
+    authorityBandText: 'Realizzato da <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a>, 15 anni nella distribuzione ospitalità europea.<br><strong style="color:rgba(255,255,255,0.6)">Operator Series</strong>',
+
+    scenarioOtaRevenueLabelTpl: 'Importo dei ricavi ({x})',
+    scenarioMarketingExtraLabelTpl: 'Spesa marketing extra ({x})',
+    otaNamePlaceholder: 'Nome OTA',
+    newOtaDefaultName: 'Nuova OTA',
+    shareOfRevenueLabel: 'Quota di Ricavi %',
+    commissionLabel: 'Commissione %',
+    otaImpliedTpl: '≈ <strong style="color:var(--ink2);">{pct}%</strong> costo reale incl. extra stimati (commissione + promo/visibilità + pagamento + assistenza)',
+    hiddenCostsToggleLabel: 'Costi nascosti',
+    hiddenCostsToggleHint: 'Promo, elaborazione pagamenti, tempo di assistenza',
+    promoVisibilityLabel: 'Promo / Visibilità %',
+    paymentProcessingLabel: 'Elaborazione Pagamenti %',
+    serviceHrsLabel: 'Ore assistenza/100 prenotazioni',
+    addAtLeastOneOta: 'Aggiungi almeno una OTA per usare queste simulazioni.',
+
+    errEnterRevenue: 'Inserisci i tuoi ricavi annuali totali.',
+    errOtaOver100Tpl: 'Il mix OTA totalizza {pct}%, riduci le quote in modo che il Diretto possa essere calcolato.',
+    errAvgBookingValue: 'Il valore medio della prenotazione deve essere maggiore di zero.',
+    hintDirectIncompleteTpl: '<strong>Suggerimento:</strong> il Diretto è il {pct}% del tuo mix ma non hai ancora inserito i costi di sito web e marketing. Apri <strong>Costi Nascosti del Diretto</strong> allo step 3 per un quadro diretto completo.',
+
+    shareSummaryOverTpl: 'Il mix OTA totalizza <strong>{pct}%</strong>, oltre il 100%. Riduci le quote sopra in modo che il Diretto possa essere calcolato.',
+    shareSummaryOkTpl: 'Mix OTA: <strong>{ota}%</strong> · Diretto (auto): <strong>{direct}%</strong>',
+
+    errEnterRevenueBeforeCompare: 'Inserisci i tuoi ricavi annuali totali prima di confrontare i canali.',
+    errOtaOver100Run: 'Le quote OTA superano il 100%. Correggile in modo che il Diretto possa essere calcolato.',
+    rhContextTpl: 'Mix OTA: {mix} · Diretto {direct}% dei ricavi (calcolato automaticamente)',
+    printMetaTpl: '{date} · Operator Series · {currency} · importi mostrati su base annua',
+
+    execAtGlance: 'In sintesi',
+    execLeadMainTpl: 'Il tuo conto totale di distribuzione è <strong>{total}</strong>, cioè il <strong>{pct}%</strong> dei tuoi ricavi ({ota} sulle OTA, il resto sul Diretto).',
+    execLeadRoomTpl: 'Il Diretto ti costa <strong>{directPct}%</strong> reale. {otaName} costa <strong>{otaPct}%</strong>. Sui <strong>{directRev}</strong> che già guadagni in diretto, sei <strong>{margin}</strong> più avanti rispetto a se quel volume passasse da {otaName}.',
+    execLeadAddCostsTpl: 'Aggiungi i tuoi costi completi di sito web e marketing allo step 3 prima di confrontare il Diretto ({directPct}%) con {otaName} ({otaPct}%).',
+    execStatTotalDistribution: 'Distribuzione totale',
+    execStatOtaSpend: 'Spesa OTA',
+    execStatDirectTrueCost: 'Costo reale Diretto',
+    execStatPriciestOta: 'OTA più costosa',
+
+    incompleteDirectCalloutText: "<strong>Quadro diretto incompleto.</strong> Hai modellato solo pagamento e assistenza, non sito web e marketing. Aggiungi quei costi allo step 3 prima di confrontare il Diretto con le OTA, altrimenti il tuo costo diretto sembrerà artificialmente basso.",
+
+    totalDistCostLabel: 'Costo Totale di Distribuzione',
+    otaCostLabel: 'Costo OTA',
+    directCostLabel: 'Costo Diretto',
+    costOnRevenueTpl: '{cost} di costo su {revenue} di ricavi',
+
+    mostExpensiveOtaLabel: 'OTA più costosa',
+    mostExpensiveOtaSubTpl: '{name}, costo reale sui suoi ricavi',
+    directLabel: 'Diretto',
+    directSubText: 'Costo reale sui ricavi diretti, incl. pagamento, assistenza e qualsiasi marketing inserito',
+
+    enterTargetShare: 'Inserisci una quota obiettivo.',
+    targetBelowCurrentTpl: '<span class="warn">L\'obiettivo deve essere inferiore alla quota attuale del {current}%.</span> Riduci prima la quota della OTA sopra, o scegli un obiettivo sotto il {current}%.',
+    extraMarketingCreateTpl: 'Cosa potrebbero creare {amount} di marketing extra?',
+    rateLineTpl: "In questo momento, ogni <strong>{unit} di ricavi diretti</strong> ti costa <strong>{rate} di marketing</strong> ({pct}%).<br><span>Cioè {spend} di marketing ÷ {revenue} di ricavi diretti.</span>",
+    eqExtraMarketingFromSaving: 'marketing extra<br>dal risparmio OTA',
+    eqExtraMarketingPerYr: 'marketing extra<br>/anno',
+    eqMarketingPerUnitDirectTpl: 'marketing per<br>{unit} diretto',
+    eqDirectRevenueIfRate: 'ricavi diretti /anno<br>se il tasso si mantiene',
+    logicOneLineDirectTpl: '<strong>La logica in una riga:</strong> risparmi {saving} sulla OTA, se lo spendi in marketing allo stesso tasso di oggi ({rate} per {unit} diretto), il calcolo dà ≈ {revenue} di ricavi diretti.',
+    addMarketingCostsFootnoteTpl: 'Aggiungi i costi di sito web e marketing allo step 3 per vedere quanti ricavi diretti potrebbero creare {amount} di risparmio OTA.',
+    flowTitleShareTpl: '{name} · {current}% → {target}%',
+    flowLeadPointsMovedTpl: '{points} punti di quota = <strong>{revenue}</strong> di ricavi. Confronta quanto costa quel volume su {name} rispetto al Diretto.',
+    colRevenue: 'Ricavi',
+    colCostOnThisRevenue: 'Costo su questi ricavi',
+    subTrueCostTpl: '{pct}% costo reale',
+    subPaymentSupportOnly: 'solo pagamento e assistenza',
+    extraMarketingSpendLabel: 'Extra che potresti spendere in marketing',
+
+    pickTwoDifferentOtas: '<span class="warn">Scegli due OTA diverse.</span>',
+    enterRevenueAmount: 'Inserisci un importo di ricavi.',
+    notCheaperTpl: '<strong>{toName}</strong> ({toPct}%) non è più economica di <strong>{fromName}</strong> ({fromPct}%) su questo volume. Nessun guadagno di margine qui.',
+    flowTitleMoveTpl: '{from} → {to}',
+    colRevenueMoved: 'Ricavi spostati',
+    colCostOnTpl: 'Costo su {name}',
+    colMarginSaved: 'Margine risparmiato',
+    subPointsOnVolumeTpl: '{pts} punti su questo volume',
+
+    addMarketingFirst: '<span class="warn">Aggiungi prima i costi di sito web e marketing allo step 3, ci serve il tuo tasso di spesa attuale.</span>',
+    enterExtraMarketingAmount: 'Inserisci un importo di marketing extra.',
+    flowTitleExtraMarketing: 'Marketing extra → ricavi diretti',
+    flowLeadExtraMarketingTpl: "Al tuo tasso attuale di <strong>{rate} di marketing per {unit} diretto</strong> ({pct}%), ecco cosa potrebbero comprare {amount} in più, se lo stesso tasso si mantiene.",
+    logicOneLineMarketingTpl: "<strong>La logica in una riga:</strong> spendi {extra} in più in marketing al tasso di oggi, il calcolo dà ≈ {revenue} di ricavi diretti. Questo porterebbe il tuo marketing da {spend} ({pct}%) a {newTotal} ({newPct}% dei ricavi diretti attuali).",
+
+    scenarioDirectBlockTitle: 'Calo quota OTA → crescita del Diretto',
+    scenarioDirectBlockDesc: 'Scopri quanto risparmi quando una quota OTA scende, e quanti ricavi diretti quel risparmio potrebbe comprare in marketing.',
+    scenarioOtaFieldLabel: 'OTA',
+    scenarioCurrentShareLabel: 'Quota attuale',
+    scenarioTargetShareLabel: 'Quota obiettivo %',
+    scenarioOtaOptionTpl: '{name} (ora {share}%)',
+    scenarioOtaMoveBlockTitle: 'Sposta volume tra OTA',
+    scenarioOtaMoveBlockDesc: 'Cosa succede al margine se il volume si sposta da una OTA più costosa a una più economica?',
+    scenarioFromLabel: 'Da (più costosa)',
+    scenarioToLabel: 'A (più economica)',
+    scenarioOtaCostOptionTpl: '{name} ({pct}%)',
+    scenarioMarketingBlockTitle: 'Marketing extra → ricavi diretti',
+    scenarioMarketingBlockDesc: 'Se aumenti il marketing diretto al tuo tasso di spesa attuale, quanti ricavi diretti potrebbe comprare?',
+
+    chartCommission: 'Commissione',
+    chartPromoIncentive: 'Promo / Sconto Incentivo',
+    chartPaymentProcessing: 'Elaborazione Pagamenti',
+    chartPaymentFailures: 'Pagamenti Falliti',
+    chartCustomerService: 'Assistenza Clienti',
+    chartWebsiteMarketing: 'Sito Web e Marketing',
+    chartDirectLabel: 'Diretto',
+    chartPctOfRevenue: '% dei ricavi',
+
+    breakdownFormulaOtaTpl: 'Commissione ({commission}%) + Promo/Visibilità ({promo}%) + Pagamento ({payment}%) + Assistenza ({service}%) = <strong>{total}%</strong> · Ricavi: {revenue} · Costo annuo: <strong>{cost}</strong>',
+    breakdownDirectHeading: 'Diretto',
+    breakdownFormulaDirectBaseTpl: 'Pagamento ({payment}%) + Fallimenti ({failure}%) + Assistenza ({service}%)',
+    breakdownWebsiteMarketingSuffixTpl: ' + Sito Web e Marketing ({items})',
+    breakdownDirectTotalTpl: ' = <strong>{total}%</strong> · Ricavi: {revenue} · Costo annuo: <strong>{cost}</strong>',
+    itemBookingEngine: 'Booking engine {amount}',
+    itemIncentiveDiscount: 'Sconto incentivo {pct}%',
+    itemHosting: 'Hosting {amount}',
+    itemAds: 'Ads {amount}',
+    itemSeo: 'SEO {amount}',
+    itemEmailTool: 'Strumento email {amount}',
+    itemContent: 'Contenuti {hrs}h/mese ({pct}%)',
+
+    riskAddAtLeastOne: 'Aggiungi almeno un canale OTA per vedere il rischio di concentrazione.',
+    riskLow: 'Rischio basso',
+    riskModerate: 'Rischio moderato',
+    riskHigh: 'Rischio alto',
+    riskLargestOtaTpl: 'OTA singola più grande: {pct}% · {name}',
+    riskCopyTpl: 'Il <strong>{pct}%</strong> dei tuoi ricavi dipende da <strong>{name}</strong>. Se le condizioni o la visibilità cambiassero su questo canale, questa è la quota di ricavi immediatamente a rischio.',
+
+    narrativeNoDirectShare: '<div class="narrative-point"><strong>Ancora nessuna quota diretta.</strong> Il tuo mix è tutto OTA. Prima di spendere in marketing diretto, modella quanto ti costerebbe davvero il diretto, pagamento, assistenza, booking engine e marketing, poi confrontalo con la tua OTA più costosa.</div>',
+    narrativeRoomTpl: '<div class="narrative-point"><strong>C\'è margine.</strong> Il Diretto ti costa {directPct}% tutto incluso. {otaName} costa {otaPct}%. Stai già pagando pesantemente per affittare domanda sulle OTA, l\'economia può sostenere maggiori investimenti nel tuo canale, se li spendi bene.</div>',
+    narrativeCheckCostsTpl: '<div class="narrative-point"><strong>Controlla i tuoi costi diretti.</strong> Al {directPct}% tutto incluso, il Diretto non batte {otaName} ({otaPct}%) sulla carta. Assicurati di aver contato la tua spesa di marketing reale, booking engine, ads, email, contenuti, prima di decidere che il diretto è troppo costoso.</div>',
+    narrativeSpendingRoom: '<div class="narrative-point"><strong>Il tuo margine di spesa.</strong> La simulazione di opportunità sopra trasforma un calo di quota OTA in una cifra concreta, quanto potresti investire nel marketing diretto e comunque battere ciò che quella OTA ti costava. Questo è il tuo budget disponibile, non una promessa che vincerai le prenotazioni.</div>',
+    narrativeNeedPlan: '<div class="narrative-point"><strong>Ti serve un piano, non una tattica.</strong> Riconquistare quota richiede un impianto diretto coordinato: booking engine, ricerca a pagamento, email agli ospiti passati, vendite B2B, conversione del sito e i contenuti che alimentano tutto questo. Potenziare solo la SEO non basterà. Questo strumento risponde se puoi permetterti di investire, costruire come spenderlo è il passo successivo.</div>',
+    narrativeStartWithEconomicsTpl: '<div class="narrative-point"><strong>Parti dall\'economia.</strong> Una volta che sai quanto ti costerebbe il diretto tutto incluso, confrontalo con {otaName} al {otaPct}%. Se i numeri funzionano, il prossimo passo è un vero piano di marketing diretto, non una singola tattica come la SEO.</div>',
+
+    summaryTitle: 'Distribution Cost Analyser, Operator Series',
+    summaryTotalDistTpl: 'Distribuzione totale: {amount} ({pct}% dei ricavi)',
+    summaryOtaSpendTpl: 'Spesa OTA: {amount}',
+    summaryDirectTrueCostTpl: 'Costo reale Diretto: {pct}% ({share}% del mix)',
+    summaryBlendedOtaTpl: 'Costo reale OTA medio: {pct}%',
+    summaryPriciestOtaTpl: 'OTA più costosa: {name} al {pct}%',
+    summaryAnnualRevenueTpl: 'Ricavi annuali modellati: {amount}',
+    summaryDirectRevenueTpl: 'Ricavi diretti: {amount}',
+    summaryGeneratedAtTpl: 'Generato il {date}',
+    toastRunFirst: 'Esegui prima Confronta i Canali',
+    toastSummaryCopied: 'Riepilogo copiato negli appunti',
+    promptCopySummary: 'Copia questo riepilogo:',
+    toastLinkCopiedFile: 'Link copiato, apre questo file sul tuo computer con i tuoi numeri già inseriti',
+    toastLinkCopiedWeb: 'Link copiato, apre questa pagina con i tuoi numeri precompilati',
+    promptCopyLink: 'Copia questo link (i tuoi numeri sono codificati al suo interno):',
+    confirmResetForm: 'Vuoi cancellare tutti gli input e ricominciare?'
+  },
+  de: {
+    brandSubtitle: 'Operator Series',
+    fabCopySummary: 'Zusammenfassung kopieren',
+    fabCopySummaryTitle: 'Eine Textzusammenfassung Ihrer Ergebnisse kopieren',
+    fabShare: 'Teilen',
+    fabShareTitle: 'Einen Link mit Ihren vorausgefüllten Zahlen kopieren',
+    fabPrint: 'Drucken',
+    fabPrintTitle: 'Drucken oder als PDF speichern',
+    heroTitle: 'Vergleichen Sie <em>alle</em> Ihre Distributionskanäle auf einmal',
+    heroSubtitle: 'Direkt oder OTA, wer frisst wirklich Ihre Marge? Geben Sie Ihren Mix ein und sehen Sie die wahren Kosten, nicht nur die genannte Provision.',
+    quickStart: 'Schnellstart',
+    presetServiced: 'Serviced Apartment',
+    presetHotel: 'Kleines Hotel',
+    presetBoutique: 'Boutique-Hotel',
+    presetStr: 'STR / Mehrere Units',
+    currencySelectTitle: 'Anzeigewährung',
+    step1Title: 'Ihr Unternehmen',
+    inputPeriodLabel: 'Eingabezeitraum',
+    inputPeriodHint: 'Umsatz und Fixkosten, der Stundensatz bleibt pro Stunde',
+    periodAnnualBtn: 'Jährlich',
+    periodMonthlyBtn: 'Monatlich',
+    totalRevenueLabelAnnual: 'Gesamter Jahresumsatz',
+    totalRevenueLabelMonthly: 'Gesamter Monatsumsatz',
+    totalRevenueHint: 'Alle Kanäle zusammen',
+    perMonth: 'pro Monat',
+    perYear: 'pro Jahr',
+    moAbbr: 'Monat',
+    yrAbbr: 'Jahr',
+    hrSuffix: '/Std',
+    hourlyRateLabel: 'Stundensatz Personal',
+    hourlyRateHint: 'Für die Berechnung zeitbasierter Kosten',
+    avgBookingValueLabel: 'Durchschnittlicher Buchungswert',
+    avgBookingValueHint: 'Wird verwendet, um Buchungen aus dem Umsatz zu schätzen, für die Berechnung der Servicekosten',
+    step2Title: 'Ihre OTA-Verteilung',
+    addOtaBtn: '+ OTA-Kanal hinzufügen',
+    step3Title: 'Ihre Direktkanal-Kosten',
+    directShareLabel: 'Direktanteil des Umsatzes',
+    directShareHint: 'Automatisch berechnet: 100% minus Ihr OTA-Mix oben',
+    directHiddenCostsLabel: 'Versteckte Direktkosten',
+    directHiddenCostsHint: 'Zahlung, Support, Website und Marketing',
+    directAdjustNote: 'Passen Sie die Schätzungen anhand Ihrer Kennzahlen an.',
+    paymentSupportHeading: 'Zahlung und Support',
+    paymentProcessingFeeLabel: 'Zahlungsabwicklungsgebühr',
+    pctOfDirectRevenue: '% des Direktumsatzes',
+    paymentFailureRateLabel: 'Zahlungsausfallquote',
+    paymentFailureHint: 'Abgelehnte Karten und fehlgeschlagene Zahlungen, Ihr eigenes Gateway hat nicht die Betrugsschutz-Skala einer OTA hinter sich.',
+    customerServiceTimeLabel: 'Kundenservice-Zeit',
+    hoursPer100Bookings: 'Stunden pro 100 Buchungen',
+    customerServiceHint: 'Personalzeit für Gästefragen, Check-in-Koordination und Abrechnung, skaliert auf Ihre geschätzten Buchungen aus Umsatz ÷ durchschnittlichem Buchungswert.',
+    websiteMarketingHeading: 'Website und Marketing',
+    websiteMarketingNote: 'Optional, die meisten Betreiber haben nicht für jeden dieser Punkte eine Zahl. Füllen Sie nur aus, was Sie tatsächlich verfolgen; lassen Sie den Rest leer.',
+    bookingEngineFeeLabel: 'Booking Engine / Website-Gebühr',
+    bookingEngineFeeHint: 'Ihre Booking-Engine- oder Konnektivitätsgebühr, SiteMinder, Cloudbeds, Lodgify oder Ähnliches. Das direkte Äquivalent zur Provision einer OTA.',
+    incentiveDiscountLabel: 'Direktbuchungs-Rabatt',
+    incentiveDiscountHint: 'Jede "Direkt buchen und sparen"-Preisgestaltung, mit der Sie OTA-Raten Konkurrenz machen, das direktseitige Äquivalent zu den Promo-Programmen einer OTA.',
+    hostingFeeLabel: 'Website-Hosting und Wartung',
+    hostingFeeHint: 'Domain, Hosting, Theme-/Plugin-Lizenzen, die gelegentliche Entwicklerrechnung.',
+    adsSpendLabel: 'Ads / Bezahlte Marketingausgaben',
+    adsSpendHint: 'Google Ads, Meta Ads und Metasearch-Gebote (Google Hotel Ads, TripAdvisor) auf Ihre eigene Website ausgerichtet.',
+    seoCostLabel: 'SEO-Kosten',
+    seoCostHint: 'Agenturhonorar oder Tool-Abonnements (Ahrefs, SEMrush usw.) für organische Sichtbarkeit.',
+    emailToolFeeLabel: 'E-Mail-Marketing-Tool',
+    emailToolFeeHint: 'Mailchimp, Klaviyo oder Ähnliches, Newsletter und Remarketing an frühere Gäste.',
+    contentHoursLabel: 'Zeit für Content-Erstellung',
+    hoursPerMonth: 'Stunden pro Monat',
+    contentHoursHint: 'Personal- oder Freelancer-Zeit für Fotos, Texte und Updates für Ihre Website und Social-Media-Kanäle.',
+    compareChannelsBtn: 'Kanäle vergleichen',
+    startOverBtn: 'Neu starten',
+    resultHeaderTitle: 'Ihre Distributionskosten',
+    costPerChannelTitle: 'Kosten pro Kanal',
+    costPerChannelDesc: 'Reale Kostenrate pro Kanal, aufgeschlüsselt nach Treibern, sortiert vom günstigsten zum teuersten. Damit entscheiden Sie, auf welchen Kanal es sich wirklich lohnt, Volumen zu lenken.',
+    costBreakdownTitle: 'Kostenaufschlüsselung',
+    riskScoreTitle: 'Kanal-Risikoscore',
+    riskScoreDesc: 'Wie konzentriert Ihr Umsatz auf eine einzelne OTA ist, abgeleitet aus Ihrem Mix oben, ohne zusätzliche Eingaben.',
+    opportunitySimTitle: 'Chancen-Simulationen',
+    opportunitySimDesc: 'Drei Simulationen: Spielraum für Direktmarketing, wenn ein OTA-Anteil sinkt, gesparte Marge durch Verschieben von Volumen auf eine günstigere OTA, und was zusätzliche Marketingausgaben bei Ihrer aktuellen Rate schaffen könnten.',
+    whatThisMeansTitle: 'Was Das Bedeutet',
+    whatThisMeansDesc: 'Die praktische Erkenntnis, und was Sie damit tun sollten.',
+    frameworkAttribution: '<strong>Framework von Roger Bisschoff</strong> · Erstveröffentlichung 2026 · Teil der Operator Intelligence Suite',
+    viewFullSuite: 'Die vollständige Suite ansehen →',
+    authorityBandText: 'Erstellt von <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a>, 15 Jahre Erfahrung in der europäischen Hospitality-Distribution.<br><strong style="color:rgba(255,255,255,0.6)">Operator Series</strong>',
+
+    scenarioOtaRevenueLabelTpl: 'Umsatzbetrag ({x})',
+    scenarioMarketingExtraLabelTpl: 'Zusätzliche Marketingausgaben ({x})',
+    otaNamePlaceholder: 'OTA-Name',
+    newOtaDefaultName: 'Neue OTA',
+    shareOfRevenueLabel: 'Umsatzanteil %',
+    commissionLabel: 'Provision %',
+    otaImpliedTpl: '≈ <strong style="color:var(--ink2);">{pct}%</strong> tatsächliche Kosten inkl. geschätzter Extras (Provision + Promo/Sichtbarkeit + Zahlung + Support)',
+    hiddenCostsToggleLabel: 'Versteckte Kosten',
+    hiddenCostsToggleHint: 'Promo, Zahlungsabwicklung, Support-Zeit',
+    promoVisibilityLabel: 'Promo / Sichtbarkeit %',
+    paymentProcessingLabel: 'Zahlungsabwicklung %',
+    serviceHrsLabel: 'Service-Std/100 Buchungen',
+    addAtLeastOneOta: 'Fügen Sie mindestens eine OTA hinzu, um diese Simulationen zu nutzen.',
+
+    errEnterRevenue: 'Geben Sie Ihren gesamten Jahresumsatz ein.',
+    errOtaOver100Tpl: 'Der OTA-Mix summiert sich auf {pct}%, reduzieren Sie die Anteile, damit Direkt berechnet werden kann.',
+    errAvgBookingValue: 'Der durchschnittliche Buchungswert muss größer als null sein.',
+    hintDirectIncompleteTpl: '<strong>Tipp:</strong> Direkt macht {pct}% Ihres Mix aus, aber Sie haben noch keine Website- und Marketingkosten eingegeben. Öffnen Sie <strong>Versteckte Direktkosten</strong> in Schritt 3 für ein vollständiges Direktbild.',
+
+    shareSummaryOverTpl: 'Der OTA-Mix summiert sich auf <strong>{pct}%</strong>, das ist über 100%. Reduzieren Sie die Anteile oben, damit Direkt berechnet werden kann.',
+    shareSummaryOkTpl: 'OTA-Mix: <strong>{ota}%</strong> · Direkt (auto): <strong>{direct}%</strong>',
+
+    errEnterRevenueBeforeCompare: 'Geben Sie Ihren gesamten Jahresumsatz ein, bevor Sie Kanäle vergleichen.',
+    errOtaOver100Run: 'Die OTA-Anteile summieren sich auf mehr als 100%. Passen Sie sie an, damit Direkt berechnet werden kann.',
+    rhContextTpl: 'OTA-Mix: {mix} · Direkt {direct}% des Umsatzes (automatisch berechnet)',
+    printMetaTpl: '{date} · Operator Series · {currency} · Beträge auf Jahresbasis dargestellt',
+
+    execAtGlance: 'Auf einen Blick',
+    execLeadMainTpl: 'Ihre gesamte Distributionsrechnung beträgt <strong>{total}</strong>, das sind <strong>{pct}%</strong> Ihres Umsatzes ({ota} auf OTAs, der Rest auf Direkt).',
+    execLeadRoomTpl: 'Direkt kostet Sie tatsächlich <strong>{directPct}%</strong>. {otaName} kostet <strong>{otaPct}%</strong>. Bei den <strong>{directRev}</strong>, die Sie bereits direkt verdienen, sind Sie <strong>{margin}</strong> besser dran, als wenn dasselbe Volumen über {otaName} käme.',
+    execLeadAddCostsTpl: 'Fügen Sie in Schritt 3 Ihre vollständigen Website- und Marketingkosten hinzu, bevor Sie Direkt ({directPct}%) mit {otaName} ({otaPct}%) vergleichen.',
+    execStatTotalDistribution: 'Gesamtdistribution',
+    execStatOtaSpend: 'OTA-Ausgaben',
+    execStatDirectTrueCost: 'Wahre Direktkosten',
+    execStatPriciestOta: 'Teuerste OTA',
+
+    incompleteDirectCalloutText: '<strong>Unvollständiges Direktbild.</strong> Sie haben nur Zahlung und Support modelliert, nicht Website und Marketing. Fügen Sie diese Kosten in Schritt 3 hinzu, bevor Sie Direkt mit OTAs vergleichen, sonst wirken Ihre Direktkosten künstlich niedrig.',
+
+    totalDistCostLabel: 'Gesamte Distributionskosten',
+    otaCostLabel: 'OTA-Kosten',
+    directCostLabel: 'Direktkosten',
+    costOnRevenueTpl: '{cost} Kosten auf {revenue} Umsatz',
+
+    mostExpensiveOtaLabel: 'Teuerste OTA',
+    mostExpensiveOtaSubTpl: '{name}, wahre Kosten auf ihren Umsatz',
+    directLabel: 'Direkt',
+    directSubText: 'Wahre Kosten auf Direktumsatz, inkl. Zahlung, Support und jeglichem eingegebenen Marketing',
+
+    enterTargetShare: 'Geben Sie einen Zielanteil ein.',
+    targetBelowCurrentTpl: '<span class="warn">Das Ziel muss unter dem aktuellen Anteil von {current}% liegen.</span> Reduzieren Sie zuerst den Anteil der OTA oben, oder wählen Sie ein Ziel unter {current}%.',
+    extraMarketingCreateTpl: 'Was könnten {amount} an zusätzlichem Marketing schaffen?',
+    rateLineTpl: 'Aktuell kostet Sie jeder <strong>{unit} Direktumsatz</strong> <strong>{rate} an Marketing</strong> ({pct}%).<br><span>Das sind {spend} Marketing ÷ {revenue} Direktumsatz.</span>',
+    eqExtraMarketingFromSaving: 'zusätzliches Marketing<br>aus OTA-Ersparnis',
+    eqExtraMarketingPerYr: 'zusätzliches Marketing<br>/Jahr',
+    eqMarketingPerUnitDirectTpl: 'Marketing pro<br>{unit} Direkt',
+    eqDirectRevenueIfRate: 'Direktumsatz/Jahr<br>bei gleicher Rate',
+    logicOneLineDirectTpl: '<strong>Die Logik in einer Zeile:</strong> Sie sparen {saving} bei der OTA, wenn Sie das zur heutigen Rate ({rate} pro {unit} Direkt) in Marketing investieren, ergibt die Rechnung ≈ {revenue} Direktumsatz.',
+    addMarketingCostsFootnoteTpl: 'Fügen Sie in Schritt 3 Website- und Marketingkosten hinzu, um zu sehen, wie viel Direktumsatz {amount} an OTA-Ersparnis schaffen könnten.',
+    flowTitleShareTpl: '{name} · {current}% → {target}%',
+    flowLeadPointsMovedTpl: '{points} Anteilspunkte = <strong>{revenue}</strong> Umsatz. Vergleichen Sie, was dieses Volumen bei {name} gegenüber Direkt kostet.',
+    colRevenue: 'Umsatz',
+    colCostOnThisRevenue: 'Kosten auf diesen Umsatz',
+    subTrueCostTpl: '{pct}% wahre Kosten',
+    subPaymentSupportOnly: 'nur Zahlung und Support',
+    extraMarketingSpendLabel: 'Zusätzlich möglich für Marketing',
+
+    pickTwoDifferentOtas: '<span class="warn">Wählen Sie zwei verschiedene OTAs.</span>',
+    enterRevenueAmount: 'Geben Sie einen Umsatzbetrag ein.',
+    notCheaperTpl: '<strong>{toName}</strong> ({toPct}%) ist bei diesem Volumen nicht günstiger als <strong>{fromName}</strong> ({fromPct}%). Kein Margengewinn hier.',
+    flowTitleMoveTpl: '{from} → {to}',
+    colRevenueMoved: 'Verschobener Umsatz',
+    colCostOnTpl: 'Kosten auf {name}',
+    colMarginSaved: 'Gesparte Marge',
+    subPointsOnVolumeTpl: '{pts} Punkte auf dieses Volumen',
+
+    addMarketingFirst: '<span class="warn">Fügen Sie zuerst Website- und Marketingkosten in Schritt 3 hinzu, wir brauchen Ihre aktuelle Ausgabenrate.</span>',
+    enterExtraMarketingAmount: 'Geben Sie einen zusätzlichen Marketingbetrag ein.',
+    flowTitleExtraMarketing: 'Zusätzliches Marketing → Direktumsatz',
+    flowLeadExtraMarketingTpl: 'Bei Ihrer aktuellen Rate von <strong>{rate} Marketing pro {unit} Direkt</strong> ({pct}%), könnten {amount} mehr Folgendes kaufen, wenn sich die Rate hält.',
+    logicOneLineMarketingTpl: '<strong>Die Logik in einer Zeile:</strong> geben Sie {extra} mehr zur heutigen Rate für Marketing aus, ergibt die Rechnung ≈ {revenue} Direktumsatz. Das würde Ihr Marketing von {spend} ({pct}%) auf {newTotal} ({newPct}% des aktuellen Direktumsatzes) bringen.',
+
+    scenarioDirectBlockTitle: 'OTA-Anteil sinkt → Direkt wächst',
+    scenarioDirectBlockDesc: 'Sehen Sie, was Sie sparen, wenn ein OTA-Anteil sinkt, und wie viel Direktumsatz diese Ersparnis in Marketing kaufen könnte.',
+    scenarioOtaFieldLabel: 'OTA',
+    scenarioCurrentShareLabel: 'Aktueller Anteil',
+    scenarioTargetShareLabel: 'Zielanteil %',
+    scenarioOtaOptionTpl: '{name} (jetzt {share}%)',
+    scenarioOtaMoveBlockTitle: 'Volumen zwischen OTAs verschieben',
+    scenarioOtaMoveBlockDesc: 'Was passiert mit der Marge, wenn Volumen von einer teureren zu einer günstigeren OTA verschoben wird?',
+    scenarioFromLabel: 'Von (teurer)',
+    scenarioToLabel: 'Zu (günstiger)',
+    scenarioOtaCostOptionTpl: '{name} ({pct}%)',
+    scenarioMarketingBlockTitle: 'Zusätzliches Marketing → Direktumsatz',
+    scenarioMarketingBlockDesc: 'Wenn Sie Direktmarketing bei Ihrer aktuellen Ausgabenrate erhöhen, wie viel Direktumsatz könnte das kaufen?',
+
+    chartCommission: 'Provision',
+    chartPromoIncentive: 'Promo / Rabatt',
+    chartPaymentProcessing: 'Zahlungsabwicklung',
+    chartPaymentFailures: 'Zahlungsausfälle',
+    chartCustomerService: 'Kundenservice',
+    chartWebsiteMarketing: 'Website und Marketing',
+    chartDirectLabel: 'Direkt',
+    chartPctOfRevenue: '% des Umsatzes',
+
+    breakdownFormulaOtaTpl: 'Provision ({commission}%) + Promo/Sichtbarkeit ({promo}%) + Zahlung ({payment}%) + Support ({service}%) = <strong>{total}%</strong> · Umsatz: {revenue} · Jahreskosten: <strong>{cost}</strong>',
+    breakdownDirectHeading: 'Direkt',
+    breakdownFormulaDirectBaseTpl: 'Zahlung ({payment}%) + Ausfälle ({failure}%) + Support ({service}%)',
+    breakdownWebsiteMarketingSuffixTpl: ' + Website und Marketing ({items})',
+    breakdownDirectTotalTpl: ' = <strong>{total}%</strong> · Umsatz: {revenue} · Jahreskosten: <strong>{cost}</strong>',
+    itemBookingEngine: 'Booking Engine {amount}',
+    itemIncentiveDiscount: 'Rabatt {pct}%',
+    itemHosting: 'Hosting {amount}',
+    itemAds: 'Ads {amount}',
+    itemSeo: 'SEO {amount}',
+    itemEmailTool: 'E-Mail-Tool {amount}',
+    itemContent: 'Content {hrs}Std/Monat ({pct}%)',
+
+    riskAddAtLeastOne: 'Fügen Sie mindestens einen OTA-Kanal hinzu, um das Konzentrationsrisiko zu sehen.',
+    riskLow: 'Niedriges Risiko',
+    riskModerate: 'Mittleres Risiko',
+    riskHigh: 'Hohes Risiko',
+    riskLargestOtaTpl: 'Größte einzelne OTA: {pct}% · {name}',
+    riskCopyTpl: '<strong>{pct}%</strong> Ihres Umsatzes hängt von <strong>{name}</strong> ab. Wenn sich Konditionen oder Sichtbarkeit auf diesem Kanal ändern würden, ist dies der Umsatzanteil, der unmittelbar gefährdet ist.',
+
+    narrativeNoDirectShare: '<div class="narrative-point"><strong>Noch kein Direktanteil.</strong> Ihr Mix ist vollständig OTA. Bevor Sie in Direktmarketing investieren, modellieren Sie, was Direkt Sie tatsächlich kosten würde, Zahlung, Support, Booking Engine und Marketing, und vergleichen Sie es dann mit Ihrer teuersten OTA.</div>',
+    narrativeRoomTpl: '<div class="narrative-point"><strong>Es gibt Spielraum.</strong> Direkt kostet Sie {directPct}% alles inklusive. {otaName} kostet {otaPct}%. Sie zahlen bereits stark, um Nachfrage über OTAs zu mieten, die Ökonomie kann höhere Investitionen in Ihren eigenen Kanal tragen, wenn Sie es gut ausgeben.</div>',
+    narrativeCheckCostsTpl: '<div class="narrative-point"><strong>Prüfen Sie Ihre Direktkosten.</strong> Bei {directPct}% alles inklusive schlägt Direkt {otaName} ({otaPct}%) auf dem Papier nicht. Stellen Sie sicher, dass Sie Ihre tatsächlichen Marketingausgaben, Booking Engine, Ads, E-Mail, Content, erfasst haben, bevor Sie entscheiden, dass Direkt zu teuer ist.</div>',
+    narrativeSpendingRoom: '<div class="narrative-point"><strong>Ihr Ausgabenspielraum.</strong> Die Chancen-Simulation oben verwandelt einen sinkenden OTA-Anteil in eine konkrete Zahl, wie viel Sie in Direktmarketing investieren könnten und dennoch besser abschneiden als das, was diese OTA Sie kostete. Das ist Ihr Budgetrahmen, kein Versprechen, dass Sie die Buchungen gewinnen.</div>',
+    narrativeNeedPlan: '<div class="narrative-point"><strong>Sie brauchen einen Plan, keine einzelne Taktik.</strong> Anteile zurückzugewinnen bedeutet einen koordinierten Direktaufbau: Booking Engine, bezahlte Suche, E-Mails an frühere Gäste, B2B-Vertrieb, Website-Konversion und den Content, der das alles nährt. Nur SEO hochzufahren, reicht nicht. Dieses Tool beantwortet, ob Sie sich die Investition leisten können, wie Sie es ausgeben, ist der nächste Schritt.</div>',
+    narrativeStartWithEconomicsTpl: '<div class="narrative-point"><strong>Beginnen Sie mit der Ökonomie.</strong> Sobald Sie wissen, was Direkt Sie alles inklusive kosten würde, vergleichen Sie es mit {otaName} bei {otaPct}%. Wenn die Zahlen aufgehen, ist der nächste Schritt ein richtiger Direktmarketing-Plan, keine einzelne Taktik wie SEO.</div>',
+
+    summaryTitle: 'Distribution Cost Analyser, Operator Series',
+    summaryTotalDistTpl: 'Gesamtdistribution: {amount} ({pct}% des Umsatzes)',
+    summaryOtaSpendTpl: 'OTA-Ausgaben: {amount}',
+    summaryDirectTrueCostTpl: 'Wahre Direktkosten: {pct}% ({share}% des Mix)',
+    summaryBlendedOtaTpl: 'Gemischte wahre OTA-Kosten: {pct}%',
+    summaryPriciestOtaTpl: 'Teuerste OTA: {name} bei {pct}%',
+    summaryAnnualRevenueTpl: 'Modellierter Jahresumsatz: {amount}',
+    summaryDirectRevenueTpl: 'Direktumsatz: {amount}',
+    summaryGeneratedAtTpl: 'Erstellt am {date}',
+    toastRunFirst: 'Führen Sie zuerst Kanäle vergleichen aus',
+    toastSummaryCopied: 'Zusammenfassung in die Zwischenablage kopiert',
+    promptCopySummary: 'Diese Zusammenfassung kopieren:',
+    toastLinkCopiedFile: 'Link kopiert, öffnet diese Datei auf Ihrem Computer mit Ihren eingetragenen Zahlen',
+    toastLinkCopiedWeb: 'Link kopiert, öffnet diese Seite mit Ihren vorausgefüllten Zahlen',
+    promptCopyLink: 'Kopieren Sie diesen Link (Ihre Zahlen sind darin codiert):',
+    confirmResetForm: 'Alle Eingaben löschen und neu starten?'
+  }
+};
+
+function t(key) {
+  const pack = I18N[currentLang] || I18N.en;
+  if (pack[key] !== undefined) return pack[key];
+  return I18N.en[key] !== undefined ? I18N.en[key] : key;
+}
+
+function tf(key, vars) {
+  let str = t(key);
+  if (vars) {
+    Object.keys(vars).forEach(function(k) { str = str.split('{' + k + '}').join(vars[k]); });
+  }
+  return str;
+}
+
+function applyLang(lang) {
+  currentLang = I18N[lang] ? lang : 'en';
+  document.documentElement.lang = currentLang;
+  if (window.updateOisMetadata) window.updateOisMetadata(currentLang);
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if (val.indexOf('<') !== -1) el.innerHTML = val;
+    else el.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
+    el.setAttribute('title', t(el.getAttribute('data-i18n-title')));
+  });
+
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    const on = btn.getAttribute('data-lang') === currentLang;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+
+  try { localStorage.setItem('ois-lang', currentLang); } catch (e) { /* ignore */ }
+
+  updatePeriodUI();
+  renderOTAList();
+  validateInputs();
+  if (document.getElementById('resultPanel')?.classList.contains('visible')) runAnalysis(true);
+}
+
+document.querySelectorAll('.lang-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() { applyLang(btn.getAttribute('data-lang')); });
+});
+
 function cur() { return CURRENCIES[currencyCode]?.symbol || '€'; }
 function isMonthly() { return periodMode === 'monthly'; }
-function periodLabel() { return isMonthly() ? 'month' : 'year'; }
-function periodLabelCap() { return isMonthly() ? 'Month' : 'Year'; }
+function periodLabel() { return isMonthly() ? t('moAbbr') : t('yrAbbr'); }
+function periodLabelCap() { return isMonthly() ? t('moAbbr') : t('yrAbbr'); }
 
 function toAnnual(value) {
   const n = parseFloat(value) || 0;
@@ -625,7 +1532,7 @@ function getAnnualTotalRevenue() {
 }
 
 function money(n) { return cur() + fmt(n); }
-function moneyPerYr(n) { return money(n) + '/yr'; }
+function moneyPerYr(n) { return money(n) + '/' + t('yrAbbr'); }
 function unitMoney() { return cur() + '1'; }
 
 function showFabToast(msg) {
@@ -679,15 +1586,15 @@ function updatePeriodUI() {
   document.getElementById('periodAnnual')?.classList.toggle('active', !isMonthly());
   document.getElementById('periodMonthly')?.classList.toggle('active', isMonthly());
   const revLabel = document.getElementById('totalRevenueLabel');
-  if (revLabel) revLabel.textContent = isMonthly() ? 'Total Monthly Revenue' : 'Total Annual Revenue';
+  if (revLabel) revLabel.textContent = isMonthly() ? t('totalRevenueLabelMonthly') : t('totalRevenueLabelAnnual');
   document.querySelectorAll('.period-suffix').forEach(el => {
-    el.textContent = isMonthly() ? 'per month' : 'per year';
+    el.textContent = isMonthly() ? t('perMonth') : t('perYear');
   });
   const periodMoneyLabel = `${cur()}/${periodLabel()}`;
   const otaRevLabel = document.getElementById('scenarioOtaRevenueLabel');
-  if (otaRevLabel) otaRevLabel.textContent = `Revenue amount (${periodMoneyLabel})`;
+  if (otaRevLabel) otaRevLabel.textContent = tf('scenarioOtaRevenueLabelTpl', { x: periodMoneyLabel });
   const mktLabel = document.getElementById('scenarioMarketingExtraLabel');
-  if (mktLabel) mktLabel.textContent = `Extra marketing spend (${periodMoneyLabel})`;
+  if (mktLabel) mktLabel.textContent = tf('scenarioMarketingExtraLabelTpl', { x: periodMoneyLabel });
 }
 
 function setPeriodMode(mode) {
@@ -755,39 +1662,39 @@ function renderOTAList() {
     <div class="ota-builder">
       <div class="ota-row">
         <div>
-          <span class="ota-field-label">OTA Name</span>
-          <input type="text" value="${ota.name}" placeholder="OTA Name" oninput="otaChannels[${i}].name = this.value; onOtaInput();" style="font-weight:600;">
+          <span class="ota-field-label">${t('otaNamePlaceholder')}</span>
+          <input type="text" value="${ota.name}" placeholder="${t('otaNamePlaceholder')}" oninput="otaChannels[${i}].name = this.value; onOtaInput();" style="font-weight:600;">
         </div>
         <div>
-          <span class="ota-field-label">Share of Revenue %</span>
-          <input type="number" value="${ota.share}" placeholder="Share %" min="0" max="100" step="0.5" oninput="otaChannels[${i}].share = parseFloat(this.value) || 0; onOtaInput(); updateOtaImplied(${i});">
+          <span class="ota-field-label">${t('shareOfRevenueLabel')}</span>
+          <input type="number" value="${ota.share}" placeholder="${t('shareOfRevenueLabel')}" min="0" max="100" step="0.5" oninput="otaChannels[${i}].share = parseFloat(this.value) || 0; onOtaInput(); updateOtaImplied(${i});">
         </div>
         <div>
-          <span class="ota-field-label">Commission %</span>
-          <input type="number" value="${ota.commission}" placeholder="Commission %" min="0" max="50" step="0.1" oninput="otaChannels[${i}].commission = parseFloat(this.value) || 0; onOtaInput(); updateOtaImplied(${i});">
+          <span class="ota-field-label">${t('commissionLabel')}</span>
+          <input type="number" value="${ota.commission}" placeholder="${t('commissionLabel')}" min="0" max="50" step="0.1" oninput="otaChannels[${i}].commission = parseFloat(this.value) || 0; onOtaInput(); updateOtaImplied(${i});">
         </div>
         <span class="ota-remove" onclick="removeOTA(${i})">✕</span>
       </div>
-      <div class="ota-implied" id="otaImplied${i}">≈ <strong style="color:var(--ink2);">${impliedTotal.toFixed(1)}%</strong> true cost incl. estimated extras (commission + promo/visibility + payment + support)</div>
+      <div class="ota-implied" id="otaImplied${i}">${tf('otaImpliedTpl', { pct: impliedTotal.toFixed(1) })}</div>
       <div class="ota-advanced-toggle" onclick="toggleOtaAdvanced(${i})">
         <div>
-          <div class="ota-advanced-toggle-label">Hidden costs</div>
-          <div class="ota-advanced-toggle-hint">Promo, payment processing, support time</div>
+          <div class="ota-advanced-toggle-label">${t('hiddenCostsToggleLabel')}</div>
+          <div class="ota-advanced-toggle-hint">${t('hiddenCostsToggleHint')}</div>
         </div>
         <span class="ota-advanced-chevron">${ota.advancedOpen ? '▲' : '▼'}</span>
       </div>
       ${ota.advancedOpen ? `
       <div class="ota-advanced">
         <div>
-          <span class="ota-field-label">Promo / Visibility %</span>
+          <span class="ota-field-label">${t('promoVisibilityLabel')}</span>
           <input type="number" value="${ota.promoPct}" step="0.5" min="0" oninput="otaChannels[${i}].promoPct = parseFloat(this.value) || 0; onOtaInput(); updateOtaImplied(${i});">
         </div>
         <div>
-          <span class="ota-field-label">Payment Processing %</span>
+          <span class="ota-field-label">${t('paymentProcessingLabel')}</span>
           <input type="number" value="${ota.paymentPct}" step="0.1" min="0" oninput="otaChannels[${i}].paymentPct = parseFloat(this.value) || 0; onOtaInput(); updateOtaImplied(${i});">
         </div>
         <div>
-          <span class="ota-field-label">Service hrs/100 bookings</span>
+          <span class="ota-field-label">${t('serviceHrsLabel')}</span>
           <input type="number" value="${ota.serviceHours}" step="0.5" min="0" oninput="otaChannels[${i}].serviceHours = parseFloat(this.value) || 0; onOtaInput(); updateOtaImplied(${i});">
         </div>
       </div>
@@ -809,11 +1716,11 @@ function updateOtaImplied(i) {
   if (!ota) return;
   const impliedTotal = otaCostPct(ota, totalRevenue, hourlyRate);
   const el = document.getElementById(`otaImplied${i}`);
-  if (el) el.innerHTML = `≈ <strong style="color:var(--ink2);">${impliedTotal.toFixed(1)}%</strong> true cost incl. estimated extras (commission + promo/visibility + payment + support)`;
+  if (el) el.innerHTML = tf('otaImpliedTpl', { pct: impliedTotal.toFixed(1) });
 }
 
 function addOTA() {
-  otaChannels.push({ name: 'New OTA', share: 10, commission: 15, promoPct: 5, paymentPct: 1, serviceHours: 1, advancedOpen: false });
+  otaChannels.push({ name: t('newOtaDefaultName'), share: 10, commission: 15, promoPct: 5, paymentPct: 1, serviceHours: 1, advancedOpen: false });
   renderOTAList();
   persistForm();
   scheduleRerun();
@@ -846,9 +1753,9 @@ function validateInputs() {
   const marketingSpend = getDirectMarketingSpendEuros(parseFloat(document.getElementById('hourlyRate')?.value) || 25);
   const errors = [];
 
-  if (!totalRevenue || totalRevenue <= 0) errors.push('Enter your total annual revenue.');
-  if (otaTotal > 100) errors.push(`OTA mix totals ${otaTotal.toFixed(0)}% — reduce shares so Direct can be calculated.`);
-  if (getAvgBookingValue() <= 0) errors.push('Average booking value must be greater than zero.');
+  if (!totalRevenue || totalRevenue <= 0) errors.push(t('errEnterRevenue'));
+  if (otaTotal > 100) errors.push(tf('errOtaOver100Tpl', { pct: otaTotal.toFixed(0) }));
+  if (getAvgBookingValue() <= 0) errors.push(t('errAvgBookingValue'));
 
   if (errors.length) {
     banner.classList.add('visible');
@@ -860,7 +1767,7 @@ function validateInputs() {
 
   if (directShare > 10 && marketingSpend === 0) {
     hint.classList.add('visible');
-    hint.innerHTML = '<strong>Tip:</strong> Direct is ' + directShare.toFixed(0) + '% of your mix but you haven\'t entered website &amp; marketing costs yet. Open <strong>Direct Hidden Costs</strong> in step 3 for a complete direct picture.';
+    hint.innerHTML = tf('hintDirectIncompleteTpl', { pct: directShare.toFixed(0) });
   } else {
     hint.classList.remove('visible');
   }
@@ -950,9 +1857,9 @@ function shareAnalysis() {
   const url = location.href.split('#')[0] + hash;
   const isFile = location.protocol === 'file:';
   navigator.clipboard.writeText(url).then(() => {
-    showFabToast(isFile ? 'Link copied — opens this file on your computer with your numbers filled in' : 'Link copied — opens this page with your numbers pre-filled');
+    showFabToast(isFile ? t('toastLinkCopiedFile') : t('toastLinkCopiedWeb'));
   }).catch(() => {
-    prompt('Copy this link (your numbers are encoded in it):', url);
+    prompt(t('promptCopyLink'), url);
   });
 }
 
@@ -1004,7 +1911,7 @@ function loadPreset(key) {
 }
 
 function resetForm() {
-  if (!confirm('Clear all inputs and start over?')) return;
+  if (!confirm(t('confirmResetForm'))) return;
   localStorage.removeItem(STORAGE_KEY);
   localStorage.removeItem(LEGACY_STORAGE_KEY);
   periodMode = 'annual';
@@ -1038,32 +1945,32 @@ function buildSummaryText() {
   const mostExpensiveOta = otaCosts.reduce((a, b) => a.costPct > b.costPct ? a : b);
   const blendedOtaPct = otaCosts.reduce((sum, o) => sum + o.costPct * o.share, 0) / Math.max(1, otaCosts.reduce((s, o) => s + o.share, 0));
   const lines = [
-    'Distribution Cost Analyser — Operator Series',
+    t('summaryTitle'),
     '',
-    `Total distribution: ${moneyPerYr(totalDistCost)} (${totalDistPct.toFixed(1)}% of revenue)`,
-    `OTA spend: ${moneyPerYr(otaCostEuros)}`,
-    `Direct true cost: ${directCostPct.toFixed(1)}% (${directShare.toFixed(0)}% of mix)`,
-    `Blended OTA true cost: ${blendedOtaPct.toFixed(1)}%`,
-    `Priciest OTA: ${mostExpensiveOta.name} at ${mostExpensiveOta.costPct.toFixed(1)}%`,
+    tf('summaryTotalDistTpl', { amount: moneyPerYr(totalDistCost), pct: totalDistPct.toFixed(1) }),
+    tf('summaryOtaSpendTpl', { amount: moneyPerYr(otaCostEuros) }),
+    tf('summaryDirectTrueCostTpl', { pct: directCostPct.toFixed(1), share: directShare.toFixed(0) }),
+    tf('summaryBlendedOtaTpl', { pct: blendedOtaPct.toFixed(1) }),
+    tf('summaryPriciestOtaTpl', { name: mostExpensiveOta.name, pct: mostExpensiveOta.costPct.toFixed(1) }),
     '',
-    `Annual revenue modelled: ${money(totalRevenue)}`,
-    `Direct revenue: ${money(directRevenue)}`,
+    tf('summaryAnnualRevenueTpl', { amount: money(totalRevenue) }),
+    tf('summaryDirectRevenueTpl', { amount: money(directRevenue) }),
     '',
-    'Generated at ' + new Date().toLocaleString('en-GB')
+    tf('summaryGeneratedAtTpl', { date: new Date().toLocaleString(DATE_LOCALES[currentLang] || 'en-GB') })
   ];
   return lines.join('\n');
 }
 
 function copySummary() {
   if (!lastAnalysis) {
-    showFabToast('Run Compare Channels first');
+    showFabToast(t('toastRunFirst'));
     return;
   }
   const text = buildSummaryText();
   navigator.clipboard.writeText(text).then(() => {
-    showFabToast('Summary copied to clipboard');
+    showFabToast(t('toastSummaryCopied'));
   }).catch(() => {
-    prompt('Copy this summary:', text);
+    prompt(t('promptCopySummary'), text);
   });
 }
 
@@ -1075,10 +1982,10 @@ function updateShareSummary() {
   if (!el) return;
   if (otaTotal > 100) {
     el.classList.add('warn');
-    el.innerHTML = `OTA mix totals <strong>${otaTotal.toFixed(0)}%</strong> — that's over 100%. Reduce shares above so Direct can be calculated.`;
+    el.innerHTML = tf('shareSummaryOverTpl', { pct: otaTotal.toFixed(0) });
   } else {
     el.classList.remove('warn');
-    el.innerHTML = `OTA mix: <strong>${otaTotal.toFixed(0)}%</strong> · Direct (auto): <strong>${directShare.toFixed(0)}%</strong>`;
+    el.innerHTML = tf('shareSummaryOkTpl', { ota: otaTotal.toFixed(0), direct: directShare.toFixed(0) });
   }
   validateInputs();
 }
@@ -1095,7 +2002,7 @@ function getDirectMarketingInputs() {
   };
 }
 
-// Everything here EXCEPT incentivePct — that one maps into the shared Promo/Incentive category instead
+// Everything here except incentivePct, that one maps into the shared Promo/Incentive category instead
 function computeDirectMarketingPct(directRevenue, hourlyRate) {
   const m = getDirectMarketingInputs();
   const flatTotal = m.bookingEngineFee + m.hostingFee + m.adsSpend + m.seoCost + m.emailToolFee;
@@ -1135,8 +2042,8 @@ function runAnalysis(silent) {
 
   if (!totalRevenue || totalRevenue <= 0 || otaTotal > 100) {
     banner.classList.add('visible');
-    if (!totalRevenue || totalRevenue <= 0) banner.textContent = 'Enter your total annual revenue before comparing channels.';
-    else banner.textContent = 'OTA shares add up to more than 100%. Adjust them so Direct can be calculated.';
+    if (!totalRevenue || totalRevenue <= 0) banner.textContent = t('errEnterRevenueBeforeCompare');
+    else banner.textContent = t('errOtaOver100Run');
     return;
   }
 
@@ -1159,7 +2066,7 @@ function runAnalysis(silent) {
   const totalDistCost = otaCostEuros + directCostEuros;
   const totalDistPct = totalRevenue > 0 ? (totalDistCost / totalRevenue) * 100 : 0;
 
-  document.getElementById('rhContext').textContent = `OTA mix: ${otaChannels.map(o => o.name).join(', ')} · Direct ${directShare.toFixed(0)}% of revenue (auto-calculated)`;
+  document.getElementById('rhContext').textContent = tf('rhContextTpl', { mix: otaChannels.map(o => o.name).join(', '), direct: directShare.toFixed(0) });
 
   renderExecutiveSnapshot(totalDistCost, totalDistPct, totalRevenue, directCostPct, directShare, directRevenue, otaCosts, otaCostEuros);
   renderIncompleteDirectCallout(directShare, hourlyRate);
@@ -1167,6 +2074,7 @@ function runAnalysis(silent) {
   renderHeadlineCompare(otaCosts, directCostPct);
   renderChannelCostChart(otaCosts, directCostPct, directShare);
   renderCostBreakdown(otaCosts, directCostPct, directShare);
+  renderChannelRiskScore();
   generateNarrative(otaCosts, directCostPct, directShare, totalRevenue);
 
   lastAnalysis = { otaCosts, directCostPct, directShare, totalRevenue, directRevenue, hourlyRate, totalDistCost, totalDistPct, otaCostEuros, directCostEuros };
@@ -1177,8 +2085,8 @@ function runAnalysis(silent) {
 
   const printMeta = document.getElementById('printHeaderMeta');
   if (printMeta) {
-    const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-    printMeta.textContent = dateStr + ' · Operator Series · ' + currencyCode + ' · amounts shown as annual';
+    const dateStr = new Date().toLocaleDateString(DATE_LOCALES[currentLang] || 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    printMeta.textContent = tf('printMetaTpl', { date: dateStr, currency: currencyCode });
   }
 
   if (!silent) {
@@ -1201,32 +2109,32 @@ function renderExecutiveSnapshot(totalDistCost, totalDistPct, totalRevenue, dire
     ? directRevenue * (gapPp / 100)
     : 0;
 
-  let leadHtml = `<p class="exec-line">Your total distribution bill is <strong>${moneyPerYr(totalDistCost)}</strong> — that's <strong>${totalDistPct.toFixed(1)}%</strong> of your revenue (${money(otaCostEuros)} on OTAs, the rest on Direct).</p>`;
+  let leadHtml = `<p class="exec-line">${tf('execLeadMainTpl', { total: moneyPerYr(totalDistCost), pct: totalDistPct.toFixed(1), ota: money(otaCostEuros) })}</p>`;
 
   if (directShare > 0 && directCostPct < mostExpensiveOta.costPct) {
-    leadHtml += `<p class="exec-line">Direct costs you <strong>${directCostPct.toFixed(1)}%</strong> true. ${mostExpensiveOta.name} costs <strong>${mostExpensiveOta.costPct.toFixed(1)}%</strong>. On the <strong>${money(directRevenue)}</strong> you already earn direct, you're <strong>${moneyPerYr(marginRoom)}</strong> better off than if that same volume came through ${mostExpensiveOta.name}.</p>`;
+    leadHtml += `<p class="exec-line">${tf('execLeadRoomTpl', { directPct: directCostPct.toFixed(1), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(1), directRev: money(directRevenue), margin: moneyPerYr(marginRoom) })}</p>`;
   } else if (directShare > 0) {
-    leadHtml += `<p class="exec-line">Add your full website &amp; marketing costs in step 3 before comparing Direct (${directCostPct.toFixed(1)}%) to ${mostExpensiveOta.name} (${mostExpensiveOta.costPct.toFixed(1)}%).</p>`;
+    leadHtml += `<p class="exec-line">${tf('execLeadAddCostsTpl', { directPct: directCostPct.toFixed(1), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(1) })}</p>`;
   }
 
   document.getElementById('execSnapshot').innerHTML = `
-    <div class="exec-snapshot-title">At a glance</div>
+    <div class="exec-snapshot-title">${t('execAtGlance')}</div>
     <div class="exec-snapshot-lead">${leadHtml}</div>
     <div class="exec-snapshot-grid">
       <div class="exec-stat">
-        <div class="exec-stat-label">Total distribution</div>
+        <div class="exec-stat-label">${t('execStatTotalDistribution')}</div>
         <div class="exec-stat-value">${moneyPerYr(totalDistCost)}</div>
       </div>
       <div class="exec-stat">
-        <div class="exec-stat-label">OTA spend</div>
+        <div class="exec-stat-label">${t('execStatOtaSpend')}</div>
         <div class="exec-stat-value">${moneyPerYr(otaCostEuros)}</div>
       </div>
       <div class="exec-stat">
-        <div class="exec-stat-label">Direct true cost</div>
+        <div class="exec-stat-label">${t('execStatDirectTrueCost')}</div>
         <div class="exec-stat-value">${directCostPct.toFixed(1)}%</div>
       </div>
       <div class="exec-stat">
-        <div class="exec-stat-label">Priciest OTA</div>
+        <div class="exec-stat-label">${t('execStatPriciestOta')}</div>
         <div class="exec-stat-value">${mostExpensiveOta.costPct.toFixed(1)}%<span style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.5);"> · ${mostExpensiveOta.name}</span></div>
       </div>
     </div>`;
@@ -1237,7 +2145,7 @@ function renderIncompleteDirectCallout(directShare, hourlyRate) {
   const marketingSpend = getDirectMarketingSpendEuros(hourlyRate);
   if (directShare > 10 && marketingSpend === 0) {
     el.style.display = 'block';
-    el.innerHTML = '<strong>Incomplete direct picture.</strong> You\'ve modelled payment and support only — not website &amp; marketing. Add those costs in step 3 before comparing Direct to OTAs, or your direct cost will look artificially low.';
+    el.innerHTML = t('incompleteDirectCalloutText');
   } else {
     el.style.display = 'none';
   }
@@ -1245,9 +2153,9 @@ function renderIncompleteDirectCallout(directShare, hourlyRate) {
 
 function renderCostSummary(totalCost, totalRevenue, otaCost, otaRevenue, directCost, directRevenue) {
   const rows = [
-    { label: 'Total Distribution Cost', cost: totalCost, revenue: totalRevenue },
-    { label: 'OTA Cost', cost: otaCost, revenue: otaRevenue },
-    { label: 'Direct Cost', cost: directCost, revenue: directRevenue }
+    { label: t('totalDistCostLabel'), cost: totalCost, revenue: totalRevenue },
+    { label: t('otaCostLabel'), cost: otaCost, revenue: otaRevenue },
+    { label: t('directCostLabel'), cost: directCost, revenue: directRevenue }
   ];
   const html = rows.map(r => {
     const pct = r.revenue > 0 ? (r.cost / r.revenue) * 100 : 0;
@@ -1257,7 +2165,7 @@ function renderCostSummary(totalCost, totalRevenue, otaCost, otaRevenue, directC
         <span class="cs-row-label">${r.label}</span>
         <span class="cs-row-pct">${pct.toFixed(1)}%</span>
       </div>
-      <div class="cs-row-detail">${money(r.cost)} cost on ${money(r.revenue)} revenue</div>
+      <div class="cs-row-detail">${tf('costOnRevenueTpl', { cost: money(r.cost), revenue: money(r.revenue) })}</div>
       <div class="cs-row-bar-track"><div class="cs-row-bar-fill" style="width:${Math.min(100, pct)}%;"></div></div>
     </div>`;
   }).join('');
@@ -1269,14 +2177,14 @@ function renderHeadlineCompare(otaCosts, directCostPct) {
 
   const html = `
     <div class="headline-card">
-      <div class="headline-card-label">Most expensive OTA</div>
+      <div class="headline-card-label">${t('mostExpensiveOtaLabel')}</div>
       <div class="headline-card-value ota">${mostExpensiveOta.costPct.toFixed(1)}%</div>
-      <div class="headline-card-sub">${mostExpensiveOta.name} — true cost on its revenue</div>
+      <div class="headline-card-sub">${tf('mostExpensiveOtaSubTpl', { name: mostExpensiveOta.name })}</div>
     </div>
     <div class="headline-card">
-      <div class="headline-card-label">Direct</div>
+      <div class="headline-card-label">${t('directLabel')}</div>
       <div class="headline-card-value direct">${directCostPct.toFixed(1)}%</div>
-      <div class="headline-card-sub">True cost on direct revenue — incl. payment, support &amp; any marketing you've entered</div>
+      <div class="headline-card-sub">${t('directSubText')}</div>
     </div>`;
 
   document.getElementById('headlineCompare').innerHTML = html;
@@ -1311,11 +2219,11 @@ function updateScenarioDirect() {
   const { totalRevenue, directRevenue, otaCosts, hourlyRate } = lastAnalysis;
 
   if (isNaN(targetShare) || targetShare < 0) {
-    resultEl.innerHTML = 'Enter a target share.';
+    resultEl.innerHTML = t('enterTargetShare');
     return;
   }
   if (targetShare >= currentShare) {
-    resultEl.innerHTML = `<span class="warn">Target must be below the current ${currentShare}% share.</span> Lower the OTA's share above first, or pick a target below ${currentShare}%.`;
+    resultEl.innerHTML = tf('targetBelowCurrentTpl', { current: currentShare });
     return;
   }
 
@@ -1336,49 +2244,48 @@ function updateScenarioDirect() {
     const revenueAtCurrentRate = marketingHeadroom / costPerEuro;
     simRows = `
       <div class="flow-equation">
-        <div class="flow-equation-title">What could ${money(marketingHeadroom)} in extra marketing create?</div>
+        <div class="flow-equation-title">${tf('extraMarketingCreateTpl', { amount: money(marketingHeadroom) })}</div>
         <div class="flow-equation-rate">
-          Right now, every <strong>${unitMoney()} of direct revenue</strong> costs you <strong>${cur()}${costPerEuro.toFixed(2)} in marketing</strong> (${marketingPctOfDirect.toFixed(1)}%).<br>
-          <span>That's ${money(marketingSpend)} marketing ÷ ${money(directRevenue)} direct revenue.</span>
+          ${tf('rateLineTpl', { unit: unitMoney(), rate: cur() + costPerEuro.toFixed(2), pct: marketingPctOfDirect.toFixed(1), spend: money(marketingSpend), revenue: money(directRevenue) })}
         </div>
         <div class="flow-equation-calc">
-          <div class="eq-part"><span class="eq-val">${money(marketingHeadroom)}</span><span class="eq-lbl">extra marketing<br>from OTA saving</span></div>
+          <div class="eq-part"><span class="eq-val">${money(marketingHeadroom)}</span><span class="eq-lbl">${t('eqExtraMarketingFromSaving')}</span></div>
           <span class="eq-op">÷</span>
-          <div class="eq-part"><span class="eq-val">${cur()}${costPerEuro.toFixed(2)}</span><span class="eq-lbl">marketing per<br>${unitMoney()} direct</span></div>
+          <div class="eq-part"><span class="eq-val">${cur()}${costPerEuro.toFixed(2)}</span><span class="eq-lbl">${tf('eqMarketingPerUnitDirectTpl', { unit: unitMoney() })}</span></div>
           <span class="eq-op">=</span>
-          <div class="eq-part eq-result"><span class="eq-val">≈ ${money(revenueAtCurrentRate)}</span><span class="eq-lbl">direct revenue /yr<br>if same rate holds</span></div>
+          <div class="eq-part eq-result"><span class="eq-val">≈ ${money(revenueAtCurrentRate)}</span><span class="eq-lbl">${t('eqDirectRevenueIfRate')}</span></div>
         </div>
-        <div class="flow-equation-note"><strong>The logic in one line:</strong> you save ${money(marketingHeadroom)} on the OTA → if you spend that on marketing at the same rate you spend today (${cur()}${costPerEuro.toFixed(2)} per ${unitMoney()} direct), the maths gives you ≈ ${money(revenueAtCurrentRate)} of direct revenue.</div>
+        <div class="flow-equation-note">${tf('logicOneLineDirectTpl', { saving: money(marketingHeadroom), rate: cur() + costPerEuro.toFixed(2), unit: unitMoney(), revenue: money(revenueAtCurrentRate) })}</div>
       </div>`;
   } else if (marketingHeadroom > 0) {
-    simRows = `<div class="flow-footnote">Add website &amp; marketing costs in step 3 to see how much direct revenue ${money(marketingHeadroom)} in OTA savings could create.</div>`;
+    simRows = `<div class="flow-footnote">${tf('addMarketingCostsFootnoteTpl', { amount: money(marketingHeadroom) })}</div>`;
   }
 
   resultEl.innerHTML = `
     <div class="flow-card">
-      <div class="flow-title">${ota.name} · ${currentShare}% → ${targetShare}%</div>
-      <div class="flow-lead">${pointsMoved.toFixed(0)} share points = <strong>${money(revenueMoved)}</strong> of revenue. Compare what that volume costs on ${ota.name} vs Direct.</div>
+      <div class="flow-title">${tf('flowTitleShareTpl', { name: ota.name, current: currentShare, target: targetShare })}</div>
+      <div class="flow-lead">${tf('flowLeadPointsMovedTpl', { points: pointsMoved.toFixed(0), revenue: money(revenueMoved), name: ota.name })}</div>
       <table class="flow-table">
         <thead>
           <tr>
             <th class="col-label"></th>
             <th class="col-num">${ota.name}</th>
-            <th class="col-num">Direct</th>
+            <th class="col-num">${t('directLabel')}</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="col-label">Revenue</td>
+            <td class="col-label">${t('colRevenue')}</td>
             <td class="col-num ota">${money(revenueMoved)}</td>
             <td class="col-num direct">${money(revenueMoved)}</td>
           </tr>
           <tr>
-            <td class="col-label">Cost on this revenue</td>
-            <td class="col-num ota">${moneyPerYr(otaCostToday)}<span class="sub">${otaTrueCost.toFixed(1)}% true cost</span></td>
-            <td class="col-num direct">${moneyPerYr(directVariableCost)}<span class="sub">payment &amp; support only</span></td>
+            <td class="col-label">${t('colCostOnThisRevenue')}</td>
+            <td class="col-num ota">${moneyPerYr(otaCostToday)}<span class="sub">${tf('subTrueCostTpl', { pct: otaTrueCost.toFixed(1) })}</span></td>
+            <td class="col-num direct">${moneyPerYr(directVariableCost)}<span class="sub">${t('subPaymentSupportOnly')}</span></td>
           </tr>
           <tr class="flow-diff-row">
-            <td colspan="3">Extra you could spend on marketing <span class="diff-val">${moneyPerYr(marketingHeadroom)}</span></td>
+            <td colspan="3">${t('extraMarketingSpendLabel')} <span class="diff-val">${moneyPerYr(marketingHeadroom)}</span></td>
           </tr>
         </tbody>
       </table>
@@ -1400,11 +2307,11 @@ function updateScenarioOta() {
   const { otaCosts } = lastAnalysis;
 
   if (fromName === toName) {
-    resultEl.innerHTML = '<span class="warn">Pick two different OTAs.</span>';
+    resultEl.innerHTML = t('pickTwoDifferentOtas');
     return;
   }
   if (revenueAmount <= 0) {
-    resultEl.innerHTML = 'Enter a revenue amount.';
+    resultEl.innerHTML = t('enterRevenueAmount');
     return;
   }
 
@@ -1416,30 +2323,30 @@ function updateScenarioOta() {
   const gapPp = fromCost - toCost;
 
   if (saving <= 0) {
-    resultEl.innerHTML = `<strong>${toName}</strong> (${toCost.toFixed(1)}%) isn't cheaper than <strong>${fromName}</strong> (${fromCost.toFixed(1)}%) on this volume. No margin gain here.`;
+    resultEl.innerHTML = tf('notCheaperTpl', { toName, toPct: toCost.toFixed(1), fromName, fromPct: fromCost.toFixed(1) });
     return;
   }
 
   resultEl.innerHTML = `
     <div class="flow-card">
-      <div class="flow-title">${fromName} → ${toName}</div>
+      <div class="flow-title">${tf('flowTitleMoveTpl', { from: fromName, to: toName })}</div>
       <table class="flow-table flow-table-2col">
         <tbody>
           <tr>
-            <td class="col-label">Revenue moved</td>
+            <td class="col-label">${t('colRevenueMoved')}</td>
             <td class="col-num">${moneyPerYr(revenueAmount)}</td>
           </tr>
           <tr>
-            <td class="col-label">Cost on ${fromName}</td>
+            <td class="col-label">${tf('colCostOnTpl', { name: fromName })}</td>
             <td class="col-num ota">${moneyPerYr(costFrom)}<span class="sub">${fromCost.toFixed(1)}%</span></td>
           </tr>
           <tr>
-            <td class="col-label">Cost on ${toName}</td>
+            <td class="col-label">${tf('colCostOnTpl', { name: toName })}</td>
             <td class="col-num direct">${moneyPerYr(costTo)}<span class="sub">${toCost.toFixed(1)}%</span></td>
           </tr>
           <tr>
-            <td class="col-label">Margin saved</td>
-            <td class="col-num saving">${moneyPerYr(saving)}<span class="sub">${gapPp.toFixed(1)} points on this volume</span></td>
+            <td class="col-label">${t('colMarginSaved')}</td>
+            <td class="col-num saving">${moneyPerYr(saving)}<span class="sub">${tf('subPointsOnVolumeTpl', { pts: gapPp.toFixed(1) })}</span></td>
           </tr>
         </tbody>
       </table>
@@ -1456,11 +2363,11 @@ function updateScenarioMarketing() {
   const marketingSpend = getDirectMarketingSpendEuros(hourlyRate);
 
   if (marketingSpend <= 0 || directRevenue <= 0) {
-    resultEl.innerHTML = '<span class="warn">Add website &amp; marketing costs in step 3 first — we need your current spend rate.</span>';
+    resultEl.innerHTML = t('addMarketingFirst');
     return;
   }
   if (extraAnnual <= 0) {
-    resultEl.innerHTML = 'Enter an extra marketing amount.';
+    resultEl.innerHTML = t('enterExtraMarketingAmount');
     return;
   }
 
@@ -1472,17 +2379,17 @@ function updateScenarioMarketing() {
 
   resultEl.innerHTML = `
     <div class="flow-card">
-      <div class="flow-title">Extra marketing → direct revenue</div>
-      <div class="flow-lead">At your current rate of <strong>${cur()}${costPerEuro.toFixed(2)} marketing per ${unitMoney()} direct</strong> (${marketingPctOfDirect.toFixed(1)}%), here's what ${moneyPerYr(extraAnnual)} more could buy — if the same rate holds.</div>
+      <div class="flow-title">${t('flowTitleExtraMarketing')}</div>
+      <div class="flow-lead">${tf('flowLeadExtraMarketingTpl', { rate: cur() + costPerEuro.toFixed(2), unit: unitMoney(), pct: marketingPctOfDirect.toFixed(1), amount: moneyPerYr(extraAnnual) })}</div>
       <div class="flow-equation">
         <div class="flow-equation-calc">
-          <div class="eq-part"><span class="eq-val">${money(extraAnnual)}</span><span class="eq-lbl">extra marketing<br>/yr</span></div>
+          <div class="eq-part"><span class="eq-val">${money(extraAnnual)}</span><span class="eq-lbl">${t('eqExtraMarketingPerYr')}</span></div>
           <span class="eq-op">÷</span>
-          <div class="eq-part"><span class="eq-val">${cur()}${costPerEuro.toFixed(2)}</span><span class="eq-lbl">marketing per<br>${unitMoney()} direct</span></div>
+          <div class="eq-part"><span class="eq-val">${cur()}${costPerEuro.toFixed(2)}</span><span class="eq-lbl">${tf('eqMarketingPerUnitDirectTpl', { unit: unitMoney() })}</span></div>
           <span class="eq-op">=</span>
-          <div class="eq-part eq-result"><span class="eq-val">≈ ${money(revenueAtRate)}</span><span class="eq-lbl">direct revenue /yr<br>if same rate holds</span></div>
+          <div class="eq-part eq-result"><span class="eq-val">≈ ${money(revenueAtRate)}</span><span class="eq-lbl">${t('eqDirectRevenueIfRate')}</span></div>
         </div>
-        <div class="flow-equation-note"><strong>The logic in one line:</strong> spend ${moneyPerYr(extraAnnual)} more on marketing at today's rate → maths gives you ≈ ${money(revenueAtRate)} of direct revenue. That would take your marketing from ${moneyPerYr(marketingSpend)} (${marketingPctOfDirect.toFixed(1)}%) to ${moneyPerYr(newTotalMarketing)} (${newMarketingPct.toFixed(1)}% of current direct revenue).</div>
+        <div class="flow-equation-note">${tf('logicOneLineMarketingTpl', { extra: moneyPerYr(extraAnnual), revenue: money(revenueAtRate), spend: moneyPerYr(marketingSpend), pct: marketingPctOfDirect.toFixed(1), newTotal: moneyPerYr(newTotalMarketing), newPct: newMarketingPct.toFixed(1) })}</div>
       </div>
     </div>`;
 }
@@ -1490,7 +2397,7 @@ function updateScenarioMarketing() {
 function renderScenarioCalculator(otaCosts) {
   const box = document.getElementById('scenarioBox');
   if (!otaCosts.length) {
-    box.innerHTML = '<div class="scenario-result">Add at least one OTA to use these scenarios.</div>';
+    box.innerHTML = `<div class="scenario-result">${t('addAtLeastOneOta')}</div>`;
     return;
   }
 
@@ -1508,21 +2415,21 @@ function renderScenarioCalculator(otaCosts) {
 
   box.innerHTML = `
     <div class="scenario-block">
-      <div class="scenario-block-title">OTA share decrease → grow Direct</div>
-      <div class="scenario-block-desc">See what you save when an OTA share drops — and how much direct revenue that saving could buy in marketing.</div>
+      <div class="scenario-block-title">${t('scenarioDirectBlockTitle')}</div>
+      <div class="scenario-block-desc">${t('scenarioDirectBlockDesc')}</div>
       <div class="scenario-inputs three">
         <div class="scenario-field">
-          <label>OTA</label>
+          <label>${t('scenarioOtaFieldLabel')}</label>
           <select id="scenarioDirectOta" onchange="updateScenarioDirect()">
-            ${otaChannels.map(o => `<option value="${o.name}"${o.name === defaultOta.name ? ' selected' : ''}>${o.name} (now ${o.share}%)</option>`).join('')}
+            ${otaChannels.map(o => `<option value="${o.name}"${o.name === defaultOta.name ? ' selected' : ''}>${tf('scenarioOtaOptionTpl', { name: o.name, share: o.share })}</option>`).join('')}
           </select>
         </div>
         <div class="scenario-field">
-          <label>Current share</label>
+          <label>${t('scenarioCurrentShareLabel')}</label>
           <div class="scenario-static" id="scenarioDirectCurrent">${defaultOta.share}%</div>
         </div>
         <div class="scenario-field">
-          <label>Target share %</label>
+          <label>${t('scenarioTargetShareLabel')}</label>
           <input type="number" id="scenarioDirectTarget" value="${defaultTarget}" min="0" max="100" step="0.5" oninput="updateScenarioDirect()">
         </div>
       </div>
@@ -1532,23 +2439,23 @@ function renderScenarioCalculator(otaCosts) {
     <div class="scenario-divider"></div>
 
     <div class="scenario-block">
-      <div class="scenario-block-title">Move volume between OTAs</div>
-      <div class="scenario-block-desc">What happens to margin if volume moves from a costlier OTA to a cheaper one?</div>
+      <div class="scenario-block-title">${t('scenarioOtaMoveBlockTitle')}</div>
+      <div class="scenario-block-desc">${t('scenarioOtaMoveBlockDesc')}</div>
       <div class="scenario-inputs three">
         <div class="scenario-field">
-          <label>From (costlier)</label>
+          <label>${t('scenarioFromLabel')}</label>
           <select id="scenarioFromOta" onchange="updateScenarioOta()">
-            ${otaCosts.map(o => `<option value="${o.name}"${o.name === expensiveOta.name ? ' selected' : ''}>${o.name} (${o.costPct.toFixed(1)}%)</option>`).join('')}
+            ${otaCosts.map(o => `<option value="${o.name}"${o.name === expensiveOta.name ? ' selected' : ''}>${tf('scenarioOtaCostOptionTpl', { name: o.name, pct: o.costPct.toFixed(1) })}</option>`).join('')}
           </select>
         </div>
         <div class="scenario-field">
-          <label>To (cheaper)</label>
+          <label>${t('scenarioToLabel')}</label>
           <select id="scenarioToOta" onchange="updateScenarioOta()">
-            ${otaCosts.map(o => `<option value="${o.name}"${o.name === cheapOta.name ? ' selected' : ''}>${o.name} (${o.costPct.toFixed(1)}%)</option>`).join('')}
+            ${otaCosts.map(o => `<option value="${o.name}"${o.name === cheapOta.name ? ' selected' : ''}>${tf('scenarioOtaCostOptionTpl', { name: o.name, pct: o.costPct.toFixed(1) })}</option>`).join('')}
           </select>
         </div>
         <div class="scenario-field">
-          <label id="scenarioOtaRevenueLabel">Revenue amount (${periodMoneyLabel})</label>
+          <label id="scenarioOtaRevenueLabel">${tf('scenarioOtaRevenueLabelTpl', { x: periodMoneyLabel })}</label>
           <input type="number" id="scenarioOtaRevenue" class="period-money-input" value="${scenarioRevenueVal}" min="0" step="1000" oninput="updateScenarioOta()">
         </div>
       </div>
@@ -1558,11 +2465,11 @@ function renderScenarioCalculator(otaCosts) {
     <div class="scenario-divider"></div>
 
     <div class="scenario-block">
-      <div class="scenario-block-title">Extra marketing spend → direct revenue</div>
-      <div class="scenario-block-desc">If you increase direct marketing at your current spend rate, how much direct revenue could that buy?</div>
+      <div class="scenario-block-title">${t('scenarioMarketingBlockTitle')}</div>
+      <div class="scenario-block-desc">${t('scenarioMarketingBlockDesc')}</div>
       <div class="scenario-inputs">
         <div class="scenario-field">
-          <label id="scenarioMarketingExtraLabel">Extra marketing spend (${periodMoneyLabel})</label>
+          <label id="scenarioMarketingExtraLabel">${tf('scenarioMarketingExtraLabelTpl', { x: periodMoneyLabel })}</label>
           <input type="number" id="scenarioMarketingExtra" class="period-money-input" value="${scenarioMarketingVal}" min="0" step="500" oninput="updateScenarioMarketing()">
         </div>
       </div>
@@ -1619,7 +2526,8 @@ function renderChannelCostChart(otaCosts, directCostPct, directShare) {
   const directIncentivePct = getDirectMarketingInputs().incentivePct;
   const directMarketingPct = computeDirectMarketingPct(directRevenue, hourlyRate);
   
-  // One row per channel — OTAs plus Direct as a single bucket — with real (non-normalized) component %s
+  // One row per channel, OTAs plus Direct as a single bucket, with real (non-normalized) component %s
+  const directLabel = t('chartDirectLabel');
   const rows = otaChannels.map(o => ({
     name: o.name,
     commission: o.commission,
@@ -1630,7 +2538,7 @@ function renderChannelCostChart(otaCosts, directCostPct, directShare) {
     marketing: 0
   }));
   rows.push({
-    name: 'Direct',
+    name: directLabel,
     commission: 0,
     promo: directIncentivePct,
     payment: directPaymentPct,
@@ -1652,12 +2560,12 @@ function renderChannelCostChart(otaCosts, directCostPct, directShare) {
     data: {
       labels,
       datasets: [
-        { label: 'Commission', data: rows.map(r => r.commission), backgroundColor: '#C0392B', borderRadius:4 },
-        { label: 'Promo / Incentive Discount', data: rows.map(r => r.promo), backgroundColor: '#E59866' },
-        { label: 'Payment Processing', data: rows.map(r => r.payment), backgroundColor: '#1B4F72' },
-        { label: 'Payment Failures', data: rows.map(r => r.failure), backgroundColor: '#5DADE2' },
-        { label: 'Customer Service', data: rows.map(r => r.service), backgroundColor: '#7A7A8C', borderRadius:4 },
-        { label: 'Website & Marketing', data: rows.map(r => r.marketing), backgroundColor: '#8E44AD', borderRadius:4 }
+        { label: t('chartCommission'), data: rows.map(r => r.commission), backgroundColor: '#FF3B30', borderRadius:4 },
+        { label: t('chartPromoIncentive'), data: rows.map(r => r.promo), backgroundColor: '#FF9500' },
+        { label: t('chartPaymentProcessing'), data: rows.map(r => r.payment), backgroundColor: '#007AFF' },
+        { label: t('chartPaymentFailures'), data: rows.map(r => r.failure), backgroundColor: '#5AC8FA' },
+        { label: t('chartCustomerService'), data: rows.map(r => r.service), backgroundColor: '#8E8E93', borderRadius:4 },
+        { label: t('chartWebsiteMarketing'), data: rows.map(r => r.marketing), backgroundColor: '#AF52DE', borderRadius:4 }
       ]
     },
     options: {
@@ -1669,7 +2577,7 @@ function renderChannelCostChart(otaCosts, directCostPct, directShare) {
         legend: { display: true, position: 'bottom', labels: { boxWidth:10, font:{size:11} } },
         tooltip: {
           callbacks: {
-            label: ctx => ctx.dataset.label + ': ' + ctx.parsed.x.toFixed(1) + '% of revenue'
+            label: ctx => ctx.dataset.label + ': ' + ctx.parsed.x.toFixed(1) + t('chartPctOfRevenue')
           }
         }
       },
@@ -1680,8 +2588,8 @@ function renderChannelCostChart(otaCosts, directCostPct, directShare) {
           reverse: true,
           grid: { display: false },
           ticks: {
-            font: (ctx) => ({ weight: labels[ctx.index] === 'Direct' ? '700' : '500', size: 12 }),
-            color: (ctx) => labels[ctx.index] === 'Direct' ? '#1B4F72' : '#2C2C3A'
+            font: (ctx) => ({ weight: labels[ctx.index] === directLabel ? '700' : '500', size: 12 }),
+            color: (ctx) => labels[ctx.index] === directLabel ? '#007AFF' : '#3A3A3C'
           }
         }
       }
@@ -1700,7 +2608,7 @@ function renderCostBreakdown(otaCosts, directCostPct, directShare) {
     const annualCost = ota.revenue * (ota.costPct / 100);
     const servicePct = serviceCostPct(channel.serviceHours || 0, hourlyRate, ota.revenue);
     html += `<div style="margin-bottom:10px;"><strong style="color:#C0392B;">${ota.name}</strong><br>`;
-    html += `Commission (${(channel.commission || 0).toFixed(1)}%) + Promo/Visibility (${(channel.promoPct || 0).toFixed(1)}%) + Payment (${(channel.paymentPct || 0).toFixed(1)}%) + Support (${servicePct.toFixed(1)}%) = <strong>${ota.costPct.toFixed(1)}%</strong> · Revenue: ${money(ota.revenue)} · Annual cost: <strong>${money(annualCost)}</strong></div>`;
+    html += tf('breakdownFormulaOtaTpl', { commission: (channel.commission || 0).toFixed(1), promo: (channel.promoPct || 0).toFixed(1), payment: (channel.paymentPct || 0).toFixed(1), service: servicePct.toFixed(1), total: ota.costPct.toFixed(1), revenue: money(ota.revenue), cost: money(annualCost) }) + '</div>';
   });
   
   const directRevenue = getAnnualTotalRevenue() * (directShare / 100);
@@ -1709,29 +2617,53 @@ function renderCostBreakdown(otaCosts, directCostPct, directShare) {
   const paymentPctVal = parseFloat(document.getElementById('directPaymentPct').value) || 0;
   const failurePctVal = parseFloat(document.getElementById('directFailurePct').value) || 0;
   
-  html += `<div style="margin-top:14px; padding-top:14px; border-top:0.5px solid var(--border);"><strong style="color:#1B4F72;">Direct</strong><br>`;
-  html += `Payment (${paymentPctVal.toFixed(1)}%) + Failures (${failurePctVal.toFixed(1)}%) + Support (${supportPct.toFixed(1)}%)`;
+  html += `<div style="margin-top:14px; padding-top:14px; border-top:0.5px solid var(--border);"><strong style="color:#007AFF;">${t('breakdownDirectHeading')}</strong><br>`;
+  html += tf('breakdownFormulaDirectBaseTpl', { payment: paymentPctVal.toFixed(1), failure: failurePctVal.toFixed(1), service: supportPct.toFixed(1) });
   
-  // Website & Marketing — only list the line items that were actually filled in
+  // Website & Marketing, only list the line items that were actually filled in
   const m = getDirectMarketingInputs();
   const contentPct = (m.contentHours * 12 * hourlyRate / (directRevenue || 1)) * 100;
   const marketingItems = [
-    m.bookingEngineFee > 0 ? `Booking engine ${moneyPerYr(m.bookingEngineFee)}` : null,
-    m.incentivePct > 0 ? `Incentive discount ${m.incentivePct.toFixed(1)}%` : null,
-    m.hostingFee > 0 ? `Hosting ${moneyPerYr(m.hostingFee)}` : null,
-    m.adsSpend > 0 ? `Ads ${moneyPerYr(m.adsSpend)}` : null,
-    m.seoCost > 0 ? `SEO ${moneyPerYr(m.seoCost)}` : null,
-    m.emailToolFee > 0 ? `Email tool ${moneyPerYr(m.emailToolFee)}` : null,
-    m.contentHours > 0 ? `Content ${m.contentHours.toFixed(1)}hrs/mo (${contentPct.toFixed(1)}%)` : null
+    m.bookingEngineFee > 0 ? tf('itemBookingEngine', { amount: moneyPerYr(m.bookingEngineFee) }) : null,
+    m.incentivePct > 0 ? tf('itemIncentiveDiscount', { pct: m.incentivePct.toFixed(1) }) : null,
+    m.hostingFee > 0 ? tf('itemHosting', { amount: moneyPerYr(m.hostingFee) }) : null,
+    m.adsSpend > 0 ? tf('itemAds', { amount: moneyPerYr(m.adsSpend) }) : null,
+    m.seoCost > 0 ? tf('itemSeo', { amount: moneyPerYr(m.seoCost) }) : null,
+    m.emailToolFee > 0 ? tf('itemEmailTool', { amount: moneyPerYr(m.emailToolFee) }) : null,
+    m.contentHours > 0 ? tf('itemContent', { hrs: m.contentHours.toFixed(1), pct: contentPct.toFixed(1) }) : null
   ].filter(Boolean);
   if (marketingItems.length) {
-    html += ` + Website & Marketing (${marketingItems.join(', ')})`;
+    html += tf('breakdownWebsiteMarketingSuffixTpl', { items: marketingItems.join(', ') });
   }
   
-  html += ` = <strong>${directCostPct.toFixed(1)}%</strong> · Revenue: ${money(directRevenue)} · Annual cost: <strong>${money(directAnnualCost)}</strong></div>`;
+  html += tf('breakdownDirectTotalTpl', { total: directCostPct.toFixed(1), revenue: money(directRevenue), cost: money(directAnnualCost) }) + '</div>';
   
   html += '</div>';
   document.getElementById('costBreakdown').innerHTML = html;
+}
+
+function renderChannelRiskScore() {
+  const el = document.getElementById('channelRiskScore');
+  if (!el) return;
+
+  if (!otaChannels.length) {
+    el.innerHTML = `<p class="risk-score-copy" style="color:var(--muted);">${t('riskAddAtLeastOne')}</p>`;
+    return;
+  }
+
+  const top = otaChannels.reduce((a, b) => ((b.share || 0) > (a.share || 0) ? b : a), otaChannels[0]);
+  const pct = top.share || 0;
+  let level, cls;
+  if (pct < 30) { level = t('riskLow'); cls = 'low'; }
+  else if (pct <= 50) { level = t('riskModerate'); cls = 'moderate'; }
+  else { level = t('riskHigh'); cls = 'high'; }
+
+  el.innerHTML = `
+    <div class="risk-score-header">
+      <span class="risk-badge ${cls}"><span class="risk-badge-dot"></span>${level}</span>
+      <span class="risk-score-meta">${tf('riskLargestOtaTpl', { pct: pct.toFixed(0), name: top.name })}</span>
+    </div>
+    <p class="risk-score-copy">${tf('riskCopyTpl', { pct: pct.toFixed(0), name: top.name })}</p>`;
 }
 
 function generateNarrative(otaCosts, directCostPct, directShare, totalRevenue) {
@@ -1739,18 +2671,18 @@ function generateNarrative(otaCosts, directCostPct, directShare, totalRevenue) {
   const points = [];
 
   if (directShare <= 0) {
-    points.push('<div class="narrative-point"><strong>No direct share yet.</strong> Your mix is all OTA. Before spending on direct marketing, model what direct would actually cost you — payment, support, booking engine, and marketing — then compare it to your priciest OTA.</div>');
+    points.push(t('narrativeNoDirectShare'));
   } else if (directCostPct < mostExpensiveOta.costPct) {
-    points.push(`<div class="narrative-point"><strong>There is room.</strong> Direct costs you ${directCostPct.toFixed(1)}% all-in. ${mostExpensiveOta.name} costs ${mostExpensiveOta.costPct.toFixed(1)}%. You are already paying heavily to rent demand on OTAs — the economics can support investing more in your own channel, if you spend it well.</div>`);
+    points.push(tf('narrativeRoomTpl', { directPct: directCostPct.toFixed(1), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(1) }));
   } else {
-    points.push(`<div class="narrative-point"><strong>Check your direct costs.</strong> At ${directCostPct.toFixed(1)}% all-in, Direct is not beating ${mostExpensiveOta.name} (${mostExpensiveOta.costPct.toFixed(1)}%) on paper. Make sure you have counted your real marketing spend — booking engine, ads, email, content — before deciding direct is too expensive.</div>`);
+    points.push(tf('narrativeCheckCostsTpl', { directPct: directCostPct.toFixed(1), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(1) }));
   }
 
   if (directShare > 0) {
-    points.push(`<div class="narrative-point"><strong>Your spending room.</strong> The opportunity simulation above turns an OTA share decrease into a euro figure — how much you could put into direct marketing and still beat what that OTA was costing you. That is your budget envelope, not a promise you will win the bookings.</div>`);
-    points.push(`<div class="narrative-point"><strong>You need a plan, not a tactic.</strong> Regaining share means a coordinated direct setup: booking engine, paid search, email to past guests, B2B sales, site conversion, and the content that feeds all of it. Turning up SEO alone will not do it. This tool answers whether you can afford to invest — building how to spend it is the next step.</div>`);
+    points.push(t('narrativeSpendingRoom'));
+    points.push(t('narrativeNeedPlan'));
   } else {
-    points.push(`<div class="narrative-point"><strong>Start with the economics.</strong> Once you know what direct would cost you all-in, compare it to ${mostExpensiveOta.name} at ${mostExpensiveOta.costPct.toFixed(1)}%. If the numbers work, the next job is a proper direct marketing plan — not a single tactic like SEO.</div>`);
+    points.push(tf('narrativeStartWithEconomicsTpl', { otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(1) }));
   }
 
   document.getElementById('narrativeText').innerHTML = points.join('');
@@ -1761,6 +2693,8 @@ updateCurrencyUI();
 updatePeriodUI();
 if (!loadStateFromHash()) loadSavedState();
 validateInputs();
+
+applyLang(window.__oisInitialLang || 'en');
 </script>
 </body>
 </html>
