@@ -198,13 +198,18 @@ header {
 .flow-table tr:last-child th, .flow-table tr:last-child td { border-bottom:none; }
 .flow-table thead th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); background:var(--card2); }
 .flow-table thead th.col-num { text-align:right; }
-.flow-table .col-label { width:38%; text-align:left; font-weight:500; color:var(--ink2); }
+.flow-table .col-label { width:38%; text-align:left; font-weight:500; color:var(--ink2); word-break:break-word; }
 .flow-table .col-num { text-align:right; font-weight:700; }
 .flow-table .col-num.ota { color:var(--alert); }
 .flow-table .col-num.direct { color:var(--accent); }
 .flow-table .col-num.saving { color:var(--positive); }
 .flow-table .sub { display:block; font-size:11px; font-weight:500; color:var(--muted); margin-top:3px; line-height:1.35; }
 .flow-table-2col .col-label { width:50%; }
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
 .flow-highlight { display:flex; justify-content:space-between; align-items:center; padding:14px; background:rgba(52,199,89,0.08); border-top:0.5px solid rgba(52,199,89,0.2); border-bottom:0.5px solid var(--border-light); gap:12px; }
 .flow-highlight-label { font-size:12px; font-weight:600; color:var(--ink2); line-height:1.4; }
 .flow-highlight-value { font-size:20px; font-weight:800; color:var(--positive); white-space:nowrap; }
@@ -328,18 +333,26 @@ header {
   .exec-snapshot-grid { grid-template-columns: 1fr; }
   .fab-stack {
     right: max(10px, env(safe-area-inset-right));
+    top: auto;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    transform: none;
   }
+  .ota-row { grid-template-columns: 1fr 1fr; }
+  .ota-row > div:first-child { grid-column: 1 / -1; }
+  .ota-remove { grid-column: 2; justify-self: end; align-self: center; padding-bottom: 0; }
+  .ota-advanced { grid-template-columns: 1fr; }
+  .scenario-inputs { grid-template-columns: 1fr; }
+  .scenario-inputs.three { grid-template-columns: 1fr; }
+  .headline-compare { grid-template-columns: 1fr; }
+  .prefs-row { margin-left: 0; width: 100%; }
+  .flow-table th, .flow-table td { padding: 10px 10px; }
+  .flow-table .flow-diff-row .diff-val { float: none; display: block; margin-top: 4px; }
+  .flow-highlight-value { white-space: normal; }
+  .chart-section, .result-header, .ios-group, .flow-card { max-width: 100%; }
 }
 
-@media (max-width: 520px) {
-  .ota-row { grid-template-columns:1fr 1fr; }
-  .ota-row > div:first-child { grid-column:1 / -1; }
-  .ota-remove { grid-column:2; justify-self:end; align-self:center; padding-bottom:0; }
-  .ota-advanced { grid-template-columns:1fr; }
-  .scenario-inputs.three { grid-template-columns:1fr; }
-  .headline-compare { grid-template-columns:1fr; }
-  .fab-stack { top:auto; bottom:calc(12px + env(safe-area-inset-bottom)); transform:none; }
-  .prefs-row { margin-left:0; width:100%; }
+@media (max-width: 380px) {
+  .flow-table th, .flow-table td { padding: 8px 8px; font-size: 12px; }
 }
 
 .authority-band { display:none; background:rgba(8,8,14,0.96); color:rgba(255,255,255,0.6); padding:12px 16px; text-align:center; font-size:11px; line-height:1.6; border-top:0.5px solid rgba(255,255,255,0.08); }
@@ -2265,6 +2278,7 @@ function updateScenarioDirect() {
     <div class="flow-card">
       <div class="flow-title">${tf('flowTitleShareTpl', { name: ota.name, current: currentShare, target: targetShare })}</div>
       <div class="flow-lead">${tf('flowLeadPointsMovedTpl', { points: pointsMoved.toFixed(0), revenue: money(revenueMoved), name: ota.name })}</div>
+      <div class="table-scroll">
       <table class="flow-table">
         <thead>
           <tr>
@@ -2289,6 +2303,7 @@ function updateScenarioDirect() {
           </tr>
         </tbody>
       </table>
+      </div>
       ${simRows}
     </div>`;
 }
@@ -2330,6 +2345,7 @@ function updateScenarioOta() {
   resultEl.innerHTML = `
     <div class="flow-card">
       <div class="flow-title">${tf('flowTitleMoveTpl', { from: fromName, to: toName })}</div>
+      <div class="table-scroll">
       <table class="flow-table flow-table-2col">
         <tbody>
           <tr>
@@ -2350,6 +2366,7 @@ function updateScenarioOta() {
           </tr>
         </tbody>
       </table>
+      </div>
     </div>`;
 }
 
