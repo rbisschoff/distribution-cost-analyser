@@ -329,7 +329,8 @@ header {
   .run-btn, .btn-add-ota, .preset-btn {
     min-height: 44px;
   }
-  .run-btn { width: 100%; font-size: 16px; }
+  .run-btn { width: 100%; font-size: 16px; flex-wrap: wrap; }
+  .reset-link { white-space: normal; width: 100%; text-align: center; padding: 8px 16px; }
   .exec-snapshot-grid { grid-template-columns: 1fr; }
   .fab-stack {
     right: max(10px, env(safe-area-inset-right));
@@ -349,10 +350,27 @@ header {
   .flow-table .flow-diff-row .diff-val { float: none; display: block; margin-top: 4px; }
   .flow-highlight-value { white-space: normal; }
   .chart-section, .result-header, .ios-group, .flow-card { max-width: 100%; }
+  .fab-btn {
+    white-space: normal;
+    max-width: min(160px, 42vw);
+    text-align: right;
+    line-height: 1.3;
+  }
+  .btn-add-ota, .btn-run, .preset-btn {
+    white-space: normal;
+    text-align: center;
+  }
+  .scenario-field label {
+    white-space: normal;
+    line-height: 1.35;
+  }
 }
 
 @media (max-width: 380px) {
   .flow-table th, .flow-table td { padding: 8px 8px; font-size: 12px; }
+  .fab-btn { font-size: 11px; padding: 8px 10px; max-width: min(140px, 40vw); }
+  .btn-run { font-size: 15px; }
+  .preset-btn { font-size: 11px; padding: 8px 10px; }
 }
 
 .authority-band { display:none; background:rgba(8,8,14,0.96); color:rgba(255,255,255,0.6); padding:12px 16px; text-align:center; font-size:11px; line-height:1.6; border-top:0.5px solid rgba(255,255,255,0.08); }
@@ -1076,7 +1094,7 @@ const I18N = {
     costPerChannelTitle: 'Costo per Canale',
     costPerChannelDesc: 'Tasso di costo reale per canale, suddiviso in ciò che lo determina, ordinato dal più economico al più costoso. Questo è quello da usare per decidere su quale canale conviene davvero spingere volume.',
     costBreakdownTitle: 'Suddivisione dei Costi',
-    riskScoreTitle: 'Punteggio di Rischio del Canale',
+    riskScoreTitle: 'Channel Risk Score',
     riskScoreDesc: 'Quanto i tuoi ricavi sono concentrati su una singola OTA, derivato dal tuo mix sopra, senza input extra.',
     opportunitySimTitle: 'Simulazioni di Opportunità',
     opportunitySimDesc: 'Tre simulazioni: margine di manovra per il marketing diretto quando una quota OTA diminuisce, margine risparmiato spostando volume verso una OTA più economica, e cosa potrebbe creare una spesa di marketing extra al tuo tasso attuale.',
@@ -1306,7 +1324,7 @@ const I18N = {
     costPerChannelTitle: 'Kosten pro Kanal',
     costPerChannelDesc: 'Reale Kostenrate pro Kanal, aufgeschlüsselt nach Treibern, sortiert vom günstigsten zum teuersten. Damit entscheiden Sie, auf welchen Kanal es sich wirklich lohnt, Volumen zu lenken.',
     costBreakdownTitle: 'Kostenaufschlüsselung',
-    riskScoreTitle: 'Kanal-Risikoscore',
+    riskScoreTitle: 'Channel Risk Score',
     riskScoreDesc: 'Wie konzentriert Ihr Umsatz auf eine einzelne OTA ist, abgeleitet aus Ihrem Mix oben, ohne zusätzliche Eingaben.',
     opportunitySimTitle: 'Chancen-Simulationen',
     opportunitySimDesc: 'Drei Simulationen: Spielraum für Direktmarketing, wenn ein OTA-Anteil sinkt, gesparte Marge durch Verschieben von Volumen auf eine günstigere OTA, und was zusätzliche Marketingausgaben bei Ihrer aktuellen Rate schaffen könnten.',
@@ -2091,7 +2109,7 @@ function runAnalysis(silent) {
   generateNarrative(otaCosts, directCostPct, directShare, totalRevenue);
 
   lastAnalysis = { otaCosts, directCostPct, directShare, totalRevenue, directRevenue, hourlyRate, totalDistCost, totalDistPct, otaCostEuros, directCostEuros };
-  renderScenarioCalculator(otaCosts);
+  renderScenarioCalculator(otaCosts, captureScenarioState());
 
   document.getElementById('resultPanel').classList.add('visible');
   document.getElementById('authorityBand').classList.add('visible');
@@ -2411,23 +2429,43 @@ function updateScenarioMarketing() {
     </div>`;
 }
 
-function renderScenarioCalculator(otaCosts) {
+function captureScenarioState() {
+  return {
+    directOta: document.getElementById('scenarioDirectOta')?.value,
+    directTarget: document.getElementById('scenarioDirectTarget')?.value,
+    fromOta: document.getElementById('scenarioFromOta')?.value,
+    toOta: document.getElementById('scenarioToOta')?.value,
+    otaRevenue: document.getElementById('scenarioOtaRevenue')?.value,
+    marketingExtra: document.getElementById('scenarioMarketingExtra')?.value
+  };
+}
+
+function renderScenarioCalculator(otaCosts, preservedState) {
   const box = document.getElementById('scenarioBox');
   if (!otaCosts.length) {
     box.innerHTML = `<div class="scenario-result">${t('addAtLeastOneOta')}</div>`;
     return;
   }
 
-  const defaultOta = otaCosts[0];
+  const state = preservedState || {};
+  const defaultOta = otaCosts.find(o => o.name === state.directOta) || otaCosts[0];
   const expensiveOta = otaCosts.reduce((a, b) => a.costPct > b.costPct ? a : b);
   const cheapOta = otaCosts.reduce((a, b) => a.costPct < b.costPct ? a : b);
-  const defaultTarget = Math.max(0, (otaChannels.find(o => o.name === defaultOta.name)?.share || 40) - 5);
+  const fromOta = otaCosts.find(o => o.name === state.fromOta) || expensiveOta;
+  const toOta = otaCosts.find(o => o.name === state.toOta) || cheapOta;
+  const defaultTarget = state.directTarget !== undefined && state.directTarget !== ''
+    ? state.directTarget
+    : Math.max(0, (otaChannels.find(o => o.name === defaultOta.name)?.share || 40) - 5);
   const defaultOtaRevenue = Math.round(expensiveOta.revenue * 0.1);
   const { hourlyRate, directRevenue } = lastAnalysis;
   const marketingSpend = getDirectMarketingSpendEuros(hourlyRate);
   const defaultMarketingExtra = marketingSpend > 0 ? Math.round(marketingSpend * 0.25) : Math.max(1000, Math.round(directRevenue * 0.02));
-  const scenarioRevenueVal = formatInputNumber(fromAnnual(defaultOtaRevenue));
-  const scenarioMarketingVal = formatInputNumber(fromAnnual(defaultMarketingExtra));
+  const scenarioRevenueVal = state.otaRevenue !== undefined && state.otaRevenue !== ''
+    ? state.otaRevenue
+    : formatInputNumber(fromAnnual(defaultOtaRevenue));
+  const scenarioMarketingVal = state.marketingExtra !== undefined && state.marketingExtra !== ''
+    ? state.marketingExtra
+    : formatInputNumber(fromAnnual(defaultMarketingExtra));
   const periodMoneyLabel = `${cur()}/${periodLabel()}`;
 
   box.innerHTML = `
@@ -2462,13 +2500,13 @@ function renderScenarioCalculator(otaCosts) {
         <div class="scenario-field">
           <label>${t('scenarioFromLabel')}</label>
           <select id="scenarioFromOta" onchange="updateScenarioOta()">
-            ${otaCosts.map(o => `<option value="${o.name}"${o.name === expensiveOta.name ? ' selected' : ''}>${tf('scenarioOtaCostOptionTpl', { name: o.name, pct: o.costPct.toFixed(1) })}</option>`).join('')}
+            ${otaCosts.map(o => `<option value="${o.name}"${o.name === fromOta.name ? ' selected' : ''}>${tf('scenarioOtaCostOptionTpl', { name: o.name, pct: o.costPct.toFixed(1) })}</option>`).join('')}
           </select>
         </div>
         <div class="scenario-field">
           <label>${t('scenarioToLabel')}</label>
           <select id="scenarioToOta" onchange="updateScenarioOta()">
-            ${otaCosts.map(o => `<option value="${o.name}"${o.name === cheapOta.name ? ' selected' : ''}>${tf('scenarioOtaCostOptionTpl', { name: o.name, pct: o.costPct.toFixed(1) })}</option>`).join('')}
+            ${otaCosts.map(o => `<option value="${o.name}"${o.name === toOta.name ? ' selected' : ''}>${tf('scenarioOtaCostOptionTpl', { name: o.name, pct: o.costPct.toFixed(1) })}</option>`).join('')}
           </select>
         </div>
         <div class="scenario-field">
