@@ -326,7 +326,7 @@ header {
     min-height: 44px;
   }
   .container {
-    padding: 20px 14px calc(88px + env(safe-area-inset-bottom));
+    padding: 20px 14px calc(40px + env(safe-area-inset-bottom));
   }
   .hero { padding: 28px 16px 24px; }
   .run-btn, .btn-add-ota, .preset-btn {
@@ -335,12 +335,6 @@ header {
   .run-btn { width: 100%; font-size: 16px; flex-wrap: wrap; }
   .reset-link { white-space: normal; width: 100%; text-align: center; padding: 8px 16px; }
   .exec-snapshot-grid { grid-template-columns: 1fr; }
-  .fab-stack {
-    right: max(10px, env(safe-area-inset-right));
-    top: auto;
-    bottom: calc(12px + env(safe-area-inset-bottom));
-    transform: none;
-  }
   .ota-row { grid-template-columns: 1fr 1fr; }
   .ota-row > div:first-child { grid-column: 1 / -1; }
   .ota-remove { grid-column: 2; justify-self: end; align-self: center; padding-bottom: 0; }
@@ -353,10 +347,14 @@ header {
   .flow-table .flow-diff-row .diff-val { float: none; display: block; margin-top: 4px; }
   .flow-highlight-value { white-space: normal; }
   .chart-section, .result-header, .ios-group, .flow-card { max-width: 100%; }
+  .fab-stack {
+    justify-content: stretch;
+  }
   .fab-btn {
+    flex: 1 1 auto;
+    min-height: 44px;
+    text-align: center;
     white-space: normal;
-    max-width: min(160px, 42vw);
-    text-align: right;
     line-height: 1.3;
   }
   .btn-add-ota, .btn-run, .preset-btn {
@@ -371,7 +369,7 @@ header {
 
 @media (max-width: 380px) {
   .flow-table th, .flow-table td { padding: 8px 8px; font-size: 12px; }
-  .fab-btn { font-size: 11px; padding: 8px 10px; max-width: min(140px, 40vw); }
+  .fab-btn { font-size: 11px; padding: 10px 8px; }
   .btn-run { font-size: 15px; }
   .preset-btn { font-size: 11px; padding: 8px 10px; }
 }
@@ -431,11 +429,46 @@ header {
 .exec-stat-value { font-size:17px; font-weight:800; margin-top:3px; }
 .exec-stat-value.positive { color:#58D68D; }
 
-.fab-stack { position:fixed; right:max(12px, env(safe-area-inset-right)); top:50%; transform:translateY(-50%); z-index:300; display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
-.fab-btn { background:var(--card); border:1px solid var(--border); border-radius:var(--r10); padding:10px 14px; font-size:12px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; box-shadow:var(--shadow); white-space:nowrap; }
-.fab-btn:active { background:var(--card2); }
-.fab-toast { font-size:11px; color:var(--positive); font-weight:600; background:var(--card); padding:8px 10px; border-radius:8px; box-shadow:var(--shadow); border:0.5px solid var(--border); opacity:0; transition:opacity 0.3s; max-width:220px; text-align:right; line-height:1.45; pointer-events:none; }
-.fab-toast.show { opacity:1; }
+.fab-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 0.5px solid rgba(0, 122, 255, 0.14);
+  background: rgba(0, 122, 255, 0.05);
+  box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.03), 0 0 28px rgba(0, 122, 255, 0.12);
+}
+.fab-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r10);
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  white-space: nowrap;
+}
+.fab-btn:active { background: var(--card2); }
+.fab-toast {
+  flex: 1 1 100%;
+  font-size: 11px;
+  color: var(--positive);
+  font-weight: 600;
+  padding: 2px 2px 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  text-align: right;
+  line-height: 1.45;
+  pointer-events: none;
+}
+.fab-toast.show { opacity: 1; }
 
 .callout { border-radius:var(--r12); padding:12px 14px; margin-bottom:16px; font-size:12px; line-height:1.55; }
 .callout-warn { background:rgba(230,152,102,0.12); border:0.5px solid rgba(230,152,102,0.35); color:var(--ink2); }
@@ -481,13 +514,6 @@ header {
     <button type="button" class="lang-btn" data-lang="de" aria-pressed="false"><span class="lang-flag" aria-hidden="true">🇩🇪</span> DE</button>
   </div>
 </header>
-
-<div class="fab-stack no-print" id="fabStack">
-  <button type="button" class="fab-btn" onclick="copySummary()" data-i18n="fabCopySummary" data-i18n-title="fabCopySummaryTitle" title="Copy a text summary of your results">Copy summary</button>
-  <button type="button" class="fab-btn" onclick="shareAnalysis()" data-i18n="fabShare" data-i18n-title="fabShareTitle" title="Copy a link with your numbers pre-filled">Share</button>
-  <button type="button" class="fab-btn" onclick="window.print()" data-i18n="fabPrint" data-i18n-title="fabPrintTitle" title="Print or save as PDF">Print</button>
-  <div class="fab-toast" id="shareToast"></div>
-</div>
 
 <div class="hero">
   <h1 data-i18n="heroTitle">Compare <em>all</em> your distribution channels at once</h1>
@@ -724,6 +750,13 @@ header {
 
     <div class="exec-snapshot" id="execSnapshot"></div>
     <div class="callout callout-warn no-print" id="incompleteDirectCallout" style="display:none;"></div>
+
+    <div class="fab-stack no-print" id="fabStack">
+      <button type="button" class="fab-btn" onclick="copySummary()" data-i18n="fabCopySummary" data-i18n-title="fabCopySummaryTitle" title="Copy a text summary of your results">Copy summary</button>
+      <button type="button" class="fab-btn" onclick="shareAnalysis()" data-i18n="fabShare" data-i18n-title="fabShareTitle" title="Copy a link with your numbers pre-filled">Share</button>
+      <button type="button" class="fab-btn" onclick="window.print()" data-i18n="fabPrint" data-i18n-title="fabPrintTitle" title="Print or save as PDF">Print</button>
+      <div class="fab-toast" id="shareToast"></div>
+    </div>
     
     <div class="result-header">
       <div class="rh-title" data-i18n="resultHeaderTitle">Your Distribution Costs</div>
