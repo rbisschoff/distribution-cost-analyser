@@ -381,6 +381,8 @@ header {
 .ab-text a { color:#5DADE2; text-decoration:none; }
 
 .framework-attribution { border-top:1px solid var(--border); padding:20px 24px; background:var(--bg); margin-top:32px; }
+.contact-route { margin:24px 0 0; padding:0 4px; font-size:14px; color:var(--ink2); line-height:1.55; }
+.contact-route a { color:var(--accent); font-weight:500; }
 .attribution-content { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--muted); }
 .attribution-text strong { color:var(--ink2); font-weight:600; }
 .attribution-link { color:var(--accent); font-weight:600; text-decoration:none; }
@@ -741,6 +743,8 @@ header {
       <div class="narrative" id="narrativeText"></div>
     </div>
 
+    <p class="contact-route" data-i18n="contactRoute">Building that plan is the work I do with operators. If you want to talk it through: <a href="mailto:rbisschoff@gmail.com?subject=Distribution%20Cost%20Analyser" data-contact-tool="distribution-cost-analyser">rbisschoff@gmail.com</a></p>
+
   </div>
 
   <div class="framework-attribution">
@@ -876,6 +880,7 @@ const I18N = {
     frameworkAttribution: '<strong>Framework by Roger Bisschoff</strong> · First published 2026 · Part of the Operator Intelligence Suite',
     viewFullSuite: 'View the full suite →',
     authorityBandText: 'Built by <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a>, 15 years in European hospitality distribution.<br><strong style="color:rgba(255,255,255,0.6)">Operator Series</strong>',
+    contactRoute: 'Building that plan is the work I do with operators. If you want to talk it through: <a href="mailto:rbisschoff@gmail.com?subject=Distribution%20Cost%20Analyser" data-contact-tool="distribution-cost-analyser">rbisschoff@gmail.com</a>',
 
     scenarioOtaRevenueLabelTpl: 'Revenue amount ({x})',
     scenarioMarketingExtraLabelTpl: 'Extra marketing spend ({x})',
@@ -1106,6 +1111,7 @@ const I18N = {
     frameworkAttribution: '<strong>Framework di Roger Bisschoff</strong> · Pubblicato per la prima volta nel 2026 · Parte della Operator Intelligence Suite',
     viewFullSuite: 'Vedi la suite completa →',
     authorityBandText: 'Realizzato da <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a>, 15 anni nella distribuzione ospitalità europea.<br><strong style="color:rgba(255,255,255,0.6)">Operator Series</strong>',
+    contactRoute: 'Costruire quel piano è il lavoro che faccio con gli operatori. Se vuoi parlarne: <a href="mailto:rbisschoff@gmail.com?subject=Distribution%20Cost%20Analyser" data-contact-tool="distribution-cost-analyser">rbisschoff@gmail.com</a>',
 
     scenarioOtaRevenueLabelTpl: 'Importo dei ricavi ({x})',
     scenarioMarketingExtraLabelTpl: 'Spesa marketing extra ({x})',
@@ -1336,6 +1342,7 @@ const I18N = {
     frameworkAttribution: '<strong>Framework von Roger Bisschoff</strong> · Erstveröffentlichung 2026 · Teil der Operator Intelligence Suite',
     viewFullSuite: 'Die vollständige Suite ansehen →',
     authorityBandText: 'Erstellt von <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a>, 15 Jahre Erfahrung in der europäischen Hospitality-Distribution.<br><strong style="color:rgba(255,255,255,0.6)">Operator Series</strong>',
+    contactRoute: 'Genau diesen Plan zu entwickeln ist meine Arbeit mit Betreibern. Wenn Sie darüber sprechen möchten: <a href="mailto:rbisschoff@gmail.com?subject=Distribution%20Cost%20Analyser" data-contact-tool="distribution-cost-analyser">rbisschoff@gmail.com</a>',
 
     scenarioOtaRevenueLabelTpl: 'Umsatzbetrag ({x})',
     scenarioMarketingExtraLabelTpl: 'Zusätzliche Marketingausgaben ({x})',
@@ -1532,6 +1539,14 @@ function applyLang(lang) {
 
 document.querySelectorAll('.lang-btn').forEach(function(btn) {
   btn.addEventListener('click', function() { applyLang(btn.getAttribute('data-lang')); });
+});
+
+document.addEventListener('click', function(e) {
+  const a = e.target.closest('a[data-contact-tool]');
+  if (!a) return;
+  if (typeof gtag === 'function') {
+    gtag('event', 'contact_click', { tool: a.getAttribute('data-contact-tool') });
+  }
 });
 
 function cur() { return CURRENCIES[currencyCode]?.symbol || '€'; }
