@@ -381,8 +381,25 @@ header {
 .ab-text a { color:#5DADE2; text-decoration:none; }
 
 .framework-attribution { border-top:1px solid var(--border); padding:20px 24px; background:var(--bg); margin-top:32px; }
-.contact-route { margin:24px 0 0; padding:0 4px; font-size:14px; color:var(--ink2); line-height:1.55; }
-.contact-route a { color:var(--accent); font-weight:500; }
+.contact-route {
+  margin: 16px 0 0;
+  padding: 14px 0 0;
+  border-top: 0.5px solid var(--border);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+}
+.contact-route a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 122, 255, 0.35);
+}
+.contact-route a:hover {
+  border-bottom-color: var(--accent);
+}
 .attribution-content { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--muted); }
 .attribution-text strong { color:var(--ink2); font-weight:600; }
 .attribution-link { color:var(--accent); font-weight:600; text-decoration:none; }
@@ -741,9 +758,8 @@ header {
       <div class="sec-label" data-i18n="whatThisMeansTitle">What This Means</div>
       <div class="sec-desc" data-i18n="whatThisMeansDesc">The practical takeaway, and what to do with it.</div>
       <div class="narrative" id="narrativeText"></div>
+      <p class="contact-route" data-i18n="contactRoute">Building that plan is the work I do with operators. If you want to talk it through: <a href="mailto:rbisschoff@gmail.com?subject=Distribution%20Cost%20Analyser" data-contact-tool="distribution-cost-analyser">rbisschoff@gmail.com</a></p>
     </div>
-
-    <p class="contact-route" data-i18n="contactRoute">Building that plan is the work I do with operators. If you want to talk it through: <a href="mailto:rbisschoff@gmail.com?subject=Distribution%20Cost%20Analyser" data-contact-tool="distribution-cost-analyser">rbisschoff@gmail.com</a></p>
 
   </div>
 
