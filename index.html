@@ -954,7 +954,7 @@ const I18N = {
     riskScoreTitle: 'Channel Risk Score',
     riskScoreDesc: 'How concentrated your revenue is in a single OTA, derived from your mix above, no extra inputs.',
     opportunitySimTitle: 'Opportunity Simulations',
-    opportunitySimDesc: 'Three simulations: direct marketing room when an OTA share decreases, margin saved by moving volume to a cheaper OTA, and what extra marketing spend could create at your current rate.',
+    opportunitySimDesc: 'Three simulations: what extra marketing spend could create at your current rate, margin saved by moving volume to a cheaper OTA, and the spending room a lower OTA share would free up.',
     whatThisMeansTitle: 'What This Means',
     whatThisMeansDesc: 'The practical takeaway, and what to do with it.',
     frameworkAttribution: '<strong>Framework by Roger Bisschoff</strong> · First published 2026 · Part of the Operator Intelligence Suite',
@@ -1045,8 +1045,9 @@ const I18N = {
     flowLeadExtraMarketingTpl: "At your current rate of <strong>{rate} marketing per {unit} direct</strong> ({pct}%), here's what {amount} more could buy, if the same rate holds.",
     logicOneLineMarketingTpl: "<strong>The logic in one line:</strong> spend {extra} more on marketing at today's rate, maths gives you ≈ {revenue} of direct revenue. That would take your marketing from {spend} ({pct}%) to {newTotal} ({newPct}% of current direct revenue).",
 
-    scenarioDirectBlockTitle: 'OTA share decrease → grow Direct',
-    scenarioDirectBlockDesc: 'See what you save when an OTA share drops, and how much direct revenue that saving could buy in marketing.',
+    scenarioDirectBlockTitle: 'OTA share decrease → your spending room',
+    scenarioDirectBlockDesc: 'See what you save when an OTA share drops. This is budget headroom you could reinvest, not revenue that appears automatically.',
+    directShareFootnote: 'This is budget headroom, not projected revenue. To see what a real marketing investment could produce, use the Extra marketing spend simulation above.',
     scenarioOtaFieldLabel: 'OTA',
     scenarioCurrentShareLabel: 'Current share',
     scenarioTargetShareLabel: 'Target share %',
@@ -1187,7 +1188,7 @@ const I18N = {
     riskScoreTitle: 'Channel Risk Score',
     riskScoreDesc: 'Quanto i tuoi ricavi sono concentrati su una singola OTA, derivato dal tuo mix sopra, senza input extra.',
     opportunitySimTitle: 'Simulazioni di Opportunità',
-    opportunitySimDesc: 'Tre simulazioni: margine di manovra per il marketing diretto quando una quota OTA diminuisce, margine risparmiato spostando volume verso una OTA più economica, e cosa potrebbe creare una spesa di marketing extra al tuo tasso attuale.',
+    opportunitySimDesc: 'Tre simulazioni: cosa potrebbe creare una spesa di marketing extra al tuo tasso attuale, margine risparmiato spostando volume verso una OTA più economica, e il margine di spesa che libererebbe un calo della quota OTA.',
     whatThisMeansTitle: 'Cosa Significa',
     whatThisMeansDesc: 'La conclusione pratica, e cosa farne.',
     frameworkAttribution: '<strong>Framework di Roger Bisschoff</strong> · Pubblicato per la prima volta nel 2026 · Parte della Operator Intelligence Suite',
@@ -1278,8 +1279,9 @@ const I18N = {
     flowLeadExtraMarketingTpl: "Al tuo tasso attuale di <strong>{rate} di marketing per {unit} diretto</strong> ({pct}%), ecco cosa potrebbero comprare {amount} in più, se lo stesso tasso si mantiene.",
     logicOneLineMarketingTpl: "<strong>La logica in una riga:</strong> spendi {extra} in più in marketing al tasso di oggi, il calcolo dà ≈ {revenue} di ricavi diretti. Questo porterebbe il tuo marketing da {spend} ({pct}%) a {newTotal} ({newPct}% dei ricavi diretti attuali).",
 
-    scenarioDirectBlockTitle: 'Calo quota OTA → crescita del Diretto',
-    scenarioDirectBlockDesc: 'Scopri quanto risparmi quando una quota OTA scende, e quanti ricavi diretti quel risparmio potrebbe comprare in marketing.',
+    scenarioDirectBlockTitle: 'Calo quota OTA → il tuo margine di spesa',
+    scenarioDirectBlockDesc: 'Scopri quanto risparmi quando una quota OTA scende. Questo è margine di budget da reinvestire, non ricavi che appaiono automaticamente.',
+    directShareFootnote: 'Questo è margine di budget, non ricavi previsti. Per vedere cosa potrebbe produrre un investimento di marketing reale, usa la simulazione Spesa marketing extra qui sopra.',
     scenarioOtaFieldLabel: 'OTA',
     scenarioCurrentShareLabel: 'Quota attuale',
     scenarioTargetShareLabel: 'Quota obiettivo %',
@@ -1420,7 +1422,7 @@ const I18N = {
     riskScoreTitle: 'Channel Risk Score',
     riskScoreDesc: 'Wie konzentriert Ihr Umsatz auf eine einzelne OTA ist, abgeleitet aus Ihrem Mix oben, ohne zusätzliche Eingaben.',
     opportunitySimTitle: 'Chancen-Simulationen',
-    opportunitySimDesc: 'Drei Simulationen: Spielraum für Direktmarketing, wenn ein OTA-Anteil sinkt, gesparte Marge durch Verschieben von Volumen auf eine günstigere OTA, und was zusätzliche Marketingausgaben bei Ihrer aktuellen Rate schaffen könnten.',
+    opportunitySimDesc: 'Drei Simulationen: was zusätzliche Marketingausgaben bei Ihrer aktuellen Rate schaffen könnten, gesparte Marge durch Verschieben von Volumen auf eine günstigere OTA, und der Budgetspielraum, den ein sinkender OTA-Anteil freisetzen würde.',
     whatThisMeansTitle: 'Was Das Bedeutet',
     whatThisMeansDesc: 'Die praktische Erkenntnis, und was Sie damit tun sollten.',
     frameworkAttribution: '<strong>Framework von Roger Bisschoff</strong> · Erstveröffentlichung 2026 · Teil der Operator Intelligence Suite',
@@ -1511,8 +1513,9 @@ const I18N = {
     flowLeadExtraMarketingTpl: 'Bei Ihrer aktuellen Rate von <strong>{rate} Marketing pro {unit} Direkt</strong> ({pct}%), könnten {amount} mehr Folgendes kaufen, wenn sich die Rate hält.',
     logicOneLineMarketingTpl: '<strong>Die Logik in einer Zeile:</strong> geben Sie {extra} mehr zur heutigen Rate für Marketing aus, ergibt die Rechnung ≈ {revenue} Direktumsatz. Das würde Ihr Marketing von {spend} ({pct}%) auf {newTotal} ({newPct}% des aktuellen Direktumsatzes) bringen.',
 
-    scenarioDirectBlockTitle: 'OTA-Anteil sinkt → Direkt wächst',
-    scenarioDirectBlockDesc: 'Sehen Sie, was Sie sparen, wenn ein OTA-Anteil sinkt, und wie viel Direktumsatz diese Ersparnis in Marketing kaufen könnte.',
+    scenarioDirectBlockTitle: 'OTA-Anteil sinkt → Ihr Budgetspielraum',
+    scenarioDirectBlockDesc: 'Sehen Sie, was Sie sparen, wenn ein OTA-Anteil sinkt. Das ist Budgetspielraum zum Reinvestieren, kein automatisch entstehender Umsatz.',
+    directShareFootnote: 'Das ist Budgetspielraum, keine prognostizierten Umsätze. Um zu sehen, was eine echte Marketinginvestition bewirken könnte, nutzen Sie die Simulation „Zusätzliches Marketing" oben.',
     scenarioOtaFieldLabel: 'OTA',
     scenarioCurrentShareLabel: 'Aktueller Anteil',
     scenarioTargetShareLabel: 'Zielanteil %',
@@ -2386,30 +2389,10 @@ function updateScenarioDirect() {
   const directVariablePct = getDirectVariableCostPct(projectedDirectRev, hourlyRate);
   const directVariableCost = revenueMoved * directVariablePct / 100;
   const marketingHeadroom = otaCostToday - directVariableCost;
-  const marketingSpend = getDirectMarketingSpendEuros(hourlyRate);
-  const marketingPctOfDirect = directRevenue > 0 ? (marketingSpend / directRevenue) * 100 : 0;
-  const costPerEuro = directRevenue > 0 ? marketingSpend / directRevenue : 0;
 
   let simRows = '';
-  if (marketingSpend > 0 && directRevenue > 0 && marketingHeadroom > 0) {
-    const revenueAtCurrentRate = marketingHeadroom / costPerEuro;
-    simRows = `
-      <div class="flow-equation">
-        <div class="flow-equation-title">${tf('extraMarketingCreateTpl', { amount: money(marketingHeadroom) })}</div>
-        <div class="flow-equation-rate">
-          ${tf('rateLineTpl', { unit: unitMoney(), rate: cur() + costPerEuro.toFixed(2), pct: marketingPctOfDirect.toFixed(0), spend: money(marketingSpend), revenue: money(directRevenue) })}
-        </div>
-        <div class="flow-equation-calc">
-          <div class="eq-part"><span class="eq-val">${money(marketingHeadroom)}</span><span class="eq-lbl">${t('eqExtraMarketingFromSaving')}</span></div>
-          <span class="eq-op">÷</span>
-          <div class="eq-part"><span class="eq-val">${cur()}${costPerEuro.toFixed(2)}</span><span class="eq-lbl">${tf('eqMarketingPerUnitDirectTpl', { unit: unitMoney() })}</span></div>
-          <span class="eq-op">=</span>
-          <div class="eq-part eq-result"><span class="eq-val">≈ ${money(revenueAtCurrentRate)}</span><span class="eq-lbl">${t('eqDirectRevenueIfRate')}</span></div>
-        </div>
-        <div class="flow-equation-note">${tf('logicOneLineDirectTpl', { saving: money(marketingHeadroom), rate: cur() + costPerEuro.toFixed(2), unit: unitMoney(), revenue: money(revenueAtCurrentRate) })}</div>
-      </div>`;
-  } else if (marketingHeadroom > 0) {
-    simRows = `<div class="flow-footnote">${tf('addMarketingCostsFootnoteTpl', { amount: money(marketingHeadroom) })}</div>`;
+  if (marketingHeadroom > 0) {
+    simRows = `<div class="flow-footnote">${t('directShareFootnote')}</div>`;
   }
 
   resultEl.innerHTML = `
@@ -2590,25 +2573,15 @@ function renderScenarioCalculator(otaCosts, preservedState) {
 
   box.innerHTML = `
     <div class="scenario-block">
-      <div class="scenario-block-title">${t('scenarioDirectBlockTitle')}</div>
-      <div class="scenario-block-desc">${t('scenarioDirectBlockDesc')}</div>
-      <div class="scenario-inputs three">
+      <div class="scenario-block-title">${t('scenarioMarketingBlockTitle')}</div>
+      <div class="scenario-block-desc">${t('scenarioMarketingBlockDesc')}</div>
+      <div class="scenario-inputs">
         <div class="scenario-field">
-          <label>${t('scenarioOtaFieldLabel')}</label>
-          <select id="scenarioDirectOta" onchange="updateScenarioDirect()">
-            ${otaChannels.map(o => `<option value="${o.name}"${o.name === defaultOta.name ? ' selected' : ''}>${tf('scenarioOtaOptionTpl', { name: o.name, share: o.share })}</option>`).join('')}
-          </select>
-        </div>
-        <div class="scenario-field">
-          <label>${t('scenarioCurrentShareLabel')}</label>
-          <div class="scenario-static" id="scenarioDirectCurrent">${defaultOta.share}%</div>
-        </div>
-        <div class="scenario-field">
-          <label>${t('scenarioTargetShareLabel')}</label>
-          <input type="number" id="scenarioDirectTarget" value="${defaultTarget}" min="0" max="100" step="0.5" oninput="updateScenarioDirect()">
+          <label id="scenarioMarketingExtraLabel">${tf('scenarioMarketingExtraLabelTpl', { x: periodMoneyLabel })}</label>
+          <input type="number" id="scenarioMarketingExtra" class="period-money-input" value="${scenarioMarketingVal}" min="0" step="500" oninput="updateScenarioMarketing()">
         </div>
       </div>
-      <div class="scenario-result" id="scenarioDirectResult"></div>
+      <div class="scenario-result" id="scenarioMarketingResult"></div>
     </div>
 
     <div class="scenario-divider"></div>
@@ -2640,15 +2613,25 @@ function renderScenarioCalculator(otaCosts, preservedState) {
     <div class="scenario-divider"></div>
 
     <div class="scenario-block">
-      <div class="scenario-block-title">${t('scenarioMarketingBlockTitle')}</div>
-      <div class="scenario-block-desc">${t('scenarioMarketingBlockDesc')}</div>
-      <div class="scenario-inputs">
+      <div class="scenario-block-title">${t('scenarioDirectBlockTitle')}</div>
+      <div class="scenario-block-desc">${t('scenarioDirectBlockDesc')}</div>
+      <div class="scenario-inputs three">
         <div class="scenario-field">
-          <label id="scenarioMarketingExtraLabel">${tf('scenarioMarketingExtraLabelTpl', { x: periodMoneyLabel })}</label>
-          <input type="number" id="scenarioMarketingExtra" class="period-money-input" value="${scenarioMarketingVal}" min="0" step="500" oninput="updateScenarioMarketing()">
+          <label>${t('scenarioOtaFieldLabel')}</label>
+          <select id="scenarioDirectOta" onchange="updateScenarioDirect()">
+            ${otaChannels.map(o => `<option value="${o.name}"${o.name === defaultOta.name ? ' selected' : ''}>${tf('scenarioOtaOptionTpl', { name: o.name, share: o.share })}</option>`).join('')}
+          </select>
+        </div>
+        <div class="scenario-field">
+          <label>${t('scenarioCurrentShareLabel')}</label>
+          <div class="scenario-static" id="scenarioDirectCurrent">${defaultOta.share}%</div>
+        </div>
+        <div class="scenario-field">
+          <label>${t('scenarioTargetShareLabel')}</label>
+          <input type="number" id="scenarioDirectTarget" value="${defaultTarget}" min="0" max="100" step="0.5" oninput="updateScenarioDirect()">
         </div>
       </div>
-      <div class="scenario-result" id="scenarioMarketingResult"></div>
+      <div class="scenario-result" id="scenarioDirectResult"></div>
     </div>`;
 
   document.getElementById('scenarioDirectOta').addEventListener('change', function() {
