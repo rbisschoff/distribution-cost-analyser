@@ -970,7 +970,7 @@ const I18N = {
 
     execAtGlance: 'At a glance',
     execLeadMainTpl: 'Your total distribution bill is <strong>{total}</strong>, that\'s <strong>{pct}%</strong> of your revenue ({ota} on OTAs, the rest on Direct).',
-    execLeadRoomTpl: "Direct costs you <strong>{directPct}%</strong> true. {otaName} costs <strong>{otaPct}%</strong>. On the <strong>{directRev}</strong> you already earn direct, you're <strong>{margin}</strong> better off than if that same volume came through {otaName}.",
+    execLeadRoomTpl: "Direct actually costs you <strong>{directPct}%</strong>, against <strong>{otaPct}%</strong> on {otaName}, so the <strong>{directRev}</strong> you already earn through Direct is already worth <strong>{margin}</strong> a year more than if that same volume ran through {otaName}.",
     execLeadAddCostsTpl: 'Add your full website &amp; marketing costs in step 3 before comparing Direct ({directPct}%) to {otaName} ({otaPct}%).',
     execStatTotalDistribution: 'Total distribution',
     execStatOtaSpend: 'OTA spend',
@@ -989,7 +989,7 @@ const I18N = {
     directLabel: 'Direct',
     directSubText: "True cost on direct revenue, incl. payment, support &amp; any marketing you've entered",
     directOverCapSubText: 'Fixed costs exceed direct revenue — this channel is too small to carry this spend yet',
-    directVsCheapestOtaTpl: '{points} points cheaper than your best-performing OTA — room to shift volume here',
+    directVsCheapestOtaTpl: '{points} points cheaper than {otaName}, worth pushing more volume here',
 
     enterTargetShare: 'Enter a target share.',
     targetBelowCurrentTpl: '<span class="warn">Target must be below the current {current}% share.</span> Lower the OTA\'s share above first, or pick a target below {current}%.',
@@ -1203,7 +1203,7 @@ const I18N = {
 
     execAtGlance: 'In sintesi',
     execLeadMainTpl: 'Il tuo conto totale di distribuzione è <strong>{total}</strong>, cioè il <strong>{pct}%</strong> dei tuoi ricavi ({ota} sulle OTA, il resto sul Diretto).',
-    execLeadRoomTpl: 'Il Diretto ti costa <strong>{directPct}%</strong> reale. {otaName} costa <strong>{otaPct}%</strong>. Sui <strong>{directRev}</strong> che già guadagni in diretto, sei <strong>{margin}</strong> più avanti rispetto a se quel volume passasse da {otaName}.',
+    execLeadRoomTpl: "Il Diretto ti costa realmente il <strong>{directPct}%</strong>, contro il <strong>{otaPct}%</strong> di {otaName}, quindi sui <strong>{directRev}</strong> che già guadagni tramite il Diretto, stai già ottenendo <strong>{margin}</strong> all'anno in più rispetto a se lo stesso volume passasse da {otaName}.",
     execLeadAddCostsTpl: 'Aggiungi i tuoi costi completi di sito web e marketing allo step 3 prima di confrontare il Diretto ({directPct}%) con {otaName} ({otaPct}%).',
     execStatTotalDistribution: 'Distribuzione totale',
     execStatOtaSpend: 'Spesa OTA',
@@ -1222,7 +1222,7 @@ const I18N = {
     directLabel: 'Diretto',
     directSubText: 'Costo reale sui ricavi diretti, incl. pagamento, assistenza e qualsiasi marketing inserito',
     directOverCapSubText: 'I costi fissi superano i ricavi diretti — questo canale è ancora troppo piccolo per sostenere questa spesa',
-    directVsCheapestOtaTpl: '{points} punti più economico della tua OTA migliore — c\'è margine per spostare volume qui',
+    directVsCheapestOtaTpl: '{points} punti più economico di {otaName}, vale la pena spostare più volume qui',
 
     enterTargetShare: 'Inserisci una quota obiettivo.',
     targetBelowCurrentTpl: '<span class="warn">L\'obiettivo deve essere inferiore alla quota attuale del {current}%.</span> Riduci prima la quota della OTA sopra, o scegli un obiettivo sotto il {current}%.',
@@ -1436,7 +1436,7 @@ const I18N = {
 
     execAtGlance: 'Auf einen Blick',
     execLeadMainTpl: 'Ihre gesamte Distributionsrechnung beträgt <strong>{total}</strong>, das sind <strong>{pct}%</strong> Ihres Umsatzes ({ota} auf OTAs, der Rest auf Direkt).',
-    execLeadRoomTpl: 'Direkt kostet Sie tatsächlich <strong>{directPct}%</strong>. {otaName} kostet <strong>{otaPct}%</strong>. Bei den <strong>{directRev}</strong>, die Sie bereits direkt verdienen, sind Sie <strong>{margin}</strong> besser dran, als wenn dasselbe Volumen über {otaName} käme.',
+    execLeadRoomTpl: 'Direkt kostet Sie tatsächlich <strong>{directPct}%</strong>, gegenüber <strong>{otaPct}%</strong> bei {otaName}. Dadurch sind die <strong>{directRev}</strong>, die Sie bereits über Direkt verdienen, schon jetzt <strong>{margin}</strong> pro Jahr mehr wert, als wenn dasselbe Volumen über {otaName} liefe.',
     execLeadAddCostsTpl: 'Fügen Sie in Schritt 3 Ihre vollständigen Website- und Marketingkosten hinzu, bevor Sie Direkt ({directPct}%) mit {otaName} ({otaPct}%) vergleichen.',
     execStatTotalDistribution: 'Gesamtdistribution',
     execStatOtaSpend: 'OTA-Ausgaben',
@@ -1455,7 +1455,7 @@ const I18N = {
     directLabel: 'Direkt',
     directSubText: 'Wahre Kosten auf Direktumsatz, inkl. Zahlung, Support und jeglichem eingegebenen Marketing',
     directOverCapSubText: 'Fixkosten übersteigen den Direktumsatz — dieser Kanal ist noch zu klein für diese Ausgaben',
-    directVsCheapestOtaTpl: '{points} Punkte günstiger als Ihre beste OTA — hier gibt es Spielraum, Volumen zu verlagern',
+    directVsCheapestOtaTpl: '{points} Punkte günstiger als {otaName}, hier lohnt es sich, mehr Volumen zu verlagern',
 
     enterTargetShare: 'Geben Sie einen Zielanteil ein.',
     targetBelowCurrentTpl: '<span class="warn">Das Ziel muss unter dem aktuellen Anteil von {current}% liegen.</span> Reduzieren Sie zuerst den Anteil der OTA oben, oder wählen Sie ein Ziel unter {current}%.',
@@ -2292,7 +2292,6 @@ function renderCostSummary(totalCost, totalRevenue, otaCost, otaRevenue, directC
 
 function renderHeadlineCompare(otaCosts, directCostPct) {
   const mostExpensiveOta = otaCosts.reduce((a, b) => a.costPct > b.costPct ? a : b);
-  const cheapestOta = otaCosts.reduce((a, b) => a.costPct < b.costPct ? a : b);
   const otaOverCap = mostExpensiveOta.costPct > 100;
   const directOverCap = directCostPct > 100;
 
@@ -2301,9 +2300,9 @@ function renderHeadlineCompare(otaCosts, directCostPct) {
   if (directOverCap) {
     directSub = '⚠ ' + t('directOverCapSubText');
     directSubClass += ' over-cap';
-  } else if (otaCosts.length && otaCosts.every(o => directCostPct < o.costPct)) {
-    const points = Math.round(cheapestOta.costPct - directCostPct);
-    directSub = tf('directVsCheapestOtaTpl', { points });
+  } else if (otaCosts.length && directCostPct < mostExpensiveOta.costPct) {
+    const points = Math.round(mostExpensiveOta.costPct - directCostPct);
+    directSub = tf('directVsCheapestOtaTpl', { points, otaName: mostExpensiveOta.name });
   }
 
   const html = `
