@@ -175,11 +175,14 @@ header {
 
 .headline-compare { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px; padding-top:18px; border-top:0.5px solid var(--border-light); }
 .headline-card { background:var(--card); border-radius:var(--radius-md); padding:18px 16px; border:none; box-shadow:var(--shadow-sm); }
+.headline-card.over-cap { box-shadow:inset 0 2px 0 var(--warning), var(--shadow-sm); }
 .headline-card-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:6px; }
 .headline-card-value { font-size:24px; font-weight:800; line-height:1.1; }
 .headline-card-value.ota { color:var(--alert); }
 .headline-card-value.direct { color:var(--accent); }
-.headline-card-sub { font-size:11px; color:var(--muted); margin-top:6px; line-height:1.4; }
+.headline-card-value.over-cap { color:var(--warning); }
+.headline-card-sub { font-size:11px; color:var(--muted); margin-top:6px; line-height:1.4; overflow-wrap:anywhere; word-break:break-word; }
+.headline-card-sub.over-cap { color:var(--warning); font-weight:600; }
 
 .scenario-box { background:var(--card); border-radius:var(--radius-md); padding:18px; border:none; box-shadow:var(--shadow-sm); }
 .scenario-block { margin-bottom:16px; }
@@ -265,9 +268,12 @@ header {
 .cs-row-top { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; }
 .cs-row-label { font-size:14px; font-weight:600; color:var(--ink2); }
 .cs-row-pct { font-size:20px; font-weight:800; color:var(--alert); }
+.cs-row-pct.over-cap { color:var(--warning); }
 .cs-row-detail { font-size:12px; color:var(--muted); margin-bottom:8px; }
+.cs-row-over-cap-note { display:block; margin-top:4px; color:var(--warning); font-weight:600; line-height:1.4; }
 .cs-row-bar-track { height:6px; background:rgba(0,0,0,0.07); border-radius:3px; overflow:hidden; }
 .cs-row-bar-fill { height:100%; background:var(--alert); border-radius:3px; }
+.cs-row-bar-fill.over-cap { background:var(--warning); }
 
 .btn-primary { background:var(--accent); color:#fff; border:none; border-radius:var(--r10); padding:12px 20px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; }
 .btn-primary:active { background:var(--accent-dark); }
@@ -981,6 +987,8 @@ const I18N = {
     mostExpensiveOtaSubTpl: '{name}, true cost on its revenue',
     directLabel: 'Direct',
     directSubText: "True cost on direct revenue, incl. payment, support &amp; any marketing you've entered",
+    directOverCapSubText: 'Fixed costs exceed direct revenue — this channel is too small to carry this spend yet',
+    directVsCheapestOtaTpl: '{points} points cheaper than your best-performing OTA — room to shift volume here',
 
     enterTargetShare: 'Enter a target share.',
     targetBelowCurrentTpl: '<span class="warn">Target must be below the current {current}% share.</span> Lower the OTA\'s share above first, or pick a target below {current}%.',
@@ -1212,6 +1220,8 @@ const I18N = {
     mostExpensiveOtaSubTpl: '{name}, costo reale sui suoi ricavi',
     directLabel: 'Diretto',
     directSubText: 'Costo reale sui ricavi diretti, incl. pagamento, assistenza e qualsiasi marketing inserito',
+    directOverCapSubText: 'I costi fissi superano i ricavi diretti — questo canale è ancora troppo piccolo per sostenere questa spesa',
+    directVsCheapestOtaTpl: '{points} punti più economico della tua OTA migliore — c\'è margine per spostare volume qui',
 
     enterTargetShare: 'Inserisci una quota obiettivo.',
     targetBelowCurrentTpl: '<span class="warn">L\'obiettivo deve essere inferiore alla quota attuale del {current}%.</span> Riduci prima la quota della OTA sopra, o scegli un obiettivo sotto il {current}%.',
@@ -1443,6 +1453,8 @@ const I18N = {
     mostExpensiveOtaSubTpl: '{name}, wahre Kosten auf ihren Umsatz',
     directLabel: 'Direkt',
     directSubText: 'Wahre Kosten auf Direktumsatz, inkl. Zahlung, Support und jeglichem eingegebenen Marketing',
+    directOverCapSubText: 'Fixkosten übersteigen den Direktumsatz — dieser Kanal ist noch zu klein für diese Ausgaben',
+    directVsCheapestOtaTpl: '{points} Punkte günstiger als Ihre beste OTA — hier gibt es Spielraum, Volumen zu verlagern',
 
     enterTargetShare: 'Geben Sie einen Zielanteil ein.',
     targetBelowCurrentTpl: '<span class="warn">Das Ziel muss unter dem aktuellen Anteil von {current}% liegen.</span> Reduzieren Sie zuerst den Anteil der OTA oben, oder wählen Sie ein Ziel unter {current}%.',
@@ -1776,7 +1788,7 @@ function renderOTAList() {
         </div>
         <span class="ota-remove" onclick="removeOTA(${i})">✕</span>
       </div>
-      <div class="ota-implied" id="otaImplied${i}">${tf('otaImpliedTpl', { pct: impliedTotal.toFixed(1) })}</div>
+      <div class="ota-implied" id="otaImplied${i}">${tf('otaImpliedTpl', { pct: impliedTotal.toFixed(0) })}</div>
       <div class="ota-advanced-toggle" onclick="toggleOtaAdvanced(${i})">
         <div>
           <div class="ota-advanced-toggle-label">${t('hiddenCostsToggleLabel')}</div>
@@ -1817,7 +1829,7 @@ function updateOtaImplied(i) {
   if (!ota) return;
   const impliedTotal = otaCostPct(ota, totalRevenue, hourlyRate);
   const el = document.getElementById(`otaImplied${i}`);
-  if (el) el.innerHTML = tf('otaImpliedTpl', { pct: impliedTotal.toFixed(1) });
+  if (el) el.innerHTML = tf('otaImpliedTpl', { pct: impliedTotal.toFixed(0) });
 }
 
 function addOTA() {
@@ -2048,11 +2060,11 @@ function buildSummaryText() {
   const lines = [
     t('summaryTitle'),
     '',
-    tf('summaryTotalDistTpl', { amount: moneyPerYr(totalDistCost), pct: totalDistPct.toFixed(1) }),
+    tf('summaryTotalDistTpl', { amount: moneyPerYr(totalDistCost), pct: totalDistPct.toFixed(0) }),
     tf('summaryOtaSpendTpl', { amount: moneyPerYr(otaCostEuros) }),
-    tf('summaryDirectTrueCostTpl', { pct: directCostPct.toFixed(1), share: directShare.toFixed(0) }),
-    tf('summaryBlendedOtaTpl', { pct: blendedOtaPct.toFixed(1) }),
-    tf('summaryPriciestOtaTpl', { name: mostExpensiveOta.name, pct: mostExpensiveOta.costPct.toFixed(1) }),
+    tf('summaryDirectTrueCostTpl', { pct: directCostPct.toFixed(0), share: directShare.toFixed(0) }),
+    tf('summaryBlendedOtaTpl', { pct: blendedOtaPct.toFixed(0) }),
+    tf('summaryPriciestOtaTpl', { name: mostExpensiveOta.name, pct: mostExpensiveOta.costPct.toFixed(0) }),
     '',
     tf('summaryAnnualRevenueTpl', { amount: money(totalRevenue) }),
     tf('summaryDirectRevenueTpl', { amount: money(directRevenue) }),
@@ -2210,12 +2222,12 @@ function renderExecutiveSnapshot(totalDistCost, totalDistPct, totalRevenue, dire
     ? directRevenue * (gapPp / 100)
     : 0;
 
-  let leadHtml = `<p class="exec-line">${tf('execLeadMainTpl', { total: moneyPerYr(totalDistCost), pct: totalDistPct.toFixed(1), ota: money(otaCostEuros) })}</p>`;
+  let leadHtml = `<p class="exec-line">${tf('execLeadMainTpl', { total: moneyPerYr(totalDistCost), pct: totalDistPct.toFixed(0), ota: money(otaCostEuros) })}</p>`;
 
   if (directShare > 0 && directCostPct < mostExpensiveOta.costPct) {
-    leadHtml += `<p class="exec-line">${tf('execLeadRoomTpl', { directPct: directCostPct.toFixed(1), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(1), directRev: money(directRevenue), margin: moneyPerYr(marginRoom) })}</p>`;
+    leadHtml += `<p class="exec-line">${tf('execLeadRoomTpl', { directPct: directCostPct.toFixed(0), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(0), directRev: money(directRevenue), margin: moneyPerYr(marginRoom) })}</p>`;
   } else if (directShare > 0) {
-    leadHtml += `<p class="exec-line">${tf('execLeadAddCostsTpl', { directPct: directCostPct.toFixed(1), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(1) })}</p>`;
+    leadHtml += `<p class="exec-line">${tf('execLeadAddCostsTpl', { directPct: directCostPct.toFixed(0), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(0) })}</p>`;
   }
 
   document.getElementById('execSnapshot').innerHTML = `
@@ -2232,11 +2244,11 @@ function renderExecutiveSnapshot(totalDistCost, totalDistPct, totalRevenue, dire
       </div>
       <div class="exec-stat">
         <div class="exec-stat-label">${t('execStatDirectTrueCost')}</div>
-        <div class="exec-stat-value">${directCostPct.toFixed(1)}%</div>
+        <div class="exec-stat-value">${directCostPct.toFixed(0)}%</div>
       </div>
       <div class="exec-stat">
         <div class="exec-stat-label">${t('execStatPriciestOta')}</div>
-        <div class="exec-stat-value">${mostExpensiveOta.costPct.toFixed(1)}%<span style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.5);"> · ${mostExpensiveOta.name}</span></div>
+        <div class="exec-stat-value">${mostExpensiveOta.costPct.toFixed(0)}%<span style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.5);"> · ${mostExpensiveOta.name}</span></div>
       </div>
     </div>`;
 }
@@ -2254,20 +2266,24 @@ function renderIncompleteDirectCallout(directShare, hourlyRate) {
 
 function renderCostSummary(totalCost, totalRevenue, otaCost, otaRevenue, directCost, directRevenue) {
   const rows = [
-    { label: t('totalDistCostLabel'), cost: totalCost, revenue: totalRevenue },
-    { label: t('otaCostLabel'), cost: otaCost, revenue: otaRevenue },
-    { label: t('directCostLabel'), cost: directCost, revenue: directRevenue }
+    { label: t('totalDistCostLabel'), cost: totalCost, revenue: totalRevenue, isDirect: false },
+    { label: t('otaCostLabel'), cost: otaCost, revenue: otaRevenue, isDirect: false },
+    { label: t('directCostLabel'), cost: directCost, revenue: directRevenue, isDirect: true }
   ];
   const html = rows.map(r => {
     const pct = r.revenue > 0 ? (r.cost / r.revenue) * 100 : 0;
+    const overCap = r.isDirect && pct > 100;
+    const detail = overCap
+      ? `${tf('costOnRevenueTpl', { cost: money(r.cost), revenue: money(r.revenue) })}<span class="cs-row-over-cap-note">⚠ ${t('directOverCapSubText')}</span>`
+      : tf('costOnRevenueTpl', { cost: money(r.cost), revenue: money(r.revenue) });
     return `
     <div class="cs-row">
       <div class="cs-row-top">
         <span class="cs-row-label">${r.label}</span>
-        <span class="cs-row-pct">${pct.toFixed(1)}%</span>
+        <span class="cs-row-pct${overCap ? ' over-cap' : ''}">${overCap ? '⚠ ' : ''}${pct.toFixed(0)}%</span>
       </div>
-      <div class="cs-row-detail">${tf('costOnRevenueTpl', { cost: money(r.cost), revenue: money(r.revenue) })}</div>
-      <div class="cs-row-bar-track"><div class="cs-row-bar-fill" style="width:${Math.min(100, pct)}%;"></div></div>
+      <div class="cs-row-detail">${detail}</div>
+      <div class="cs-row-bar-track"><div class="cs-row-bar-fill${overCap ? ' over-cap' : ''}" style="width:${Math.min(100, pct)}%;"></div></div>
     </div>`;
   }).join('');
   document.getElementById('costSummary').innerHTML = html;
@@ -2275,17 +2291,30 @@ function renderCostSummary(totalCost, totalRevenue, otaCost, otaRevenue, directC
 
 function renderHeadlineCompare(otaCosts, directCostPct) {
   const mostExpensiveOta = otaCosts.reduce((a, b) => a.costPct > b.costPct ? a : b);
+  const cheapestOta = otaCosts.reduce((a, b) => a.costPct < b.costPct ? a : b);
+  const otaOverCap = mostExpensiveOta.costPct > 100;
+  const directOverCap = directCostPct > 100;
+
+  let directSub = t('directSubText');
+  let directSubClass = 'headline-card-sub';
+  if (directOverCap) {
+    directSub = '⚠ ' + t('directOverCapSubText');
+    directSubClass += ' over-cap';
+  } else if (otaCosts.length && otaCosts.every(o => directCostPct < o.costPct)) {
+    const points = Math.round(cheapestOta.costPct - directCostPct);
+    directSub = tf('directVsCheapestOtaTpl', { points });
+  }
 
   const html = `
-    <div class="headline-card">
+    <div class="headline-card${otaOverCap ? ' over-cap' : ''}">
       <div class="headline-card-label">${t('mostExpensiveOtaLabel')}</div>
-      <div class="headline-card-value ota">${mostExpensiveOta.costPct.toFixed(1)}%</div>
+      <div class="headline-card-value ota${otaOverCap ? ' over-cap' : ''}">${otaOverCap ? '⚠ ' : ''}${mostExpensiveOta.costPct.toFixed(0)}%</div>
       <div class="headline-card-sub">${tf('mostExpensiveOtaSubTpl', { name: mostExpensiveOta.name })}</div>
     </div>
-    <div class="headline-card">
+    <div class="headline-card${directOverCap ? ' over-cap' : ''}">
       <div class="headline-card-label">${t('directLabel')}</div>
-      <div class="headline-card-value direct">${directCostPct.toFixed(1)}%</div>
-      <div class="headline-card-sub">${t('directSubText')}</div>
+      <div class="headline-card-value direct${directOverCap ? ' over-cap' : ''}">${directOverCap ? '⚠ ' : ''}${directCostPct.toFixed(0)}%</div>
+      <div class="${directSubClass}">${directSub}</div>
     </div>`;
 
   document.getElementById('headlineCompare').innerHTML = html;
@@ -2347,7 +2376,7 @@ function updateScenarioDirect() {
       <div class="flow-equation">
         <div class="flow-equation-title">${tf('extraMarketingCreateTpl', { amount: money(marketingHeadroom) })}</div>
         <div class="flow-equation-rate">
-          ${tf('rateLineTpl', { unit: unitMoney(), rate: cur() + costPerEuro.toFixed(2), pct: marketingPctOfDirect.toFixed(1), spend: money(marketingSpend), revenue: money(directRevenue) })}
+          ${tf('rateLineTpl', { unit: unitMoney(), rate: cur() + costPerEuro.toFixed(2), pct: marketingPctOfDirect.toFixed(0), spend: money(marketingSpend), revenue: money(directRevenue) })}
         </div>
         <div class="flow-equation-calc">
           <div class="eq-part"><span class="eq-val">${money(marketingHeadroom)}</span><span class="eq-lbl">${t('eqExtraMarketingFromSaving')}</span></div>
@@ -2383,7 +2412,7 @@ function updateScenarioDirect() {
           </tr>
           <tr>
             <td class="col-label">${t('colCostOnThisRevenue')}</td>
-            <td class="col-num ota">${moneyPerYr(otaCostToday)}<span class="sub">${tf('subTrueCostTpl', { pct: otaTrueCost.toFixed(1) })}</span></td>
+            <td class="col-num ota">${moneyPerYr(otaCostToday)}<span class="sub">${tf('subTrueCostTpl', { pct: otaTrueCost.toFixed(0) })}</span></td>
             <td class="col-num direct">${moneyPerYr(directVariableCost)}<span class="sub">${t('subPaymentSupportOnly')}</span></td>
           </tr>
           <tr class="flow-diff-row">
@@ -2426,7 +2455,7 @@ function updateScenarioOta() {
   const gapPp = fromCost - toCost;
 
   if (saving <= 0) {
-    resultEl.innerHTML = tf('notCheaperTpl', { toName, toPct: toCost.toFixed(1), fromName, fromPct: fromCost.toFixed(1) });
+    resultEl.innerHTML = tf('notCheaperTpl', { toName, toPct: toCost.toFixed(0), fromName, fromPct: fromCost.toFixed(0) });
     return;
   }
 
@@ -2442,15 +2471,15 @@ function updateScenarioOta() {
           </tr>
           <tr>
             <td class="col-label">${tf('colCostOnTpl', { name: fromName })}</td>
-            <td class="col-num ota">${moneyPerYr(costFrom)}<span class="sub">${fromCost.toFixed(1)}%</span></td>
+            <td class="col-num ota">${moneyPerYr(costFrom)}<span class="sub">${fromCost.toFixed(0)}%</span></td>
           </tr>
           <tr>
             <td class="col-label">${tf('colCostOnTpl', { name: toName })}</td>
-            <td class="col-num direct">${moneyPerYr(costTo)}<span class="sub">${toCost.toFixed(1)}%</span></td>
+            <td class="col-num direct">${moneyPerYr(costTo)}<span class="sub">${toCost.toFixed(0)}%</span></td>
           </tr>
           <tr>
             <td class="col-label">${t('colMarginSaved')}</td>
-            <td class="col-num saving">${moneyPerYr(saving)}<span class="sub">${tf('subPointsOnVolumeTpl', { pts: gapPp.toFixed(1) })}</span></td>
+            <td class="col-num saving">${moneyPerYr(saving)}<span class="sub">${tf('subPointsOnVolumeTpl', { pts: gapPp.toFixed(0) })}</span></td>
           </tr>
         </tbody>
       </table>
@@ -2485,7 +2514,7 @@ function updateScenarioMarketing() {
   resultEl.innerHTML = `
     <div class="flow-card">
       <div class="flow-title">${t('flowTitleExtraMarketing')}</div>
-      <div class="flow-lead">${tf('flowLeadExtraMarketingTpl', { rate: cur() + costPerEuro.toFixed(2), unit: unitMoney(), pct: marketingPctOfDirect.toFixed(1), amount: moneyPerYr(extraAnnual) })}</div>
+      <div class="flow-lead">${tf('flowLeadExtraMarketingTpl', { rate: cur() + costPerEuro.toFixed(2), unit: unitMoney(), pct: marketingPctOfDirect.toFixed(0), amount: moneyPerYr(extraAnnual) })}</div>
       <div class="flow-equation">
         <div class="flow-equation-calc">
           <div class="eq-part"><span class="eq-val">${money(extraAnnual)}</span><span class="eq-lbl">${t('eqExtraMarketingPerYr')}</span></div>
@@ -2494,7 +2523,7 @@ function updateScenarioMarketing() {
           <span class="eq-op">=</span>
           <div class="eq-part eq-result"><span class="eq-val">≈ ${money(revenueAtRate)}</span><span class="eq-lbl">${t('eqDirectRevenueIfRate')}</span></div>
         </div>
-        <div class="flow-equation-note">${tf('logicOneLineMarketingTpl', { extra: moneyPerYr(extraAnnual), revenue: money(revenueAtRate), spend: moneyPerYr(marketingSpend), pct: marketingPctOfDirect.toFixed(1), newTotal: moneyPerYr(newTotalMarketing), newPct: newMarketingPct.toFixed(1) })}</div>
+        <div class="flow-equation-note">${tf('logicOneLineMarketingTpl', { extra: moneyPerYr(extraAnnual), revenue: money(revenueAtRate), spend: moneyPerYr(marketingSpend), pct: marketingPctOfDirect.toFixed(0), newTotal: moneyPerYr(newTotalMarketing), newPct: newMarketingPct.toFixed(0) })}</div>
       </div>
     </div>`;
 }
@@ -2570,13 +2599,13 @@ function renderScenarioCalculator(otaCosts, preservedState) {
         <div class="scenario-field">
           <label>${t('scenarioFromLabel')}</label>
           <select id="scenarioFromOta" onchange="updateScenarioOta()">
-            ${otaCosts.map(o => `<option value="${o.name}"${o.name === fromOta.name ? ' selected' : ''}>${tf('scenarioOtaCostOptionTpl', { name: o.name, pct: o.costPct.toFixed(1) })}</option>`).join('')}
+            ${otaCosts.map(o => `<option value="${o.name}"${o.name === fromOta.name ? ' selected' : ''}>${tf('scenarioOtaCostOptionTpl', { name: o.name, pct: o.costPct.toFixed(0) })}</option>`).join('')}
           </select>
         </div>
         <div class="scenario-field">
           <label>${t('scenarioToLabel')}</label>
           <select id="scenarioToOta" onchange="updateScenarioOta()">
-            ${otaCosts.map(o => `<option value="${o.name}"${o.name === toOta.name ? ' selected' : ''}>${tf('scenarioOtaCostOptionTpl', { name: o.name, pct: o.costPct.toFixed(1) })}</option>`).join('')}
+            ${otaCosts.map(o => `<option value="${o.name}"${o.name === toOta.name ? ' selected' : ''}>${tf('scenarioOtaCostOptionTpl', { name: o.name, pct: o.costPct.toFixed(0) })}</option>`).join('')}
           </select>
         </div>
         <div class="scenario-field">
@@ -2702,7 +2731,7 @@ function renderChannelCostChart(otaCosts, directCostPct, directShare) {
         legend: { display: true, position: 'bottom', labels: { boxWidth:10, font:{size:11} } },
         tooltip: {
           callbacks: {
-            label: ctx => ctx.dataset.label + ': ' + ctx.parsed.x.toFixed(1) + t('chartPctOfRevenue')
+            label: ctx => ctx.dataset.label + ': ' + ctx.parsed.x.toFixed(0) + t('chartPctOfRevenue')
           }
         }
       },
@@ -2719,7 +2748,7 @@ function renderChannelCostChart(otaCosts, directCostPct, directShare) {
         }
       }
     },
-    plugins: [drawHorizontalTotalLabelsPlugin(totals, v => v.toFixed(1) + '%')]
+    plugins: [drawHorizontalTotalLabelsPlugin(totals, v => v.toFixed(0) + '%')]
   });
 }
 
@@ -2733,7 +2762,7 @@ function renderCostBreakdown(otaCosts, directCostPct, directShare) {
     const annualCost = ota.revenue * (ota.costPct / 100);
     const servicePct = serviceCostPct(channel.serviceHours || 0, hourlyRate, ota.revenue);
     html += `<div style="margin-bottom:10px;"><strong style="color:#C0392B;">${ota.name}</strong><br>`;
-    html += tf('breakdownFormulaOtaTpl', { commission: (channel.commission || 0).toFixed(1), promo: (channel.promoPct || 0).toFixed(1), payment: (channel.paymentPct || 0).toFixed(1), service: servicePct.toFixed(1), total: ota.costPct.toFixed(1), revenue: money(ota.revenue), cost: money(annualCost) }) + '</div>';
+    html += tf('breakdownFormulaOtaTpl', { commission: (channel.commission || 0).toFixed(0), promo: (channel.promoPct || 0).toFixed(0), payment: (channel.paymentPct || 0).toFixed(0), service: servicePct.toFixed(0), total: ota.costPct.toFixed(0), revenue: money(ota.revenue), cost: money(annualCost) }) + '</div>';
   });
   
   const directRevenue = getAnnualTotalRevenue() * (directShare / 100);
@@ -2743,25 +2772,25 @@ function renderCostBreakdown(otaCosts, directCostPct, directShare) {
   const failurePctVal = parseFloat(document.getElementById('directFailurePct').value) || 0;
   
   html += `<div style="margin-top:14px; padding-top:14px; border-top:0.5px solid var(--border);"><strong style="color:#007AFF;">${t('breakdownDirectHeading')}</strong><br>`;
-  html += tf('breakdownFormulaDirectBaseTpl', { payment: paymentPctVal.toFixed(1), failure: failurePctVal.toFixed(1), service: supportPct.toFixed(1) });
+  html += tf('breakdownFormulaDirectBaseTpl', { payment: paymentPctVal.toFixed(0), failure: failurePctVal.toFixed(0), service: supportPct.toFixed(0) });
   
   // Website & Marketing, only list the line items that were actually filled in
   const m = getDirectMarketingInputs();
   const contentPct = (m.contentHours * 12 * hourlyRate / (directRevenue || 1)) * 100;
   const marketingItems = [
     m.bookingEngineFee > 0 ? tf('itemBookingEngine', { amount: moneyPerYr(m.bookingEngineFee) }) : null,
-    m.incentivePct > 0 ? tf('itemIncentiveDiscount', { pct: m.incentivePct.toFixed(1) }) : null,
+    m.incentivePct > 0 ? tf('itemIncentiveDiscount', { pct: m.incentivePct.toFixed(0) }) : null,
     m.hostingFee > 0 ? tf('itemHosting', { amount: moneyPerYr(m.hostingFee) }) : null,
     m.adsSpend > 0 ? tf('itemAds', { amount: moneyPerYr(m.adsSpend) }) : null,
     m.seoCost > 0 ? tf('itemSeo', { amount: moneyPerYr(m.seoCost) }) : null,
     m.emailToolFee > 0 ? tf('itemEmailTool', { amount: moneyPerYr(m.emailToolFee) }) : null,
-    m.contentHours > 0 ? tf('itemContent', { hrs: m.contentHours.toFixed(1), pct: contentPct.toFixed(1) }) : null
+    m.contentHours > 0 ? tf('itemContent', { hrs: m.contentHours.toFixed(1), pct: contentPct.toFixed(0) }) : null
   ].filter(Boolean);
   if (marketingItems.length) {
     html += tf('breakdownWebsiteMarketingSuffixTpl', { items: marketingItems.join(', ') });
   }
   
-  html += tf('breakdownDirectTotalTpl', { total: directCostPct.toFixed(1), revenue: money(directRevenue), cost: money(directAnnualCost) }) + '</div>';
+  html += tf('breakdownDirectTotalTpl', { total: directCostPct.toFixed(0), revenue: money(directRevenue), cost: money(directAnnualCost) }) + '</div>';
   
   html += '</div>';
   document.getElementById('costBreakdown').innerHTML = html;
@@ -2798,16 +2827,16 @@ function generateNarrative(otaCosts, directCostPct, directShare, totalRevenue) {
   if (directShare <= 0) {
     points.push(t('narrativeNoDirectShare'));
   } else if (directCostPct < mostExpensiveOta.costPct) {
-    points.push(tf('narrativeRoomTpl', { directPct: directCostPct.toFixed(1), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(1) }));
+    points.push(tf('narrativeRoomTpl', { directPct: directCostPct.toFixed(0), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(0) }));
   } else {
-    points.push(tf('narrativeCheckCostsTpl', { directPct: directCostPct.toFixed(1), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(1) }));
+    points.push(tf('narrativeCheckCostsTpl', { directPct: directCostPct.toFixed(0), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(0) }));
   }
 
   if (directShare > 0) {
     points.push(t('narrativeSpendingRoom'));
     points.push(t('narrativeNeedPlan'));
   } else {
-    points.push(tf('narrativeStartWithEconomicsTpl', { otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(1) }));
+    points.push(tf('narrativeStartWithEconomicsTpl', { otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(0) }));
   }
 
   document.getElementById('narrativeText').innerHTML = points.join('');
