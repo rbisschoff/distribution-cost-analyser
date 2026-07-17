@@ -413,30 +413,38 @@ header {
 .attribution-link:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
 
 .preset-bar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:16px; }
-.preset-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); }
-.preset-btn { background:var(--card); border:1px solid var(--border); border-radius:var(--r10); padding:8px 12px; font-size:12px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
+.preset-bar-top, .preset-scroll { display: contents; }
+.preset-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); order:1; }
+.preset-btn { background:var(--card); border:1px solid var(--border); border-radius:var(--r10); padding:8px 12px; font-size:12px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; order:2; }
 .preset-btn:active { background:var(--card2); }
+.prefs-row { order:3; }
 
 @media (max-width: 640px) {
   .preset-bar {
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+  }
+  .preset-bar-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+  }
+  .preset-scroll {
+    display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    gap: 8px;
     padding-bottom: 2px;
+    margin-top: 8px;
   }
-  .preset-bar::-webkit-scrollbar { display: none; }
-  .preset-label { flex-shrink: 0; white-space: nowrap; }
+  .preset-scroll::-webkit-scrollbar { display: none; }
   .preset-btn { flex-shrink: 0; white-space: nowrap; }
-  .prefs-row {
-    flex-shrink: 0;
-    width: auto;
-    margin-left: auto;
-    position: sticky;
-    right: 0;
-    background: var(--bg);
-    padding-left: 8px;
-  }
+  .prefs-row { flex-shrink: 0; width: auto; margin-left: 0; }
 }
 
 .validation-banner { display:none; background:rgba(192,57,43,0.08); border:0.5px solid rgba(192,57,43,0.25); border-radius:var(--r10); padding:12px 14px; margin-bottom:12px; font-size:13px; color:var(--alert); font-weight:500; line-height:1.5; }
@@ -555,18 +563,22 @@ header {
   </div>
 
   <div class="preset-bar no-print">
-    <span class="preset-label" data-i18n="quickStart">Quick start</span>
-    <button type="button" class="preset-btn" onclick="loadPreset('serviced')" data-i18n="presetServiced">Serviced apartment</button>
-    <button type="button" class="preset-btn" onclick="loadPreset('villas')" data-i18n="presetVillas">Villas</button>
-    <button type="button" class="preset-btn" onclick="loadPreset('bungalowpark')" data-i18n="presetBungalowPark">Bungalow park</button>
-    <button type="button" class="preset-btn" onclick="loadPreset('str')" data-i18n="presetStr">STR / multi-unit</button>
-    <div class="prefs-row">
-      <select id="currencySelect" class="currency-select" onchange="setCurrency(this.value)" data-i18n-title="currencySelectTitle" title="Display currency">
-        <option value="EUR">EUR €</option>
-        <option value="GBP">GBP £</option>
-        <option value="USD">USD $</option>
-        <option value="CHF">CHF</option>
-      </select>
+    <div class="preset-bar-top">
+      <span class="preset-label" data-i18n="quickStart">Quick start</span>
+      <div class="prefs-row">
+        <select id="currencySelect" class="currency-select" onchange="setCurrency(this.value)" data-i18n-title="currencySelectTitle" title="Display currency">
+          <option value="EUR">EUR €</option>
+          <option value="GBP">GBP £</option>
+          <option value="USD">USD $</option>
+          <option value="CHF">CHF</option>
+        </select>
+      </div>
+    </div>
+    <div class="preset-scroll">
+      <button type="button" class="preset-btn" onclick="loadPreset('serviced')" data-i18n="presetServiced">Serviced apartment</button>
+      <button type="button" class="preset-btn" onclick="loadPreset('villas')" data-i18n="presetVillas">Villas</button>
+      <button type="button" class="preset-btn" onclick="loadPreset('bungalowpark')" data-i18n="presetBungalowPark">Bungalow park</button>
+      <button type="button" class="preset-btn" onclick="loadPreset('str')" data-i18n="presetStr">STR / multi-unit</button>
     </div>
   </div>
 
@@ -1104,6 +1116,10 @@ const I18N = {
     summaryPriciestOtaTpl: 'Priciest OTA: {name} at {pct}%',
     summaryAnnualRevenueTpl: 'Annual revenue modelled: {amount}',
     summaryDirectRevenueTpl: 'Direct revenue: {amount}',
+    summaryChannelsHeader: 'Channel mix:',
+    summaryChannelLineTpl: '- {name}: {share}% of revenue, true cost {pct}%',
+    summaryToolAttribution: 'Generated with the Distribution Cost Analyser: rbisschoff.github.io/distribution-cost-analyser',
+    summaryContactLine: 'Building that plan is the work I do with operators. If you want to talk it through: rbisschoff@gmail.com',
     summaryGeneratedAtTpl: 'Generated at {date}',
     toastRunFirst: 'Run Compare Channels first',
     toastSummaryCopied: 'Summary copied to clipboard',
@@ -1338,6 +1354,10 @@ const I18N = {
     summaryPriciestOtaTpl: 'OTA più costosa: {name} al {pct}%',
     summaryAnnualRevenueTpl: 'Ricavi annuali modellati: {amount}',
     summaryDirectRevenueTpl: 'Ricavi diretti: {amount}',
+    summaryChannelsHeader: 'Mix dei canali:',
+    summaryChannelLineTpl: '- {name}: {share}% dei ricavi, costo reale {pct}%',
+    summaryToolAttribution: 'Generato con il Distribution Cost Analyser: rbisschoff.github.io/distribution-cost-analyser',
+    summaryContactLine: 'Costruire quel piano è il lavoro che faccio con gli operatori. Se vuoi parlarne: rbisschoff@gmail.com',
     summaryGeneratedAtTpl: 'Generato il {date}',
     toastRunFirst: 'Esegui prima Confronta i Canali',
     toastSummaryCopied: 'Riepilogo copiato negli appunti',
@@ -1572,6 +1592,10 @@ const I18N = {
     summaryPriciestOtaTpl: 'Teuerste OTA: {name} bei {pct}%',
     summaryAnnualRevenueTpl: 'Modellierter Jahresumsatz: {amount}',
     summaryDirectRevenueTpl: 'Direktumsatz: {amount}',
+    summaryChannelsHeader: 'Kanalmix:',
+    summaryChannelLineTpl: '- {name}: {share}% des Umsatzes, wahre Kosten {pct}%',
+    summaryToolAttribution: 'Erstellt mit dem Distribution Cost Analyser: rbisschoff.github.io/distribution-cost-analyser',
+    summaryContactLine: 'Genau diesen Plan zu entwickeln ist meine Arbeit mit Betreibern. Wenn Sie darüber sprechen möchten: rbisschoff@gmail.com',
     summaryGeneratedAtTpl: 'Erstellt am {date}',
     toastRunFirst: 'Führen Sie zuerst Kanäle vergleichen aus',
     toastSummaryCopied: 'Zusammenfassung in die Zwischenablage kopiert',
@@ -2091,8 +2115,15 @@ function buildSummaryText() {
     tf('summaryBlendedOtaTpl', { pct: blendedOtaPct.toFixed(0) }),
     tf('summaryPriciestOtaTpl', { name: mostExpensiveOta.name, pct: mostExpensiveOta.costPct.toFixed(0) }),
     '',
+    t('summaryChannelsHeader'),
+    ...otaCosts.map(o => tf('summaryChannelLineTpl', { name: o.name, share: o.share.toFixed(0), pct: o.costPct.toFixed(0) })),
+    tf('summaryChannelLineTpl', { name: t('directLabel'), share: directShare.toFixed(0), pct: directCostPct.toFixed(0) }),
+    '',
     tf('summaryAnnualRevenueTpl', { amount: money(totalRevenue) }),
     tf('summaryDirectRevenueTpl', { amount: money(directRevenue) }),
+    '',
+    t('summaryToolAttribution'),
+    t('summaryContactLine'),
     '',
     tf('summaryGeneratedAtTpl', { date: new Date().toLocaleString(DATE_LOCALES[currentLang] || 'en-GB') })
   ];
