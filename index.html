@@ -536,8 +536,8 @@ header {
   <div class="preset-bar no-print">
     <span class="preset-label" data-i18n="quickStart">Quick start</span>
     <button type="button" class="preset-btn" onclick="loadPreset('serviced')" data-i18n="presetServiced">Serviced apartment</button>
-    <button type="button" class="preset-btn" onclick="loadPreset('hotel')" data-i18n="presetHotel">Small hotel</button>
-    <button type="button" class="preset-btn" onclick="loadPreset('boutique')" data-i18n="presetBoutique">Boutique hotel</button>
+    <button type="button" class="preset-btn" onclick="loadPreset('villas')" data-i18n="presetVillas">Villas</button>
+    <button type="button" class="preset-btn" onclick="loadPreset('bungalowpark')" data-i18n="presetBungalowPark">Bungalow park</button>
     <button type="button" class="preset-btn" onclick="loadPreset('str')" data-i18n="presetStr">STR / multi-unit</button>
     <div class="prefs-row">
       <select id="currencySelect" class="currency-select" onchange="setCurrency(this.value)" data-i18n-title="currencySelectTitle" title="Display currency">
@@ -772,6 +772,25 @@ header {
     </div>
 
     <div class="chart-section">
+      <div class="sec-label" data-i18n="whatThisMeansTitle">What This Means</div>
+      <div class="sec-desc" data-i18n="whatThisMeansDesc">The practical takeaway, and what to do with it.</div>
+      <div class="narrative" id="narrativeText"></div>
+      <p class="contact-route" data-i18n="contactRoute">Building that plan is the work I do with operators. If you want to talk it through: <a href="mailto:rbisschoff@gmail.com?subject=Distribution%20Cost%20Analyser" data-contact-tool="distribution-cost-analyser">rbisschoff@gmail.com</a></p>
+    </div>
+
+    <div class="chart-section">
+      <div class="sec-label" data-i18n="opportunitySimTitle">Opportunity Simulations</div>
+      <div class="sec-desc" data-i18n="opportunitySimDesc">Three simulations: direct marketing room when an OTA share decreases, margin saved by moving volume to a cheaper OTA, and what extra marketing spend could create at your current rate.</div>
+      <div class="scenario-box" id="scenarioBox"></div>
+    </div>
+
+    <div class="chart-section">
+      <div class="sec-label" data-i18n="riskScoreTitle">Channel Risk Score</div>
+      <div class="sec-desc" data-i18n="riskScoreDesc">How concentrated your revenue is in a single OTA, derived from your mix above, no extra inputs.</div>
+      <div class="risk-score-panel" id="channelRiskScore"></div>
+    </div>
+
+    <div class="chart-section">
       <div class="sec-label" data-i18n="costPerChannelTitle">Cost per Channel</div>
       <div class="sec-desc" data-i18n="costPerChannelDesc">Real cost rate per channel, broken into what's driving it, sorted from cheapest to most expensive. This is the one for deciding which channel is actually worth pushing volume toward.</div>
       <div class="chart-container">
@@ -782,24 +801,6 @@ header {
     <div class="chart-section">
       <div class="sec-label" data-i18n="costBreakdownTitle">Cost Breakdown</div>
       <div id="costBreakdown"></div>
-    </div>
-
-    <div class="chart-section">
-      <div class="sec-label" data-i18n="riskScoreTitle">Channel Risk Score</div>
-      <div class="sec-desc" data-i18n="riskScoreDesc">How concentrated your revenue is in a single OTA, derived from your mix above, no extra inputs.</div>
-      <div class="risk-score-panel" id="channelRiskScore"></div>
-    </div>
-
-    <div class="chart-section">
-      <div class="sec-label" data-i18n="opportunitySimTitle">Opportunity Simulations</div>
-      <div class="sec-desc" data-i18n="opportunitySimDesc">Three simulations: direct marketing room when an OTA share decreases, margin saved by moving volume to a cheaper OTA, and what extra marketing spend could create at your current rate.</div>
-      <div class="scenario-box" id="scenarioBox"></div>
-    </div>
-
-    <div class="chart-section">
-      <div class="sec-label" data-i18n="whatThisMeansTitle">What This Means</div>
-      <div class="sec-desc" data-i18n="whatThisMeansDesc">The practical takeaway, and what to do with it.</div>
-      <div class="narrative" id="narrativeText"></div>
       <p class="contact-route" data-i18n="contactRoute">Building that plan is the work I do with operators. If you want to talk it through: <a href="mailto:rbisschoff@gmail.com?subject=Distribution%20Cost%20Analyser" data-contact-tool="distribution-cost-analyser">rbisschoff@gmail.com</a></p>
     </div>
 
@@ -869,8 +870,8 @@ const I18N = {
     heroSubtitle: 'Direct or OTA, which is really eating your margin? Enter your mix and see the true cost, not just headline commission.',
     quickStart: 'Quick start',
     presetServiced: 'Serviced apartment',
-    presetHotel: 'Small hotel',
-    presetBoutique: 'Boutique hotel',
+    presetVillas: 'Villas',
+    presetBungalowPark: 'Bungalow park',
     presetStr: 'STR / multi-unit',
     currencySelectTitle: 'Display currency',
     step1Title: 'Your business',
@@ -1102,8 +1103,8 @@ const I18N = {
     heroSubtitle: 'Diretto o OTA, chi ti sta davvero erodendo il margine? Inserisci il tuo mix e scopri il costo reale, non solo la commissione dichiarata.',
     quickStart: 'Avvio rapido',
     presetServiced: 'Appartamento con servizi',
-    presetHotel: 'Piccolo hotel',
-    presetBoutique: 'Boutique hotel',
+    presetVillas: 'Ville',
+    presetBungalowPark: 'Parco bungalow',
     presetStr: 'STR / multi-unità',
     currencySelectTitle: 'Valuta di visualizzazione',
     step1Title: 'La tua attività',
@@ -1335,8 +1336,8 @@ const I18N = {
     heroSubtitle: 'Direkt oder OTA, wer frisst wirklich Ihre Marge? Geben Sie Ihren Mix ein und sehen Sie die wahren Kosten, nicht nur die genannte Provision.',
     quickStart: 'Schnellstart',
     presetServiced: 'Serviced Apartment',
-    presetHotel: 'Kleines Hotel',
-    presetBoutique: 'Boutique-Hotel',
+    presetVillas: 'Villen',
+    presetBungalowPark: 'Bungalowpark',
     presetStr: 'STR / Mehrere Units',
     currencySelectTitle: 'Anzeigewährung',
     step1Title: 'Ihr Unternehmen',
@@ -1986,21 +1987,21 @@ const PRESETS = {
     ],
     direct: { paymentPct: '2.5', failurePct: '0.3', serviceHours: '3', adsSpend: '24000', seoCost: '6000', bookingEngineFee: '4800', hostingFee: '1200', emailToolFee: '600', contentHours: '4', incentivePct: '0' }
   },
-  hotel: {
-    totalRevenue: '800000', hourlyRate: '22', avgBookingValue: '95',
+  villas: {
+    totalRevenue: '650000', hourlyRate: '25', avgBookingValue: '420', periodMode: 'annual',
     otaChannels: [
-      { name: 'Booking.com', share: 55, commission: 17, promoPct: 3, paymentPct: 1, serviceHours: 0.5, advancedOpen: false },
-      { name: 'Expedia', share: 20, commission: 20, promoPct: 4, paymentPct: 1, serviceHours: 0.5, advancedOpen: false }
+      { name: 'Airbnb', share: 45, commission: 15, promoPct: 3, paymentPct: 1, serviceHours: 2, advancedOpen: false },
+      { name: 'Booking.com', share: 30, commission: 16, promoPct: 4, paymentPct: 1, serviceHours: 1.5, advancedOpen: false }
     ],
-    direct: { paymentPct: '2.2', failurePct: '0.3', serviceHours: '2', adsSpend: '12000', seoCost: '3000', bookingEngineFee: '3600', hostingFee: '800', incentivePct: '2' }
+    direct: { paymentPct: '2.5', failurePct: '0.3', serviceHours: '5', adsSpend: '9000', seoCost: '4800', bookingEngineFee: '3600', hostingFee: '1500', emailToolFee: '600', contentHours: '6', incentivePct: '0' }
   },
-  boutique: {
-    totalRevenue: '2200000', hourlyRate: '28', avgBookingValue: '140', periodMode: 'annual',
+  bungalowpark: {
+    totalRevenue: '3200000', hourlyRate: '20', avgBookingValue: '480', periodMode: 'annual',
     otaChannels: [
-      { name: 'Booking.com', share: 62, commission: 17, promoPct: 4, paymentPct: 1, serviceHours: 0.5, advancedOpen: false },
-      { name: 'Expedia', share: 18, commission: 20, promoPct: 4, paymentPct: 1, serviceHours: 0.5, advancedOpen: false }
+      { name: 'Booking.com', share: 50, commission: 16, promoPct: 4, paymentPct: 1, serviceHours: 0.5, advancedOpen: false },
+      { name: 'Expedia', share: 15, commission: 18, promoPct: 3, paymentPct: 1, serviceHours: 0.5, advancedOpen: false }
     ],
-    direct: { paymentPct: '2.2', failurePct: '0.3', serviceHours: '2', adsSpend: '36000', seoCost: '9000', bookingEngineFee: '6000', hostingFee: '1500', emailToolFee: '900', incentivePct: '3' }
+    direct: { paymentPct: '2.0', failurePct: '0.2', serviceHours: '1.5', adsSpend: '48000', seoCost: '12000', bookingEngineFee: '9600', hostingFee: '2400', emailToolFee: '1200', contentHours: '8', incentivePct: '5' }
   },
   str: {
     totalRevenue: '420000', hourlyRate: '22', avgBookingValue: '180', periodMode: 'annual',
