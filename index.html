@@ -154,7 +154,7 @@ header {
   -moz-appearance:textfield;
 }
 .ios-row input::-webkit-outer-spin-button, .ios-row input::-webkit-inner-spin-button { -webkit-appearance:none; }
-.ios-row input::placeholder { color:var(--muted2); }
+.ios-row input::placeholder { color:var(--muted2); opacity:0.55; font-style:italic; }
 
 .ota-builder { background:var(--card); border-radius:var(--radius-md); padding:16px; margin-bottom:12px; border:none; box-shadow:var(--shadow-card); }
 .ota-row { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:10px; align-items:end; margin-bottom:10px; }
@@ -607,7 +607,7 @@ header {
       </div>
       <div class="ios-row-right">
         <span class="ios-row-prefix currency-prefix">€</span>
-        <input type="number" id="totalRevenue" placeholder="500,000" inputmode="numeric" oninput="onInputChange()" />
+        <input type="number" id="totalRevenue" value="500000" placeholder="e.g. 500000" inputmode="numeric" oninput="onInputChange()" />
       </div>
     </div>
     <div class="ios-row">
@@ -989,6 +989,11 @@ const I18N = {
     addAtLeastOneOta: 'Add at least one OTA to use these scenarios.',
 
     errEnterRevenue: 'Enter your total annual revenue.',
+    errEnterRevenueMonthly: 'Enter your total monthly revenue.',
+    noOtaInMix: 'No OTA in the mix',
+    directOnlySubText: '100% of revenue is direct',
+    narrativeDirectOnly: 'This run is 100% direct. Add an OTA above to compare true channel costs side by side.',
+    execStatNoOta: '—',
     errOtaOver100Tpl: 'OTA mix totals {pct}%, reduce shares so Direct can be calculated.',
     errAvgBookingValue: 'Average booking value must be greater than zero.',
     hintDirectIncompleteTpl: "<strong>Tip:</strong> Direct is {pct}% of your mix but you haven't entered website &amp; marketing costs yet. Open <strong>Direct Hidden Costs</strong> in step 3 for a complete direct picture.",
@@ -997,6 +1002,7 @@ const I18N = {
     shareSummaryOkTpl: 'OTA mix: <strong>{ota}%</strong> · Direct (auto): <strong>{direct}%</strong>',
 
     errEnterRevenueBeforeCompare: 'Enter your total annual revenue before comparing channels.',
+    errEnterRevenueBeforeCompareMonthly: 'Enter your total monthly revenue before comparing channels.',
     errOtaOver100Run: 'OTA shares add up to more than 100%. Adjust them so Direct can be calculated.',
     rhContextTpl: 'OTA mix: {mix} · Direct {direct}% of revenue (auto-calculated)',
     printMetaTpl: '{date} · Operator Series · {currency} · amounts shown as annual',
@@ -1227,6 +1233,11 @@ const I18N = {
     addAtLeastOneOta: 'Aggiungi almeno una OTA per usare queste simulazioni.',
 
     errEnterRevenue: 'Inserisci i tuoi ricavi annuali totali.',
+    errEnterRevenueMonthly: 'Inserisci i tuoi ricavi mensili totali.',
+    noOtaInMix: 'Nessuna OTA nel mix',
+    directOnlySubText: 'Il 100% dei ricavi è diretto',
+    narrativeDirectOnly: 'Questa analisi è al 100% diretta. Aggiungi un\'OTA sopra per confrontare i costi reali dei canali.',
+    execStatNoOta: '—',
     errOtaOver100Tpl: 'Il mix OTA totalizza {pct}%, riduci le quote in modo che il Diretto possa essere calcolato.',
     errAvgBookingValue: 'Il valore medio della prenotazione deve essere maggiore di zero.',
     hintDirectIncompleteTpl: '<strong>Suggerimento:</strong> il Diretto è il {pct}% del tuo mix ma non hai ancora inserito i costi di sito web e marketing. Apri <strong>Costi Nascosti del Diretto</strong> allo step 3 per un quadro diretto completo.',
@@ -1235,6 +1246,7 @@ const I18N = {
     shareSummaryOkTpl: 'Mix OTA: <strong>{ota}%</strong> · Diretto (auto): <strong>{direct}%</strong>',
 
     errEnterRevenueBeforeCompare: 'Inserisci i tuoi ricavi annuali totali prima di confrontare i canali.',
+    errEnterRevenueBeforeCompareMonthly: 'Inserisci i tuoi ricavi mensili totali prima di confrontare i canali.',
     errOtaOver100Run: 'Le quote OTA superano il 100%. Correggile in modo che il Diretto possa essere calcolato.',
     rhContextTpl: 'Mix OTA: {mix} · Diretto {direct}% dei ricavi (calcolato automaticamente)',
     printMetaTpl: '{date} · Operator Series · {currency} · importi mostrati su base annua',
@@ -1465,6 +1477,11 @@ const I18N = {
     addAtLeastOneOta: 'Fügen Sie mindestens eine OTA hinzu, um diese Simulationen zu nutzen.',
 
     errEnterRevenue: 'Geben Sie Ihren gesamten Jahresumsatz ein.',
+    errEnterRevenueMonthly: 'Geben Sie Ihren gesamten Monatsumsatz ein.',
+    noOtaInMix: 'Keine OTA im Mix',
+    directOnlySubText: '100% des Umsatzes ist direkt',
+    narrativeDirectOnly: 'Dieser Lauf ist 100% direkt. Fügen Sie oben eine OTA hinzu, um die wahren Kanalkosten zu vergleichen.',
+    execStatNoOta: '—',
     errOtaOver100Tpl: 'Der OTA-Mix summiert sich auf {pct}%, reduzieren Sie die Anteile, damit Direkt berechnet werden kann.',
     errAvgBookingValue: 'Der durchschnittliche Buchungswert muss größer als null sein.',
     hintDirectIncompleteTpl: '<strong>Tipp:</strong> Direkt macht {pct}% Ihres Mix aus, aber Sie haben noch keine Website- und Marketingkosten eingegeben. Öffnen Sie <strong>Versteckte Direktkosten</strong> in Schritt 3 für ein vollständiges Direktbild.',
@@ -1473,6 +1490,7 @@ const I18N = {
     shareSummaryOkTpl: 'OTA-Mix: <strong>{ota}%</strong> · Direkt (auto): <strong>{direct}%</strong>',
 
     errEnterRevenueBeforeCompare: 'Geben Sie Ihren gesamten Jahresumsatz ein, bevor Sie Kanäle vergleichen.',
+    errEnterRevenueBeforeCompareMonthly: 'Geben Sie Ihren gesamten Monatsumsatz ein, bevor Sie Kanäle vergleichen.',
     errOtaOver100Run: 'Die OTA-Anteile summieren sich auf mehr als 100%. Passen Sie sie an, damit Direkt berechnet werden kann.',
     rhContextTpl: 'OTA-Mix: {mix} · Direkt {direct}% des Umsatzes (automatisch berechnet)',
     printMetaTpl: '{date} · Operator Series · {currency} · Beträge auf Jahresbasis dargestellt',
@@ -1907,6 +1925,18 @@ function computeDirectShare() {
   return { otaTotal, directShare: Math.max(0, 100 - otaTotal) };
 }
 
+function costliestOta(otaCosts) {
+  if (!otaCosts?.length) return null;
+  return otaCosts.reduce((a, b) => a.costPct > b.costPct ? a : b);
+}
+
+function revenueRequiredMessage(beforeCompare) {
+  if (beforeCompare) {
+    return isMonthly() ? t('errEnterRevenueBeforeCompareMonthly') : t('errEnterRevenueBeforeCompare');
+  }
+  return isMonthly() ? t('errEnterRevenueMonthly') : t('errEnterRevenue');
+}
+
 function validateInputs() {
   const banner = document.getElementById('validationBanner');
   const hint = document.getElementById('inputHintBanner');
@@ -1915,7 +1945,7 @@ function validateInputs() {
   const marketingSpend = getDirectMarketingSpendEuros(parseFloat(document.getElementById('hourlyRate')?.value) || 25);
   const errors = [];
 
-  if (!totalRevenue || totalRevenue <= 0) errors.push(t('errEnterRevenue'));
+  if (!totalRevenue || totalRevenue <= 0) errors.push(revenueRequiredMessage(false));
   if (otaTotal > 100) errors.push(tf('errOtaOver100Tpl', { pct: otaTotal.toFixed(0) }));
   if (getAvgBookingValue() <= 0) errors.push(t('errAvgBookingValue'));
 
@@ -2104,16 +2134,22 @@ function resetForm() {
 function buildSummaryText() {
   if (!lastAnalysis) return '';
   const { totalDistCost, totalDistPct, directCostPct, directShare, directRevenue, otaCosts, otaCostEuros, totalRevenue } = lastAnalysis;
-  const mostExpensiveOta = otaCosts.reduce((a, b) => a.costPct > b.costPct ? a : b);
-  const blendedOtaPct = otaCosts.reduce((sum, o) => sum + o.costPct * o.share, 0) / Math.max(1, otaCosts.reduce((s, o) => s + o.share, 0));
+  const mostExpensiveOta = costliestOta(otaCosts);
+  const blendedOtaPct = otaCosts.length
+    ? otaCosts.reduce((sum, o) => sum + o.costPct * o.share, 0) / Math.max(1, otaCosts.reduce((s, o) => s + o.share, 0))
+    : 0;
   const lines = [
     t('summaryTitle'),
     '',
     tf('summaryTotalDistTpl', { amount: moneyPerYr(totalDistCost), pct: totalDistPct.toFixed(0) }),
     tf('summaryOtaSpendTpl', { amount: moneyPerYr(otaCostEuros) }),
     tf('summaryDirectTrueCostTpl', { pct: directCostPct.toFixed(0), share: directShare.toFixed(0) }),
-    tf('summaryBlendedOtaTpl', { pct: blendedOtaPct.toFixed(0) }),
-    tf('summaryPriciestOtaTpl', { name: mostExpensiveOta.name, pct: mostExpensiveOta.costPct.toFixed(0) }),
+  ];
+  if (mostExpensiveOta) {
+    lines.push(tf('summaryBlendedOtaTpl', { pct: blendedOtaPct.toFixed(0) }));
+    lines.push(tf('summaryPriciestOtaTpl', { name: mostExpensiveOta.name, pct: mostExpensiveOta.costPct.toFixed(0) }));
+  }
+  lines.push(
     '',
     t('summaryChannelsHeader'),
     ...otaCosts.map(o => tf('summaryChannelLineTpl', { name: o.name, share: o.share.toFixed(0), pct: o.costPct.toFixed(0) })),
@@ -2126,7 +2162,7 @@ function buildSummaryText() {
     t('summaryContactLine'),
     '',
     tf('summaryGeneratedAtTpl', { date: new Date().toLocaleString(DATE_LOCALES[currentLang] || 'en-GB') })
-  ];
+  );
   return lines.join('\n');
 }
 
@@ -2211,7 +2247,7 @@ function runAnalysis(silent) {
 
   if (!totalRevenue || totalRevenue <= 0 || otaTotal > 100) {
     banner.classList.add('visible');
-    if (!totalRevenue || totalRevenue <= 0) banner.textContent = t('errEnterRevenueBeforeCompare');
+    if (!totalRevenue || totalRevenue <= 0) banner.textContent = revenueRequiredMessage(true);
     else banner.textContent = t('errOtaOver100Run');
     return;
   }
@@ -2235,7 +2271,8 @@ function runAnalysis(silent) {
   const totalDistCost = otaCostEuros + directCostEuros;
   const totalDistPct = totalRevenue > 0 ? (totalDistCost / totalRevenue) * 100 : 0;
 
-  document.getElementById('rhContext').textContent = tf('rhContextTpl', { mix: otaChannels.map(o => o.name).join(', '), direct: directShare.toFixed(0) });
+  const mixNames = otaChannels.map(o => o.name).filter(Boolean).join(', ') || t('noOtaInMix');
+  document.getElementById('rhContext').textContent = tf('rhContextTpl', { mix: mixNames, direct: directShare.toFixed(0) });
 
   renderExecutiveSnapshot(totalDistCost, totalDistPct, totalRevenue, directCostPct, directShare, directRevenue, otaCosts, otaCostEuros);
   renderIncompleteDirectCallout(directShare, hourlyRate);
@@ -2272,19 +2309,25 @@ function fmt(n) {
 }
 
 function renderExecutiveSnapshot(totalDistCost, totalDistPct, totalRevenue, directCostPct, directShare, directRevenue, otaCosts, otaCostEuros) {
-  const mostExpensiveOta = otaCosts.reduce((a, b) => a.costPct > b.costPct ? a : b);
-  const gapPp = mostExpensiveOta.costPct - directCostPct;
-  const marginRoom = directShare > 0 && directCostPct < mostExpensiveOta.costPct
+  const mostExpensiveOta = costliestOta(otaCosts);
+  const gapPp = mostExpensiveOta ? mostExpensiveOta.costPct - directCostPct : 0;
+  const marginRoom = mostExpensiveOta && directShare > 0 && directCostPct < mostExpensiveOta.costPct
     ? directRevenue * (gapPp / 100)
     : 0;
 
   let leadHtml = `<p class="exec-line">${tf('execLeadMainTpl', { total: moneyPerYr(totalDistCost), pct: totalDistPct.toFixed(0), ota: money(otaCostEuros) })}</p>`;
 
-  if (directShare > 0 && directCostPct < mostExpensiveOta.costPct) {
+  if (mostExpensiveOta && directShare > 0 && directCostPct < mostExpensiveOta.costPct) {
     leadHtml += `<p class="exec-line">${tf('execLeadRoomTpl', { directPct: directCostPct.toFixed(0), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(0), directRev: money(directRevenue), margin: moneyPerYr(marginRoom) })}</p>`;
-  } else if (directShare > 0) {
+  } else if (mostExpensiveOta && directShare > 0) {
     leadHtml += `<p class="exec-line">${tf('execLeadAddCostsTpl', { directPct: directCostPct.toFixed(0), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(0) })}</p>`;
+  } else if (!mostExpensiveOta) {
+    leadHtml += `<p class="exec-line">${t('narrativeDirectOnly')}</p>`;
   }
+
+  const priciestHtml = mostExpensiveOta
+    ? `${mostExpensiveOta.costPct.toFixed(0)}%<span style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.5);"> · ${mostExpensiveOta.name}</span>`
+    : t('execStatNoOta');
 
   document.getElementById('execSnapshot').innerHTML = `
     <div class="exec-snapshot-title">${t('execAtGlance')}</div>
@@ -2304,7 +2347,7 @@ function renderExecutiveSnapshot(totalDistCost, totalDistPct, totalRevenue, dire
       </div>
       <div class="exec-stat">
         <div class="exec-stat-label">${t('execStatPriciestOta')}</div>
-        <div class="exec-stat-value">${mostExpensiveOta.costPct.toFixed(0)}%<span style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.5);"> · ${mostExpensiveOta.name}</span></div>
+        <div class="exec-stat-value">${priciestHtml}</div>
       </div>
     </div>`;
 }
@@ -2346,7 +2389,23 @@ function renderCostSummary(totalCost, totalRevenue, otaCost, otaRevenue, directC
 }
 
 function renderHeadlineCompare(otaCosts, directCostPct) {
-  const mostExpensiveOta = otaCosts.reduce((a, b) => a.costPct > b.costPct ? a : b);
+  const mostExpensiveOta = costliestOta(otaCosts);
+
+  if (!mostExpensiveOta) {
+    document.getElementById('headlineCompare').innerHTML = `
+      <div class="headline-card">
+        <div class="headline-card-label">${t('mostExpensiveOtaLabel')}</div>
+        <div class="headline-card-value ota">${t('execStatNoOta')}</div>
+        <div class="headline-card-sub">${t('noOtaInMix')}</div>
+      </div>
+      <div class="headline-card">
+        <div class="headline-card-label">${t('directLabel')}</div>
+        <div class="headline-card-value direct">${directCostPct.toFixed(0)}%</div>
+        <div class="headline-card-sub">${t('directOnlySubText')}</div>
+      </div>`;
+    return;
+  }
+
   const otaOverCap = mostExpensiveOta.costPct > 100;
   const directOverCap = directCostPct > 100;
 
@@ -2355,7 +2414,7 @@ function renderHeadlineCompare(otaCosts, directCostPct) {
   if (directOverCap) {
     directSub = '⚠ ' + t('directOverCapSubText');
     directSubClass += ' over-cap';
-  } else if (otaCosts.length && directCostPct < mostExpensiveOta.costPct) {
+  } else if (directCostPct < mostExpensiveOta.costPct) {
     const points = Math.round(mostExpensiveOta.costPct - directCostPct);
     directSub = tf('directVsCheapestOtaTpl', { points, otaName: mostExpensiveOta.name });
   }
@@ -2856,10 +2915,12 @@ function renderChannelRiskScore() {
 }
 
 function generateNarrative(otaCosts, directCostPct, directShare, totalRevenue) {
-  const mostExpensiveOta = otaCosts.reduce((a, b) => a.costPct > b.costPct ? a : b);
+  const mostExpensiveOta = costliestOta(otaCosts);
   const points = [];
 
-  if (directShare <= 0) {
+  if (!mostExpensiveOta) {
+    points.push(t('narrativeDirectOnly'));
+  } else if (directShare <= 0) {
     points.push(t('narrativeNoDirectShare'));
   } else if (directCostPct < mostExpensiveOta.costPct) {
     points.push(tf('narrativeRoomTpl', { directPct: directCostPct.toFixed(0), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(0) }));
@@ -2867,10 +2928,10 @@ function generateNarrative(otaCosts, directCostPct, directShare, totalRevenue) {
     points.push(tf('narrativeCheckCostsTpl', { directPct: directCostPct.toFixed(0), otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(0) }));
   }
 
-  if (directShare > 0) {
+  if (mostExpensiveOta && directShare > 0) {
     points.push(t('narrativeSpendingRoom'));
     points.push(t('narrativeNeedPlan'));
-  } else {
+  } else if (mostExpensiveOta) {
     points.push(tf('narrativeStartWithEconomicsTpl', { otaName: mostExpensiveOta.name, otaPct: mostExpensiveOta.costPct.toFixed(0) }));
   }
 
