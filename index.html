@@ -64,6 +64,13 @@
   })();
 </script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JPJ7VKS451"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-JPJ7VKS451');
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <title>Distribution Cost Analyser, Operator Series</title>
 <style>
@@ -103,23 +110,34 @@ body { font-family:-apple-system,'Inter',sans-serif; background:var(--bg); color
 
 header {
   background:rgba(8,8,14,0.96);
-  padding-top:calc(12px + env(safe-area-inset-top));
-  padding-bottom:12px;
-  padding-left:max(20px, calc((100% - 760px) / 2));
-  padding-right:max(20px, calc((100% - 760px) / 2));
-  display:flex; align-items:center; justify-content:space-between;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
   position:sticky; top:0; z-index:200;
-  border-bottom:0.5px solid rgba(255,255,255,0.08);
+  border-bottom:1px solid rgba(255,255,255,0.1);
 }
-.logo { display:flex; align-items:center; gap:10px; min-width:0; }
-.logo > div:not(.logo-mark) { min-width:0; }
-.logo-mark {
+.header-inner {
+  max-width:880px; margin:0 auto; padding:16px 24px;
+  padding-top:calc(16px + env(safe-area-inset-top));
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.brand { display:flex; align-items:center; gap:12px; min-width:0; }
+.brand-mark {
   width:36px; height:36px; background:linear-gradient(145deg,var(--accent) 0%,var(--accent-dark) 100%);
   border-radius:10px; display:flex; align-items:center; justify-content:center;
   font-size:12px; font-weight:800; color:#fff; box-shadow:0 2px 10px rgba(0,122,255,0.35); flex-shrink:0;
 }
-.logo-name { color:#fff; font-size:15px; font-weight:700; letter-spacing:-0.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.logo-sub  { color:rgba(255,255,255,0.35); font-size:9px; text-transform:uppercase; letter-spacing:1px; margin-top:1px; }
+.brand-text { color:#fff; min-width:0; }
+.brand-title { font-size:15px; font-weight:700; letter-spacing:-0.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.brand-subtitle { color:rgba(255,255,255,0.35); font-size:9px; text-transform:uppercase; letter-spacing:1px; margin-top:1px; }
+.header-actions { display:flex; gap:8px; flex-shrink:0; align-items:center; }
+.btn-ghost {
+  background:rgba(255,255,255,0.08); color:#fff;
+  border:1px solid rgba(255,255,255,0.15); padding:8px 14px;
+  border-radius:8px; font-size:13px; font-weight:500;
+  cursor:pointer; transition:all 0.2s; font-family:inherit;
+}
+.btn-ghost:hover { background:rgba(255,255,255,0.15); }
+.btn-ghost:focus-visible { outline:2px solid rgba(255,255,255,0.6); outline-offset:2px; }
 
 .lang-switch { display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:100px; padding:3px; flex-shrink:0; }
 .lang-btn { font-family:inherit; font-size:11px; font-weight:600; letter-spacing:0.04em; color:rgba(255,255,255,0.55); background:transparent; border:none; border-radius:100px; padding:6px 10px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.15s; }
@@ -296,16 +314,15 @@ header {
 .print-header-meta { font-size:12px; color:#666; margin-top:4px; }
 
 @media (max-width: 900px) {
-  .logo-sub { display: none; }
+  .brand-subtitle { display: none; }
 }
 
 @media (max-width: 640px) {
-  .logo-name { font-size: 13px; }
-  header {
+  .brand-title { font-size: 13px; }
+  .header-inner {
+    padding: 10px 12px;
     padding-top: calc(10px + env(safe-area-inset-top));
-    padding-bottom: 10px;
-    padding-left: max(12px, calc((100% - 760px) / 2));
-    padding-right: max(12px, calc((100% - 760px) / 2));
+    gap: 8px;
   }
   .lang-btn {
     padding: 8px 9px;
@@ -536,17 +553,22 @@ header {
 <body>
 
 <header>
-  <div class="logo">
-    <div class="logo-mark">💰</div>
-    <div>
-      <div class="logo-name">Distribution Cost Analyser</div>
-      <div class="logo-sub" data-i18n="brandSubtitle">Operator Series</div>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">💰</div>
+      <div class="brand-text">
+        <div class="brand-title">Distribution Cost Analyser</div>
+        <div class="brand-subtitle" data-i18n="brandSubtitle">Operator Series</div>
+      </div>
     </div>
-  </div>
-  <div class="lang-switch" role="group" aria-label="Language">
-    <button type="button" class="lang-btn active" data-lang="en" aria-pressed="true"><span class="lang-flag" aria-hidden="true">🇬🇧</span> EN</button>
-    <button type="button" class="lang-btn" data-lang="it" aria-pressed="false"><span class="lang-flag" aria-hidden="true">🇮🇹</span> IT</button>
-    <button type="button" class="lang-btn" data-lang="de" aria-pressed="false"><span class="lang-flag" aria-hidden="true">🇩🇪</span> DE</button>
+    <div class="header-actions">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn active" data-lang="en" aria-pressed="true"><span class="lang-flag" aria-hidden="true">🇬🇧</span> EN</button>
+        <button type="button" class="lang-btn" data-lang="it" aria-pressed="false"><span class="lang-flag" aria-hidden="true">🇮🇹</span> IT</button>
+        <button type="button" class="lang-btn" data-lang="de" aria-pressed="false"><span class="lang-flag" aria-hidden="true">🇩🇪</span> DE</button>
+      </div>
+      <button class="btn-ghost" onclick="resetForm()" type="button" data-i18n="resetBtn">Reset</button>
+    </div>
   </div>
 </header>
 
@@ -893,6 +915,7 @@ const DATE_LOCALES = { en: 'en-GB', it: 'it-IT', de: 'de-DE' };
 const I18N = {
   en: {
     brandSubtitle: 'Operator Series',
+    resetBtn: 'Reset',
     fabCopySummary: 'Copy summary',
     fabCopySummaryTitle: 'Copy a text summary of your results',
     fabShare: 'Share',
@@ -1137,6 +1160,7 @@ const I18N = {
   },
   it: {
     brandSubtitle: 'Operator Series',
+    resetBtn: 'Reimposta',
     fabCopySummary: 'Copia riepilogo',
     fabCopySummaryTitle: 'Copia un riepilogo testuale dei tuoi risultati',
     fabShare: 'Condividi',
@@ -1381,6 +1405,7 @@ const I18N = {
   },
   de: {
     brandSubtitle: 'Operator Series',
+    resetBtn: 'Zurücksetzen',
     fabCopySummary: 'Zusammenfassung kopieren',
     fabCopySummaryTitle: 'Eine Textzusammenfassung Ihrer Ergebnisse kopieren',
     fabShare: 'Teilen',
@@ -2288,6 +2313,13 @@ function runAnalysis(silent) {
 
   document.getElementById('resultPanel').classList.add('visible');
   document.getElementById('authorityBand').classList.add('visible');
+
+  if (!silent && typeof gtag === 'function') {
+    gtag('event', 'distribution_analysis_completed', {
+      ota_count: otaChannels.length,
+      direct_share: Math.round(directShare)
+    });
+  }
 
   const printMeta = document.getElementById('printHeaderMeta');
   if (printMeta) {
