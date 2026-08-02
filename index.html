@@ -404,7 +404,7 @@ header {
    between each row's label and its input. */
 @media (min-width: 1000px) {
   .header-inner { max-width: 1100px; }
-  .container { max-width: 1040px; padding: 32px 24px 96px; }
+  .container { max-width: 1040px; padding: 32px 24px 56px; }
   .hero { padding: 56px 20px 48px; }
   .hero h1 { font-size: clamp(28px, 3.2vw, 40px); }
   .hero p { max-width: 620px; font-size: 15px; }
@@ -413,6 +413,17 @@ header {
   .ota-row { gap: 14px; }
   .chart-container { height: 280px; }
   .chart-container.tall { height: 320px; }
+  .about-top-wrap { max-width: 1100px; padding: 8px 32px 0; }
+  .about { padding: 28px 34px; }
+  .author-avatar { width: 44px; height: 44px; }
+  .author-name { font-size: 18px; }
+  .author-role { font-size: 14px; }
+  .about-cta-primary { font-size: 14px; padding: 14px 26px; }
+  .author-link { font-size: 13px; }
+  .about-outcome { font-size: 16px; max-width: 760px; margin: 18px auto; }
+  .about-method-line { font-size: 14px; margin-bottom: 16px; }
+  .about-service-tag { font-size: 12px; padding: 10px 12px; }
+  footer { max-width: 1100px; font-size: 13px; padding: 28px 32px 90px; }
 }
 
 @media (min-width: 1500px) {
@@ -421,13 +432,21 @@ header {
   .hero { padding: 64px 20px 52px; }
   .hero h1 { font-size: clamp(32px, 2.8vw, 44px); }
   .hero p { font-size: 16px; max-width: 660px; }
+  .about-top-wrap { max-width: 1160px; }
+  .about { padding: 34px 40px; }
+  .author-avatar { width: 50px; height: 50px; }
+  .author-name { font-size: 20px; }
+  .author-role { font-size: 15px; }
+  .about-outcome { font-size: 17px; max-width: 900px; margin: 22px auto; }
+  .about-method-line { font-size: 15px; }
+  .about-service-tag { font-size: 13px; padding: 11px 14px; }
+  footer { max-width: 1160px; }
 }
 
 .authority-band { display:none; background:rgba(30,47,40,0.97); color:rgba(255,255,255,0.6); padding:12px 16px; text-align:center; font-size:11px; line-height:1.6; border-top:0.5px solid rgba(255,255,255,0.08); }
 .authority-band.visible { display:block; }
 .ab-text a { color:var(--accent); text-decoration:none; }
 
-.framework-attribution { border-top:1px solid var(--border); padding:20px 24px; background:var(--bg); margin-top:32px; }
 .contact-route {
   margin: 16px 0 0;
   padding: 14px 16px;
@@ -450,11 +469,39 @@ header {
 .contact-route a:hover {
   border-bottom-color: var(--accent);
 }
-.attribution-content { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--muted); }
-.attribution-text strong { color:var(--ink2); font-weight:600; }
-.attribution-link { color:var(--accent); font-weight:600; text-decoration:none; }
-.attribution-link:hover { text-decoration:underline; }
-.attribution-link:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+.about {
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  border: none;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 20px;
+}
+.about-author { display: flex; align-items: center; gap: 10px; }
+.author-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; object-fit: cover; object-position: center; border: 1px solid var(--border); }
+.author-info { flex: 1; min-width: 0; }
+.author-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+.author-role { font-size: 12px; font-weight: 600; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+.about-outcome { font-size: 13px; color: var(--ink2); line-height: 1.55; margin: 12px 0; text-align: center; }
+.about-top-wrap { max-width: 1280px; margin: 0 auto; padding: 8px 20px 0; }
+.about-method-line { font-size: 11px; color: var(--muted); line-height: 1.5; margin: 0 0 10px; white-space: nowrap; overflow-x: auto; text-align: center; }
+.about-method-line span[data-i18n$="Title"] { font-weight: 600; color: var(--ink); }
+.about-method-arrow { margin: 0 6px; color: var(--muted2); }
+@media (max-width: 640px) { .about-method-line { white-space: normal; overflow-x: visible; } }
+.about-cta-row { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 12px; }
+.about-cta-primary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--ink); background: var(--accent); padding: 12px 22px; border-radius: 100px; box-shadow: 0 4px 14px rgba(201, 169, 97, 0.35); transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease; }
+.about-cta-primary:hover { background: var(--accent-dark); color: #fff; transform: translateY(-2px); box-shadow: 0 7px 18px rgba(201, 169, 97, 0.45); }
+.about-cta-primary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.author-link { font-size: 12px; font-weight: 600; color: var(--muted); transition: color 0.2s; flex-shrink: 0; }
+.author-link:hover { color: var(--accent); }
+.author-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.about-services-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; list-style: none; margin: 0; padding: 0; }
+@media (max-width: 640px) { .about-services-list { grid-template-columns: repeat(2, 1fr); } }
+.about-service-tag { font-size: 10px; font-weight: 600; color: var(--ink2); background: var(--card-tint); padding: 6px 8px; border-radius: 8px; text-align: center; display: flex; align-items: center; justify-content: center; line-height: 1.3; }
+footer { max-width: 1280px; margin: 0 auto; padding: 20px 20px 90px; text-align: center; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
+footer a { color: var(--accent); }
+footer a:hover { text-decoration: underline; }
+footer p + p { margin-top: 4px; }
 
 .preset-bar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:16px; }
 .preset-bar-top, .preset-scroll { display: contents; }
@@ -888,15 +935,6 @@ header {
 
   </div>
 
-  <div class="framework-attribution">
-    <div class="attribution-content">
-      <div class="attribution-text" data-i18n="frameworkAttribution">
-        <strong>Framework by Roger Bisschoff</strong> · First published 2026 · Part of the Operator Intelligence Suite
-      </div>
-      <a href="https://rbisschoff.github.io/operator-intelligence-suite/" class="attribution-link" data-i18n="viewFullSuite">View the full suite →</a>
-    </div>
-  </div>
-
   <div class="authority-band" id="authorityBand">
     <div class="ab-text" data-i18n="authorityBandText">
       Built by <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a>, 15 years in European hospitality distribution.<br>
@@ -905,6 +943,43 @@ header {
   </div>
 
 </div>
+
+<div class="about-top-wrap">
+  <section class="about">
+    <div class="about-author">
+      <img class="author-avatar" src="assets/roger-headshot.jpg" alt="Roger Bisschoff" width="28" height="28">
+      <div class="author-info">
+        <div class="author-name">Roger Bisschoff</div>
+        <div class="author-role" data-i18n="authorRole">Distribution and revenue consulting for short-term rental and serviced apartment operators</div>
+      </div>
+    </div>
+    <div class="about-cta-row">
+      <a href="mailto:rbisschoff@gmail.com" class="about-cta-primary" data-i18n="getInTouch">Get in touch →</a>
+      <a href="https://www.linkedin.com/in/roger-bisschoff/" target="_blank" rel="noopener noreferrer" class="author-link" data-i18n="viewProfile">View profile</a>
+    </div>
+    <p class="about-outcome" data-i18n="aboutOutcome">I look across an operator's whole commercial picture, revenue, distribution, guest experience, owner retention, tech stack, to find where the real growth opportunity is.</p>
+    <p class="about-method-line">
+      <span data-i18n="methodMapTitle">Map</span> <span data-i18n="methodLineMap">everything</span>
+      <span class="about-method-arrow">→</span>
+      <span data-i18n="methodIdentifyTitle">identify</span> <span data-i18n="methodLineIdentify">the opportunity</span>
+      <span class="about-method-arrow">→</span>
+      <span data-i18n="methodQuantifyTitle">quantify</span> <span data-i18n="methodLineQuantify">its value</span>
+      <span class="about-method-arrow">→</span>
+      <span data-i18n="methodDirectTitle">direct</span> <span data-i18n="methodLineDirect">what to do first</span>
+    </p>
+    <ul class="about-services-list">
+      <li class="about-service-tag" data-i18n="aboutService1">Distribution &amp; OTA cost strategy</li>
+      <li class="about-service-tag" data-i18n="aboutService2">Owner retention &amp; supply stability</li>
+      <li class="about-service-tag" data-i18n="aboutService3">Guest experience &amp; repeat guest value</li>
+      <li class="about-service-tag" data-i18n="aboutService4">Tech stack &amp; portfolio profitability</li>
+    </ul>
+  </section>
+</div>
+
+<footer>
+  <p data-i18n="footer1">Operator Intelligence Suite by <a href="https://www.linkedin.com/in/roger-bisschoff/" target="_blank" rel="noopener noreferrer">Roger Bisschoff</a></p>
+  <p style="margin-top: 4px;" data-i18n="footer2">A practical toolkit for hospitality and short-term rental operators.</p>
+</footer>
 
 <script>
 let otaChannels = [
@@ -1019,8 +1094,24 @@ const I18N = {
     opportunitySimDesc: 'Three simulations: what extra marketing spend could create at your current rate, margin saved by moving volume to a cheaper OTA, and the spending room a lower OTA share would free up.',
     whatThisMeansTitle: 'What This Means',
     whatThisMeansDesc: 'The practical takeaway, and what to do with it.',
-    frameworkAttribution: '<strong>Framework by Roger Bisschoff</strong> · First published 2026 · Part of the Operator Intelligence Suite',
-    viewFullSuite: 'View the full suite →',
+    authorRole: 'Distribution and revenue consulting for short-term rental and serviced apartment operators',
+    getInTouch: 'Get in touch →',
+    viewProfile: 'View profile',
+    aboutOutcome: "I look across an operator's whole commercial picture, revenue, distribution, guest experience, owner retention, tech stack, to find where the real growth opportunity is.",
+    methodMapTitle: 'Map',
+    methodLineMap: 'everything',
+    methodIdentifyTitle: 'identify',
+    methodLineIdentify: 'the opportunity',
+    methodQuantifyTitle: 'quantify',
+    methodLineQuantify: 'its value',
+    methodDirectTitle: 'direct',
+    methodLineDirect: 'what to do first',
+    aboutService1: 'Distribution & OTA cost strategy',
+    aboutService2: 'Owner retention & supply stability',
+    aboutService3: 'Guest experience & repeat guest value',
+    aboutService4: 'Tech stack & portfolio profitability',
+    footer1: 'Operator Intelligence Suite by <a href="https://www.linkedin.com/in/roger-bisschoff/" target="_blank" rel="noopener noreferrer">Roger Bisschoff</a>',
+    footer2: 'A practical toolkit for hospitality and short-term rental operators.',
     authorityBandText: 'Built by <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a>, 15 years in European hospitality distribution.<br><strong style="color:rgba(255,255,255,0.6)">Operator Series</strong>',
     contactRoute: 'Building that plan is the work I do with operators. If you want to talk it through: <a href="mailto:rbisschoff@gmail.com?subject=Distribution%20Cost%20Analyser" data-contact-tool="distribution-cost-analyser">rbisschoff@gmail.com</a>',
 
@@ -1264,8 +1355,24 @@ const I18N = {
     opportunitySimDesc: 'Tre simulazioni: cosa potrebbe creare una spesa di marketing extra al tuo tasso attuale, margine risparmiato spostando volume verso una OTA più economica, e il margine di spesa che libererebbe un calo della quota OTA.',
     whatThisMeansTitle: 'Cosa Significa',
     whatThisMeansDesc: 'La conclusione pratica, e cosa farne.',
-    frameworkAttribution: '<strong>Framework di Roger Bisschoff</strong> · Pubblicato per la prima volta nel 2026 · Parte della Operator Intelligence Suite',
-    viewFullSuite: 'Vedi la suite completa →',
+    authorRole: 'Consulenza su distribuzione e revenue per operatori di affitti brevi e appartamenti serviti',
+    getInTouch: 'Contattami →',
+    viewProfile: 'Vedi il profilo',
+    aboutOutcome: "Analizzo l'intero quadro commerciale di un operatore, revenue, distribuzione, esperienza ospite, fidelizzazione dei proprietari, stack tecnologico, per individuare dove si trova la vera opportunità di crescita.",
+    methodMapTitle: 'Mappare',
+    methodLineMap: 'tutto',
+    methodIdentifyTitle: 'identificare',
+    methodLineIdentify: "l'opportunità",
+    methodQuantifyTitle: 'quantificare',
+    methodLineQuantify: 'il suo valore',
+    methodDirectTitle: 'indicare',
+    methodLineDirect: 'cosa fare per primo',
+    aboutService1: 'Strategia di distribuzione e costi OTA',
+    aboutService2: "Fidelizzazione proprietari e stabilità dell'offerta",
+    aboutService3: 'Esperienza ospite e valore del ripetuto',
+    aboutService4: 'Stack tecnologico e redditività del portfolio',
+    footer1: 'Operator Intelligence Suite di <a href="https://www.linkedin.com/in/roger-bisschoff/" target="_blank" rel="noopener noreferrer">Roger Bisschoff</a>',
+    footer2: 'Un toolkit pratico per operatori di ospitalità e affitti brevi.',
     authorityBandText: 'Realizzato da <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a>, 15 anni nella distribuzione ospitalità europea.<br><strong style="color:rgba(255,255,255,0.6)">Operator Series</strong>',
     contactRoute: 'Costruire quel piano è il lavoro che faccio con gli operatori. Se vuoi parlarne: <a href="mailto:rbisschoff@gmail.com?subject=Distribution%20Cost%20Analyser" data-contact-tool="distribution-cost-analyser">rbisschoff@gmail.com</a>',
 
@@ -1509,8 +1616,24 @@ const I18N = {
     opportunitySimDesc: 'Drei Simulationen: was zusätzliche Marketingausgaben bei Ihrer aktuellen Rate schaffen könnten, gesparte Marge durch Verschieben von Volumen auf eine günstigere OTA, und der Budgetspielraum, den ein sinkender OTA-Anteil freisetzen würde.',
     whatThisMeansTitle: 'Was Das Bedeutet',
     whatThisMeansDesc: 'Die praktische Erkenntnis, und was Sie damit tun sollten.',
-    frameworkAttribution: '<strong>Framework von Roger Bisschoff</strong> · Erstveröffentlichung 2026 · Teil der Operator Intelligence Suite',
-    viewFullSuite: 'Die vollständige Suite ansehen →',
+    authorRole: 'Distributions- und Revenue-Beratung für Kurzzeitvermietungen und Serviced Apartments',
+    getInTouch: 'Kontakt aufnehmen →',
+    viewProfile: 'Profil ansehen',
+    aboutOutcome: 'Ich betrachte das gesamte kommerzielle Bild eines Betreibers, Umsatz, Distribution, Gästeerlebnis, Eigentümerbindung, Technologie-Stack, um herauszufinden, wo das eigentliche Wachstumspotenzial liegt.',
+    methodMapTitle: 'Erfassen',
+    methodLineMap: 'aller Daten',
+    methodIdentifyTitle: 'identifizieren',
+    methodLineIdentify: 'der Chance',
+    methodQuantifyTitle: 'quantifizieren',
+    methodLineQuantify: 'ihres Werts',
+    methodDirectTitle: 'festlegen',
+    methodLineDirect: 'was zuerst zu tun ist',
+    aboutService1: 'Distributions- & OTA-Kostenstrategie',
+    aboutService2: 'Eigentümerbindung & Angebotsstabilität',
+    aboutService3: 'Gästeerlebnis & Wiederholungsgast-Wert',
+    aboutService4: 'Tech-Stack & Portfolio-Rentabilität',
+    footer1: 'Operator Intelligence Suite von <a href="https://www.linkedin.com/in/roger-bisschoff/" target="_blank" rel="noopener noreferrer">Roger Bisschoff</a>',
+    footer2: 'Ein praktisches Toolkit für Hospitality- und Kurzzeitvermietungs-Betreiber.',
     authorityBandText: 'Erstellt von <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a>, 15 Jahre Erfahrung in der europäischen Hospitality-Distribution.<br><strong style="color:rgba(255,255,255,0.6)">Operator Series</strong>',
     contactRoute: 'Genau diesen Plan zu entwickeln ist meine Arbeit mit Betreibern. Wenn Sie darüber sprechen möchten: <a href="mailto:rbisschoff@gmail.com?subject=Distribution%20Cost%20Analyser" data-contact-tool="distribution-cost-analyser">rbisschoff@gmail.com</a>',
 
