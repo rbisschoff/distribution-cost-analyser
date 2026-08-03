@@ -1,0 +1,3 @@
+# Distribution Cost Analyser
+
+Distribution Cost Analyser is a free tool that compares the true cost of every distribution channel an operator uses — direct bookings versus OTAs like Booking.com — not just the headline commission rate. It is for short-term rental and serviced apartment operators who want to know which channel is really eating their margin once promo spend, payment processing, and support time are included. Enter your channel mix and it shows the true cost per channel, so operators can see where they have room to shift booking volume toward direct. It runs entirely in the browser: no login, no account, and no data leaves the visitor's device. It is part of the Operator Intelligence Suite by Roger Bisschoff.

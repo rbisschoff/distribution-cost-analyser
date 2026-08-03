@@ -4,19 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="description" data-i18n-meta="description" content="Compare true distribution costs across Direct and OTAs. See where margin goes and how much room you have for direct marketing.">
+<meta name="description" content="Compare true distribution costs across Direct and OTAs. See where margin goes and how much room you have for direct marketing.">
+<link rel="canonical" href="https://rbisschoff.github.io/distribution-cost-analyser/">
 <link rel="alternate" hreflang="en" href="https://rbisschoff.github.io/distribution-cost-analyser/?lang=en">
 <link rel="alternate" hreflang="it" href="https://rbisschoff.github.io/distribution-cost-analyser/?lang=it">
 <link rel="alternate" hreflang="de" href="https://rbisschoff.github.io/distribution-cost-analyser/?lang=de">
 <link rel="alternate" hreflang="x-default" href="https://rbisschoff.github.io/distribution-cost-analyser/?lang=en">
-<meta property="og:title" data-i18n-meta="ogTitle" content="Distribution Cost Analyser, Operator Series">
-<meta property="og:description" data-i18n-meta="ogDescription" content="Direct or OTA, which is really eating your margin? Enter your channel mix and see the true cost, not just headline commission.">
+<meta property="og:title" content="Distribution Cost Analyser, Operator Series">
+<meta property="og:description" content="Direct or OTA, which is really eating your margin? Enter your channel mix and see the true cost, not just headline commission.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="og-image.svg">
+<meta property="og:image" content="https://rbisschoff.github.io/distribution-cost-analyser/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="og-image.svg">
+<meta name="twitter:image" content="https://rbisschoff.github.io/distribution-cost-analyser/og-image.png">
 <meta name="twitter:title" content="Distribution Cost Analyser">
 <meta name="twitter:description" content="Compare true distribution costs across Direct and OTAs. Built for hospitality operators.">
 <script>
@@ -36,31 +37,6 @@
     document.documentElement.lang = lang;
     window.__oisInitialLang = lang;
     try { localStorage.setItem('ois-lang', lang); } catch (e) {}
-    const metadata = {
-      en: {
-        description: 'Compare true distribution costs across Direct and OTAs. See where margin goes and how much room you have for direct marketing.',
-        ogTitle: 'Distribution Cost Analyser, Operator Series',
-        ogDescription: 'Direct or OTA, which is really eating your margin? Enter your channel mix and see the true cost.'
-      },
-      it: {
-        description: 'Confronta i costi reali di distribuzione tra Diretto e OTA. Scopri dove va il margine e quanto puoi investire nel marketing diretto.',
-        ogTitle: 'Distribution Cost Analyser, Operator Series',
-        ogDescription: 'Diretto o OTA: quale canale erode davvero il tuo margine? Inserisci il mix e scopri il costo reale.'
-      },
-      de: {
-        description: 'Vergleichen Sie die tatsächlichen Distributionskosten von Direkt und OTAs. Sehen Sie, wohin Ihre Marge fließt.',
-        ogTitle: 'Distribution Cost Analyser, Operator Series',
-        ogDescription: 'Direkt oder OTA: Was kostet Sie wirklich Marge? Geben Sie Ihren Channel-Mix ein und sehen Sie die tatsächlichen Kosten.'
-      }
-    };
-    window.updateOisMetadata = function (activeLang) {
-      const pack = metadata[activeLang] || metadata.en;
-      document.querySelectorAll('[data-i18n-meta]').forEach(function (el) {
-        const value = pack[el.getAttribute('data-i18n-meta')];
-        if (value) el.setAttribute('content', value);
-      });
-    };
-    window.updateOisMetadata(lang);
   })();
 </script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
@@ -1827,6 +1803,64 @@ function tf(key, vars) {
   }
   return str;
 }
+
+// Title/meta description/OG/Twitter tags and JSON-LD are generated from the SAME
+// hero copy (I18N) used for the visible page, so editing hero strings above keeps
+// SEO fields in sync automatically. Hardcoded <head> values are only a pre-JS fallback.
+const META_FALLBACK = {
+  title: 'Distribution Cost Analyser, Operator Series',
+  description: 'Compare true distribution costs across Direct and OTAs. See where margin goes and how much room you have for direct marketing.'
+};
+function truncateAtWord(str, maxLen) {
+  if (!str || str.length <= maxLen) return str;
+  const cut = str.slice(0, maxLen);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trim() + '…';
+}
+function setMetaContent(selector, content) {
+  const el = document.querySelector(selector);
+  if (el) el.setAttribute('content', content);
+}
+function stripTags(str) {
+  return (str || '').replace(/<[^>]*>/g, '');
+}
+function buildJsonLd(pack) {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Distribution Cost Analyser',
+    description: (pack && truncateAtWord(pack.heroSubtitle, 160)) || META_FALLBACK.description,
+    url: 'https://rbisschoff.github.io/distribution-cost-analyser/',
+    applicationCategory: 'BusinessApplication',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    isPartOf: { '@type': 'WebSite', name: 'Operator Intelligence Suite', url: 'https://rbisschoff.github.io/operator-intelligence-suite/' }
+  };
+  let script = document.getElementById('ois-json-ld');
+  if (!script) {
+    script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'ois-json-ld';
+    document.head.appendChild(script);
+  }
+  script.textContent = JSON.stringify(data);
+}
+function buildMetaFromCopy(lang) {
+  const pack = I18N[lang] || I18N.en;
+  let title = META_FALLBACK.title;
+  let description = META_FALLBACK.description;
+  if (pack && pack.heroTitle && pack.heroSubtitle) {
+    title = stripTags(pack.heroTitle) + ' | Distribution Cost Analyser';
+    description = truncateAtWord(pack.heroSubtitle, 160);
+  }
+  document.title = title;
+  setMetaContent('meta[name="description"]', description);
+  setMetaContent('meta[property="og:title"]', title);
+  setMetaContent('meta[property="og:description"]', description);
+  setMetaContent('meta[name="twitter:title"]', title);
+  setMetaContent('meta[name="twitter:description"]', description);
+  buildJsonLd(pack);
+}
+window.updateOisMetadata = buildMetaFromCopy;
 
 function applyLang(lang) {
   currentLang = I18N[lang] ? lang : 'en';
