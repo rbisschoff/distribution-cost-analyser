@@ -373,6 +373,14 @@ header {
   .preset-btn { font-size: 11px; padding: 8px 10px; }
 }
 
+/* Base (mobile/default) max-width for the About box's text lines - kept
+   here, before the desktop-scale-up media queries below, so their own
+   wider max-width values (760px/900px) correctly win the cascade at
+   those breakpoints instead of being shadowed by a same-specificity
+   rule that appears later in the file (see .about-outcome etc. further
+   down, which intentionally omits max-width for this reason). */
+.about-outcome, .about-engagement, .about-method-line { max-width: 680px; }
+
 /* DESKTOP SCALE-UP: this tool is a single-column, iOS-Settings-style wizard
    (.ios-row uses justify-content:space-between for label/value), not a card
    grid, so containers are widened moderately rather than to the 1600px used
@@ -404,8 +412,8 @@ header {
   .author-role { font-size: 14px; }
   .about-cta-primary { font-size: 14px; padding: 14px 26px; }
   .author-link { font-size: 13px; }
-  .about-outcome { font-size: 16px; max-width: 760px; margin: 18px auto; }
-  .about-method-line { font-size: 14px; margin-bottom: 16px; }
+  .about-outcome, .about-engagement { font-size: 16px; max-width: 760px; margin: 18px 0; }
+  .about-method-line { font-size: 14px; max-width: 760px; margin-bottom: 16px; }
   .about-service-tag { font-size: 12px; padding: 10px 12px; }
   footer { max-width: 1100px; font-size: 13px; padding: 28px 32px 90px; }
 }
@@ -427,8 +435,8 @@ header {
   .author-avatar { width: 50px; height: 50px; }
   .author-name { font-size: 20px; }
   .author-role { font-size: 15px; }
-  .about-outcome { font-size: 17px; max-width: 900px; margin: 22px auto; }
-  .about-method-line { font-size: 15px; }
+  .about-outcome, .about-engagement { font-size: 17px; max-width: 900px; margin: 22px 0; }
+  .about-method-line { font-size: 15px; max-width: 900px; }
   .about-service-tag { font-size: 13px; padding: 11px 14px; }
   footer { max-width: 1160px; }
 }
@@ -472,9 +480,9 @@ header {
 .author-info { flex: 1; min-width: 0; }
 .author-name { font-size: 14px; font-weight: 700; color: var(--ink); }
 .author-role { font-size: 12px; font-weight: 600; color: var(--muted); margin-top: 2px; line-height: 1.4; }
-.about-outcome { font-size: 13px; color: var(--ink2); line-height: 1.55; margin: 12px 0; text-align: center; }
+.about-outcome, .about-engagement { font-size: 13px; color: var(--ink2); line-height: 1.55; margin: 12px 0; }
 .about-top-wrap { max-width: 1280px; margin: 0 auto; padding: 8px 20px 0; }
-.about-method-line { font-size: 11px; color: var(--muted); line-height: 1.5; margin: 0 0 10px; white-space: nowrap; overflow-x: auto; text-align: center; }
+.about-method-line { font-size: 11px; color: var(--muted); line-height: 1.5; margin: 0 0 10px; white-space: nowrap; overflow-x: auto; }
 .about-method-line span[data-i18n$="Title"] { font-weight: 600; color: var(--ink); }
 .about-method-arrow { margin: 0 6px; color: var(--muted2); }
 @media (max-width: 640px) { .about-method-line { white-space: normal; overflow-x: visible; } }
@@ -940,7 +948,7 @@ footer p + p { margin-top: 4px; }
       <img class="author-avatar" src="assets/roger-headshot.jpg" alt="Roger Bisschoff" width="28" height="28">
       <div class="author-info">
         <div class="author-name">Roger Bisschoff</div>
-        <div class="author-role" data-i18n="authorRole">Distribution and revenue consulting for short-term rental and serviced apartment operators</div>
+        <div class="author-role" data-i18n="authorRole">Commercial growth consulting for short-term rental, vacation rental, and serviced apartment operators</div>
       </div>
     </div>
     <div class="about-cta-row">
@@ -948,6 +956,7 @@ footer p + p { margin-top: 4px; }
       <a href="https://www.linkedin.com/in/roger-bisschoff/" target="_blank" rel="noopener noreferrer" class="author-link" data-i18n="viewProfile">View profile</a>
     </div>
     <p class="about-outcome" data-i18n="aboutOutcome">I look across an operator's whole commercial picture, revenue, distribution, guest experience, owner retention, tech stack, to find where the real growth opportunity is.</p>
+    <p class="about-engagement" data-i18n="aboutEngagement">Engagements are project-based: a focused review of one commercial area, or ongoing advisory support as needed. No fixed retainer required to start.</p>
     <p class="about-method-line">
       <span data-i18n="methodMapTitle">Map</span> <span data-i18n="methodLineMap">everything</span>
       <span class="about-method-arrow">→</span>
@@ -1084,10 +1093,11 @@ const I18N = {
     opportunitySimDesc: 'Three simulations: what extra marketing spend could create at your current rate, margin saved by moving volume to a cheaper OTA, and the spending room a lower OTA share would free up.',
     whatThisMeansTitle: 'What This Means',
     whatThisMeansDesc: 'The practical takeaway, and what to do with it.',
-    authorRole: 'Distribution and revenue consulting for short-term rental, vacation rental, and serviced apartment operators',
+    authorRole: 'Commercial growth consulting for short-term rental, vacation rental, and serviced apartment operators',
     getInTouch: 'Talk through your numbers →',
     viewProfile: 'View profile',
     aboutOutcome: "I look across an operator's whole commercial picture — whether that's short-term rental or full property management — revenue, distribution, guest experience, owner retention, tech stack, to find where the real growth opportunity is.",
+    aboutEngagement: 'Engagements are project-based: a focused review of one commercial area, or ongoing advisory support as needed. No fixed retainer required to start.',
     methodMapTitle: 'Map',
     methodLineMap: 'everything',
     methodIdentifyTitle: 'identify',
@@ -1345,10 +1355,11 @@ const I18N = {
     opportunitySimDesc: 'Tre simulazioni: cosa potrebbe creare una spesa di marketing extra al tuo tasso attuale, margine risparmiato spostando volume verso una OTA più economica, e il margine di spesa che libererebbe un calo della quota OTA.',
     whatThisMeansTitle: 'Cosa Significa',
     whatThisMeansDesc: 'La conclusione pratica, e cosa farne.',
-    authorRole: 'Consulenza in distribuzione e revenue per operatori di short-term rental, vacation rental, e appartamenti in gestione',
+    authorRole: 'Consulenza di crescita commerciale per operatori short-term rental, vacation rental e appartamenti in gestione',
     getInTouch: 'Parliamo dei tuoi numeri →',
     viewProfile: 'Vedi il profilo',
     aboutOutcome: "Guardo all'intero quadro commerciale di un operatore — che sia short-term rental o full property management — ricavi, distribuzione, guest experience, retention dei proprietari, stack tecnologico, per trovare dove si trova la vera opportunità di crescita.",
+    aboutEngagement: "Gli incarichi sono a progetto: una revisione mirata su un'area commerciale specifica, oppure supporto di consulenza continuativo secondo necessità. Nessun impegno fisso richiesto per iniziare.",
     methodMapTitle: 'Mappare',
     methodLineMap: 'tutto',
     methodIdentifyTitle: 'identificare',
@@ -1606,10 +1617,11 @@ const I18N = {
     opportunitySimDesc: 'Drei Simulationen: was zusätzliche Marketingausgaben bei Ihrer aktuellen Rate schaffen könnten, gesparte Marge durch Verschieben von Volumen auf eine günstigere OTA, und der Budgetspielraum, den ein sinkender OTA-Anteil freisetzen würde.',
     whatThisMeansTitle: 'Was Das Bedeutet',
     whatThisMeansDesc: 'Die praktische Erkenntnis, und was Sie damit tun sollten.',
-    authorRole: 'Vertriebs- und Revenue-Beratung für Short-Term-Rental-, Vacation-Rental- und Serviced-Apartment-Betreiber',
+    authorRole: 'Beratung für kommerzielles Wachstum für STR-, Ferienwohnungs- und Serviced-Apartment-Betreiber',
     getInTouch: 'Sprechen wir über Ihre Zahlen →',
     viewProfile: 'Profil ansehen',
     aboutOutcome: 'Ich betrachte das gesamte kommerzielle Bild eines Betreibers — ob Short-Term-Rental oder volles Property Management — Umsatz, Distribution, Gästeerlebnis, Owner Retention, Tech-Stack, um herauszufinden, wo die eigentliche Wachstumschance liegt.',
+    aboutEngagement: 'Engagements sind projektbasiert: eine gezielte Prüfung eines einzelnen kommerziellen Bereichs oder laufende Beratungsunterstützung nach Bedarf. Kein fester Vertrag nötig, um zu starten.',
     methodMapTitle: 'Erfassen',
     methodLineMap: 'aller Daten',
     methodIdentifyTitle: 'identifizieren',
